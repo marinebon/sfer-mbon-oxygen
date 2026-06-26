@@ -1,32 +1,109 @@
-# quartobatch
-Batch generate quarto reports from a common template across a dataset.
+:warning: NOTE: much of the below is not yet implemented!
 
-# Usage
-## Website Deployment
-It is recommended to deploy your quarto website to GitHub pages using the quarto CLI:
+# SFER MBON Oxygen
+
+Batch-generate Quarto reports for SFER MBON research cruises, from raw CTD download through cleaned/binned data, DIVAnd interpolation, and website publication.
+
+## Prerequisites
+
+- [R](https://www.r-project.org/) (4.0+)
+- [Julia](https://julialang.org/) (1.6+) with [DIVAnd.jl](https://github.com/gher-uliege/DIVAnd.jl)
+- [Quarto CLI](https://quarto.org/docs/get-started/)
+
+On first run, R and Julia dependencies are installed automatically from `scripts/` and `julia/Project.toml`.
+
+
+## Pipeline overview
+
+Cruises and stations are listed in [`data/ctd_datasetid_cruisename_stationname_mapping.csv`](data/ctd_datasetid_cruisename_stationname_mapping.csv). The Makefile runs these steps in order:
+
+| Step | Target | What it does |
+|------|--------|--------------|
+| 1 | `make download` | Run [`scripts/download_cruises.R`](scripts/download_cruises.R) to fetch each `dataset_id` from GCOOS ERDDAP into `data/01_raw/` |
+| 2 | `make process` | Run [`scripts/clean_bin_ctd.R`](scripts/clean_bin_ctd.R) to QC, clean, and depth-bin CTD observations |
+| 3 | `make interpolate` | Run [`scripts/interpolate_cruise.jl`](scripts/interpolate_cruise.jl) to build gridded oxygen fields with [DIVAnd.jl](https://github.com/gher-uliege/DIVAnd.jl) for each cruise |
+| 4 | `make render` | Render the Quarto website: expand [`example_batch/template.qmd`](example_batch/template.qmd) into per-cruise `.qmd` files and build HTML reports |
+| 5 | `make publish` | Run the full pipeline above, then `quarto publish` to deploy the site (e.g. GitHub Pages) |
+
+```bash
+make publish
+```
+
+Individual steps can be run separately:
+
+```bash
+make download
+make process
+make interpolate
+make render
+```
+
+To remove generated data and site output:
+
+```bash
+make clean
+```
+
+
+### Data layout
+
+```
+data/
+├── ctd_datasetid_cruisename_stationname_mapping.csv  # station-to-cruise mapping (tracked in git)
+├── 01_raw/                  # downloaded raw CTD files (one CSV per dataset_id)
+├── processed/{cruise_id}/     # cleaned, depth-binned CTD (R output)
+└── interpolated/{cruise_id}/  # gridded oxygen fields (DIVAnd.jl output)
+```
+
+
+### CTD mapping file
+
+[`data/ctd_datasetid_cruisename_stationname_mapping.csv`](data/ctd_datasetid_cruisename_stationname_mapping.csv) maps each CTD dataset to a cruise and station:
+
+| Column | Description |
+|--------|-------------|
+| `dataset_id` | Unique CTD dataset identifier (used for download) |
+| `cruise_id_og` | Original cruise name from source data |
+| `cruise_id` | Normalized cruise identifier; used as the batch report key |
+| `date` | Cast date |
+| `lon`, `lat` | Station coordinates |
+| `station_og` | Original station name from source data |
+| `station` | Normalized station identifier |
+
+[`example_batch/getListOfValues.R`](example_batch/getListOfValues.R) reads unique `cruise_id` values from this file. [`example_batch/getData.R`](example_batch/getData.R) loads processed and interpolated outputs for each report.
+
+
+## Website deployment
+
+After the data pipeline completes, publish the Quarto website:
 
 ```bash
 quarto publish
 ```
 
-## To Create a New Batch:
-1. Use create_batch R function:
-    ```R
-    source("create_batch.R")
-    create_batch("testBatchName", "testExampleValue")
-    ```
-2. in the new {batch_name} folder, modify getData & getListOfValues to work with your data.
-3. modify the {batch_name}/template.yml
+Or run the full pipeline and publish in one command:
+
+```bash
+make publish
+```
+
+
+## Create a new batch
+
+1. Use the `create_batch` R function:
+   ```R
+   source("create_batch.R")
+   create_batch("testBatchName", "testExampleValue")
+   ```
+2. In the new `{batch_name}` folder, modify `getData.R` and `getListOfValues.R` to work with your data.
+3. Modify the `{batch_name}/template.qmd` report template.
+
 
 ----------------------------------------------------------------------------
 
-# Attribution
+## Attribution
+
 This project is powered by the [quartobatch template](https://github.com/7yl4r/quartobatch).
 
 ----------------------------------------------------------------------------
 
-# Additional Notes
-The quartobatch template is a generalized implementation inspired by the following projects:
-
-* [FCRWQDC_data_ingest](https://github.com/USF-IMARS/FCRWQDC_data_ingest) : Applies a common template across water quality analytes & data providers from multiple data file sources
-* [seus-mbon-cruise-ctd-processing](https://github.com/USF-IMARS/seus-mbon-cruise-ctd-processing) : Applies a common template across CTD casts and research cruises.

@@ -16,3 +16,8 @@ site_libs/*
 
 *.html
 **/*.quarto_ipynb
+
+# pipeline data (cruise inventory CSV is tracked)
+data/01_raw/
+data/processed/
+data/interpolated/
