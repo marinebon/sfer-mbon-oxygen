@@ -10,7 +10,3 @@ read_ctd_mapping <- function(csv_path = here::here(MAPPING_CSV)) {
 unique_cruise_ids <- function(mapping) {
   sort(unique(mapping$cruise_id))
 }
-
-stations_for_cruise <- function(mapping, cruise_id) {
-  mapping[mapping$cruise_id == cruise_id, , drop = FALSE]
-}
