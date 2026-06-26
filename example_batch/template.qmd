@@ -1,0 +1,20 @@
+---
+title: "example_1 Report"
+format: html
+params:
+  batch_value: "example_1"  # must match value in generate_batch_qmds.R
+  batch_name: "example_batch"
+---
+
+<!-- 
+This is the template that will be generated for
+each batch_value.
+-->
+
+```{R, get data for params$batch_value}
+#| code-summary: get data for params$batch_value
+source(here::here(glue::glue("{params$batch_name}/getData.R")))
+
+df <- getData(params$batch_value)
+head(df)
+```

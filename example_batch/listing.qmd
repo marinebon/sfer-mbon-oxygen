@@ -1,0 +1,11 @@
+---
+title: "Example Reports"
+description: "Reports for each value in the batch."
+code-fold: true
+listing:
+  contents: batched_reports
+  type: grid
+  fields: [image, title]
+---
+
+Click on any element for more details.

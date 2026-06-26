@@ -1,0 +1,5 @@
+---
+title: "quartobatch template"
+---
+
+This project uses [quartobatch](https://github.com/7yl4r/quartobatch).
