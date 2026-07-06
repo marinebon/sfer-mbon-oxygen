@@ -11,9 +11,10 @@ SHELL := /bin/bash
 RAW_DIR := data/01_raw
 PROCESSED_DIR := data/processed
 INTERP_DIR := data/interpolated
-# JULIA_PROJECT := julia
+JULIA_PROJECT := julia
+CRUISE ?= SV18067
 
-.PHONY: help download process report-process clean
+.PHONY: help download process report-process interpolate clean
 
 help:
 	@echo "SFER MBON Oxygen pipeline"
@@ -22,6 +23,7 @@ help:
 	@echo "  make download        Download raw CTD data for each cruise in data/ctd_datasetid_cruisename_stationname_mapping.csv"
 	@echo "  make process         Clean raw CTD casts with oce into data/02_clean/ (skips up-to-date outputs)"
 	@echo "  make report-process  Render reports/processing_summary.qmd (run after make process)"
+	@echo "  make interpolate     Build DIVAnd oxygen fields for one cruise (CRUISE=$(CRUISE))"
 	@echo "  make clean           Remove generated data and rendered site output"
 
 # all: render
@@ -34,14 +36,14 @@ process:
 
 report-process:
 	quarto render reports/processing_summary.qmd
+
+interpolate:
+	julia --project=$(JULIA_PROJECT) scripts/interpolate_cruise.jl $(CRUISE)
 #
-# interpolate: process
-# 	julia --project=$(JULIA_PROJECT) scripts/interpolate_cruise.jl $(MAPPING_CSV)
-#
-# render: interpolate
+# render:
 # 	quarto render
 #
-# publish: render
+# publish: 
 # 	quarto publish
 
 clean:
