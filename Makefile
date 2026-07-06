@@ -20,7 +20,7 @@ help:
 	@echo ""
 	@echo "Targets:"
 	@echo "  make download        Download raw CTD data for each cruise in data/ctd_datasetid_cruisename_stationname_mapping.csv"
-	@echo "  make process         Clean raw CTD casts with oce into data/02_clean/"
+	@echo "  make process         Clean raw CTD casts with oce into data/02_clean/ (skips up-to-date outputs)"
 	@echo "  make report-process  Render reports/processing_summary.qmd (run after make process)"
 	@echo "  make clean           Remove generated data and rendered site output"
 

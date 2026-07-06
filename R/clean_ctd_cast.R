@@ -1,3 +1,7 @@
+is_cast_already_processed <- function(raw_file, output_file) {
+  file.exists(output_file) && file.mtime(output_file) >= file.mtime(raw_file)
+}
+
 clean_ctd_cast <- function(
     raw_file,
     output_file = NULL,
@@ -15,16 +19,12 @@ clean_ctd_cast <- function(
     output_file <- here::here("data", "02_clean", paste0(cast_id, ".csv"))
   }
 
-  if (file.exists(output_file) && !overwrite) {
-    raw_rows <- count_pressure_rows(raw_file)
-    clean_rows <- nrow(read.csv(output_file))
+  if (!overwrite && is_cast_already_processed(raw_file, output_file)) {
     return(list(
       status = "skipped",
       cast_id = cast_id,
       cruise_id = cruise_id,
-      output_file = output_file,
-      raw_rows = raw_rows,
-      clean_rows = clean_rows
+      output_file = output_file
     ))
   }
 
