@@ -20,7 +20,8 @@ Cruises and stations are listed in [`data/ctd_datasetid_cruisename_stationname_m
 | Step | Target | What it does |
 |------|--------|--------------|
 | 1 | `make download` | Run [`scripts/download_cruises.R`](scripts/download_cruises.R) to fetch CTD datasets from GCOOS ERDDAP into `data/01_raw/{cruise_id}/` |
-| 2 | `make process` | Run [`scripts/clean_bin_ctd.R`](scripts/clean_bin_ctd.R) to QC, clean, and depth-bin CTD observations |
+| 2 | `make process` | Run [`scripts/clean_bin_ctd.R`](scripts/clean_bin_ctd.R) to clean each cast with `oce::ctdTrim()` and `oce::ctdDecimate()` into `data/02_clean/` |
+| 2b | `make report-process` | Render [`reports/processing_summary.qmd`](reports/processing_summary.qmd) summarizing raw vs cleaned row counts and example profiles |
 | 3 | `make interpolate` | Run [`scripts/interpolate_cruise.jl`](scripts/interpolate_cruise.jl) to build gridded oxygen fields with [DIVAnd.jl](https://github.com/gher-uliege/DIVAnd.jl) for each cruise |
 | 4 | `make render` | Render the Quarto website: expand [`example_batch/template.qmd`](example_batch/template.qmd) into per-cruise `.qmd` files and build HTML reports |
 | 5 | `make publish` | Run the full pipeline above, then `quarto publish` to deploy the site (e.g. GitHub Pages) |
@@ -34,6 +35,7 @@ Individual steps can be run separately:
 ```bash
 make download
 make process
+make report-process
 make interpolate
 make render
 ```
@@ -54,6 +56,10 @@ data/
 │   ├── {cruise_id}/         # one folder per cruise
 │   │   └── SFER_CTD_*.csv   # one file per ERDDAP dataset
 │   └── download_log.csv     # per-dataset download status (generated)
+├── 02_clean/                # oce-cleaned CTD files (one CSV per cast)
+│   └── processing_log.csv   # per-cast processing status (generated)
+reports/
+└── processing_summary.qmd   # post-process QC report (render with make report-process)
 ├── processed/{cruise_id}/     # cleaned, depth-binned CTD (R output)
 └── interpolated/{cruise_id}/  # gridded oxygen fields (DIVAnd.jl output)
 ```

@@ -8,13 +8,43 @@ params:
 
 <!-- 
 This is the template that will be generated for
-each batch_value.
+each batch_value (research cruise).
 -->
 
-```{R, get data for params$batch_value}
-#| code-summary: get data for params$batch_value
-source(here::here(glue::glue("{params$batch_name}/getData.R")))
+```{r setup}
+#| include: false
+library(here)
+library(glue)
+```
 
-df <- getData(params$batch_value)
-head(df)
+```{r get-data}
+#| code-summary: Load processed and interpolated CTD data for this cruise
+source(here(glue("{params$batch_name}/getData.R")))
+
+data <- getData(params$batch_value)
+ctd <- data$ctd_binned
+field <- data$oxygen_field
+head(ctd)
+```
+
+## CTD summary
+
+```{r ctd-summary}
+#| code-summary: Cast and depth-bin summary
+data.frame(
+  casts = length(unique(ctd$cast_id)),
+  depth_bins = length(unique(ctd$depth_bin_m)),
+  oxygen_range_umol_kg = range(ctd$oxygen_umol_kg, na.rm = TRUE)
+)
+```
+
+## Interpolated oxygen field
+
+```{r field-preview}
+#| code-summary: Preview gridded DIVAnd output
+if (is.null(field)) {
+  "Interpolated field not found. Run `make interpolate` first."
+} else {
+  head(field)
+}
 ```

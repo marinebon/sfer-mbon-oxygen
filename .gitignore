@@ -19,5 +19,6 @@ site_libs/*
 
 # pipeline data (cruise inventory CSV is tracked)
 data/01_raw/
+data/02_clean/
 data/processed/
 data/interpolated/

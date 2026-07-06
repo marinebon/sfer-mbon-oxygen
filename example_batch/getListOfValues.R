@@ -1,10 +1,9 @@
 getListOfValues <- function() {
-  examples <- c(
-    "example_1",
-    "example_2", 
-    "example_3",
-    "example_4",
-    "example_5"
-  )
-  return(examples)
+  if (!requireNamespace("here", quietly = TRUE)) {
+    install.packages("here", repos = "https://cloud.r-project.org")
+  }
+
+  source(here::here("scripts/read_ctd_mapping.R"), local = TRUE)
+  mapping <- read_ctd_mapping()
+  return(unique_cruise_ids(mapping))
 }

@@ -1,14 +1,28 @@
-getData <- function(batch_value, n_rows = 10) {
-  print(paste('getting data for', batch_value))
-  # seed based on batch_value so the data is reproducible
-  set.seed(sum(as.integer(charToRaw(batch_value))))
-  
-  data <- data.frame(
-    id = 1:n_rows,
-    value = runif(n_rows, min = 0, max = 100),
-    category = sample(c("A", "B", "C"), n_rows, replace = TRUE),
-    timestamp = seq(as.POSIXct("2024-01-01"), by = "day", length.out = n_rows)
+getData <- function(batch_value) {
+  if (!requireNamespace("here", quietly = TRUE)) {
+    install.packages("here", repos = "https://cloud.r-project.org")
+  }
+
+  processed_file <- here::here(
+    "data/processed", batch_value, "ctd_binned.csv"
   )
-  
-  return(data)
+  interp_file <- here::here(
+    "data/interpolated", batch_value, "oxygen_field.csv"
+  )
+
+  if (!file.exists(processed_file)) {
+    stop(
+      "Processed CTD data not found for ", batch_value,
+      ". Run `make process` (or `make publish`) first."
+    )
+  }
+
+  list(
+    ctd_binned = read.csv(processed_file, stringsAsFactors = FALSE),
+    oxygen_field = if (file.exists(interp_file)) {
+      read.csv(interp_file, stringsAsFactors = FALSE)
+    } else {
+      NULL
+    }
+  )
 }
