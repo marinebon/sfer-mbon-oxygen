@@ -62,7 +62,7 @@ data.frame(
 
 ## Interpolated field map
 
-The map below is interactive: pan and zoom to explore the gridded dissolved oxygen field. Use **Prev** / **Next** to step through four ecological depth layers (neuston surface, near-surface, mixed layer, circalittoral). CTD observations are colored with the same palette as the interpolated field.
+The map below is interactive: pan and zoom to explore the gridded dissolved oxygen field. Use **Prev** / **Next** to step through depth bands. CTD observations are colored with the same palette as the interpolated field.
 
 ```{r oxygen-map}
 #| code-summary: Interactive map with interpolated field and observation points

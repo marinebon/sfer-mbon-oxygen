@@ -23,13 +23,13 @@ plot_oxygen_map <- function(field, observations) {
   layers <- oxygen_depth_layers(max_depth = max_depth)
 
   obs <- as.data.frame(observations)
-  o2_range <- range(
+  global_o2_range <- range(
     c(field$dissolved_oxygen, obs$dissolved_oxygen),
     na.rm = TRUE
   )
   pal <- leaflet::colorNumeric(
-    viridisLite::viridis(256, option = "magma"),
-    domain = o2_range,
+    viridisLite::turbo(256),
+    domain = global_o2_range,
     na.color = "transparent"
   )
 
@@ -83,8 +83,7 @@ plot_oxygen_map <- function(field, observations) {
     depth_groups[[length(depth_groups) + 1L]] <- list(
       field = field_group,
       obs = if (nrow(obs_slice) > 0) obs_group else NULL,
-      label = layer$label,
-      range = layer$range_label
+      label = layer$range_label
     )
 
     map <- map |>
@@ -95,7 +94,7 @@ plot_oxygen_map <- function(field, observations) {
         lng2 = ~lon2,
         lat2 = ~lat2,
         fillColor = ~pal(dissolved_oxygen),
-        fillOpacity = 0.75,
+        fillOpacity = 0.88,
         color = NA,
         weight = 0,
         group = field_group
@@ -143,7 +142,7 @@ plot_oxygen_map <- function(field, observations) {
     ) |>
     leaflet::addLegend(
       pal = pal,
-      values = o2_range,
+      values = global_o2_range,
       title = "O\u2082 (mg/L)",
       position = "bottomright"
     ) |>
@@ -160,8 +159,7 @@ function(el, x) {
   var groups = %s;
   var idx = 0;
   var depthLabelEl = null;
-  var depthRangeEl = null;
-  var depthCountEl = null;
+  var depthMetaEl = null;
   var prevBtn = null;
   var nextBtn = null;
   var map = null;
@@ -207,11 +205,8 @@ function(el, x) {
     if (depthLabelEl) {
       depthLabelEl.textContent = groups[i].label;
     }
-    if (depthRangeEl) {
-      depthRangeEl.textContent = groups[i].range;
-    }
-    if (depthCountEl) {
-      depthCountEl.textContent = 'Layer ' + (i + 1) + ' of ' + groups.length;
+    if (depthMetaEl) {
+      depthMetaEl.textContent = (i + 1) + ' of ' + groups.length;
     }
   }
 
@@ -243,18 +238,15 @@ function(el, x) {
         'min-width:240px'
       ].join(';');
       div.innerHTML = [
-        '<div style=\"font-weight:600;margin-bottom:8px;\">Depth layer</div>',
         '<div style=\"display:flex;align-items:center;justify-content:space-between;gap:8px;\">',
         '<button type=\"button\" class=\"depth-prev\" style=\"padding:4px 8px;\">&#9664; Prev</button>',
-        '<div class=\"depth-current\" style=\"flex:1;text-align:center;font-size:15px;font-weight:700;\"></div>',
+        '<div class=\"depth-current\" style=\"flex:1;text-align:center;font-size:16px;font-weight:700;\"></div>',
         '<button type=\"button\" class=\"depth-next\" style=\"padding:4px 8px;\">Next &#9654;</button>',
         '</div>',
-        '<div class=\"depth-range\" style=\"margin-top:6px;text-align:center;color:#333;font-size:12px;\"></div>',
-        '<div class=\"depth-count\" style=\"margin-top:4px;text-align:center;color:#666;font-size:12px;\"></div>'
+        '<div class=\"depth-meta\" style=\"margin-top:6px;text-align:center;color:#444;font-size:12px;\"></div>'
       ].join('');
       depthLabelEl = div.querySelector('.depth-current');
-      depthRangeEl = div.querySelector('.depth-range');
-      depthCountEl = div.querySelector('.depth-count');
+      depthMetaEl = div.querySelector('.depth-meta');
       prevBtn = div.querySelector('.depth-prev');
       nextBtn = div.querySelector('.depth-next');
       L.DomEvent.disableClickPropagation(div);
