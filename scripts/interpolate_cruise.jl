@@ -119,6 +119,58 @@ function load_cruise_observations(cruise_id::AbstractString, clean_root::Abstrac
     return obs
 end
 
+function depth_slice_tolerance(depth_range)
+    if length(depth_range) > 1
+        return max(DEPTH_RES_M / 2, minimum(diff(collect(depth_range))) / 2)
+    end
+    return DEPTH_RES_M / 2
+end
+
+function interpolate_depth_slice(
+    lon_range,
+    lat_range,
+    depth,
+    depth_tol,
+    x,
+    y,
+    z,
+    f,
+    len_horiz,
+    epsilon2,
+)
+    mask_obs = abs.(z .- depth) .<= depth_tol
+    n_obs = count(mask_obs)
+
+    mask, (pm, pn), (xi, yi) = DIVAnd_rectdom(lon_range, lat_range)
+
+    if n_obs < 3
+        fill_value = if n_obs == 0
+            missing
+        else
+            mean(f[mask_obs])
+        end
+        fi = fill(fill_value, size(mask))
+        return fi
+    end
+
+    x2 = x[mask_obs]
+    y2 = y[mask_obs]
+    f2 = f[mask_obs]
+    f2_mean = mean(f2)
+
+    fi, _ = DIVAndrun(
+        mask,
+        (pm, pn),
+        (xi, yi),
+        (x2, y2),
+        f2 .- f2_mean,
+        len_horiz,
+        epsilon2,
+    )
+
+    return fi .+ f2_mean
+end
+
 function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractString, interp_root::AbstractString)
     output_dir = joinpath(interp_root, cruise_id)
     output_file = joinpath(output_dir, "oxygen_field.csv")
@@ -147,24 +199,53 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
     lon_range = range(lon_min, stop = lon_max, length = n_lon)
     lat_range = range(lat_min, stop = lat_max, length = n_lat)
     depth_range = range(depth_min, stop = depth_max, length = n_depth)
+    depth_tol = depth_slice_tolerance(depth_range)
 
-    mask, (pm, pn, po), (xi, yi, zi) = DIVAnd_rectdom(lon_range, lat_range, depth_range)
-
-    len = (0.05, 0.05, 5.0)
+    len_horiz = (0.05, 0.05)
     epsilon2 = 1.0
 
-    f_mean = mean(f)
-    println("Background (observation mean): $(round(f_mean, digits=3)) mg/L")
-    fi, _ = DIVAndrun(
-        mask,
-        (pm, pn, po),
-        (xi, yi, zi),
-        (x, y, z),
-        f .- f_mean,
-        len,
-        epsilon2,
+    println(
+        "Interpolating independently per depth slice (±$(round(depth_tol, digits=2)) m tolerance)",
     )
-    fi .+= f_mean
+
+    fi = Array{Union{Missing, Float64}}(undef, n_lon, n_lat, n_depth)
+
+    for (idep, depth) in enumerate(depth_range)
+        fi[:, :, idep] = interpolate_depth_slice(
+            lon_range,
+            lat_range,
+            depth,
+            depth_tol,
+            x,
+            y,
+            z,
+            f,
+            len_horiz,
+            epsilon2,
+        )
+    end
+
+    # Fill depth slices with no observations from neighboring depth means.
+    depth_means = [
+        begin
+            mask_obs = abs.(z .- depth) .<= depth_tol
+            count(mask_obs) > 0 ? mean(f[mask_obs]) : missing
+        end
+        for depth in depth_range
+    ]
+    for i in eachindex(depth_means)
+        if ismissing(depth_means[i])
+            neighbors = [depth_means[j] for j in eachindex(depth_means) if !ismissing(depth_means[j])]
+            depth_means[i] = isempty(neighbors) ? mean(f) : mean(neighbors)
+        end
+    end
+    for idep in 1:n_depth
+        if any(ismissing.(fi[:, :, idep]))
+            fi[:, :, idep] = replace(fi[:, :, idep], missing => depth_means[idep])
+        end
+    end
+
+    fi = Float64.(fi)
 
     grid = DataFrame(
         longitude = vec([lon for lon in lon_range, lat in lat_range, depth in depth_range]),
