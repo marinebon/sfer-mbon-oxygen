@@ -7,10 +7,37 @@ Pkg.instantiate()
 using CSV
 using DataFrames
 using DIVAnd
+using Statistics
 
 const MAPPING_CSV = joinpath(@__DIR__, "..", "data", "ctd_datasetid_cruisename_stationname_mapping.csv")
 const CLEAN_ROOT = joinpath(@__DIR__, "..", "data", "02_clean")
 const INTERP_ROOT = joinpath(@__DIR__, "..", "data", "interpolated")
+const HORIZ_RES_DEG = 0.03
+const DEPTH_RES_M = 4.0
+const MIN_GRID_POINTS = 30
+const MAX_GRID_POINTS = 100
+const MAX_GRID_POINTS_TOTAL = 120_000
+
+function grid_size(span, resolution, min_points, max_points)
+    n = max(min_points, round(Int, span / resolution) + 1)
+    min(n, max_points)
+end
+
+function capped_grid_sizes(lon_span, lat_span, depth_span)
+    n_lon = grid_size(lon_span, HORIZ_RES_DEG, MIN_GRID_POINTS, MAX_GRID_POINTS)
+    n_lat = grid_size(lat_span, HORIZ_RES_DEG, MIN_GRID_POINTS, MAX_GRID_POINTS)
+    n_depth = grid_size(depth_span, DEPTH_RES_M, MIN_GRID_POINTS, MAX_GRID_POINTS)
+
+    total = n_lon * n_lat * n_depth
+    if total > MAX_GRID_POINTS_TOTAL
+        scale = (MAX_GRID_POINTS_TOTAL / total)^(1 / 3)
+        n_lon = max(MIN_GRID_POINTS, round(Int, n_lon * scale))
+        n_lat = max(MIN_GRID_POINTS, round(Int, n_lat * scale))
+        n_depth = max(MIN_GRID_POINTS, round(Int, n_depth * scale))
+    end
+
+    (n_lon, n_lat, n_depth)
+end
 
 function read_ctd_mapping(csv_path::AbstractString)
     DataFrame(CSV.File(csv_path))
@@ -109,9 +136,13 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
     lat_min, lat_max = extrema(y)
     depth_min, depth_max = extrema(z)
 
-    n_lon = 20
-    n_lat = 20
-    n_depth = 15
+    n_lon, n_lat, n_depth = capped_grid_sizes(
+        lon_max - lon_min,
+        lat_max - lat_min,
+        depth_max - depth_min,
+    )
+
+    println("Grid size: $n_lon x $n_lat x $n_depth ($(n_lon * n_lat * n_depth) points)")
 
     lon_range = range(lon_min, stop = lon_max, length = n_lon)
     lat_range = range(lat_min, stop = lat_max, length = n_lat)
@@ -122,7 +153,18 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
     len = (0.05, 0.05, 5.0)
     epsilon2 = 1.0
 
-    fi, _ = DIVAndrun(mask, (pm, pn, po), (xi, yi, zi), (x, y, z), f, len, epsilon2)
+    f_mean = mean(f)
+    println("Background (observation mean): $(round(f_mean, digits=3)) mg/L")
+    fi, _ = DIVAndrun(
+        mask,
+        (pm, pn, po),
+        (xi, yi, zi),
+        (x, y, z),
+        f .- f_mean,
+        len,
+        epsilon2,
+    )
+    fi .+= f_mean
 
     grid = DataFrame(
         longitude = vec([lon for lon in lon_range, lat in lat_range, depth in depth_range]),
