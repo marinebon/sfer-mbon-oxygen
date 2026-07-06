@@ -18,21 +18,23 @@ ensure_packages <- function(pkgs) {
 }
 
 ensure_packages(c(
-  "here", "glue", "dplyr", "leaflet", "raster", "sp", "viridisLite"
+  "here", "glue", "dplyr", "leaflet",
+  "viridisLite", "htmlwidgets", "jsonlite"
 ))
 
 library(here)
 library(glue)
 library(dplyr)
 library(leaflet)
-library(raster)
-library(sp)
 library(viridisLite)
+library(htmlwidgets)
+library(jsonlite)
 ```
 
 ```{r get-data}
 #| code-summary: Load cleaned observations and interpolated oxygen field
 source(here(glue("{params$batch_name}/getData.R")))
+source(here(glue("{params$batch_name}/depth_layers.R")))
 source(here(glue("{params$batch_name}/plot_oxygen_map.R")))
 
 data <- getData(params$batch_value)
@@ -60,7 +62,7 @@ data.frame(
 
 ## Interpolated field map
 
-The map below is interactive: pan and zoom to explore the gridded dissolved oxygen field at a single depth level. CTD observations are colored with the same palette as the interpolated field. Switch basemaps with the layer control.
+The map below is interactive: pan and zoom to explore the gridded dissolved oxygen field. Use **Prev** / **Next** to step through four ecological depth layers (neuston surface, near-surface, mixed layer, circalittoral). CTD observations are colored with the same palette as the interpolated field.
 
 ```{r oxygen-map}
 #| code-summary: Interactive map with interpolated field and observation points
@@ -68,8 +70,7 @@ The map below is interactive: pan and zoom to explore the gridded dissolved oxyg
 if (is.null(field)) {
   cat("Interpolated field not found. Run `make interpolate CRUISE=", params$batch_value, "` first.", sep = "")
 } else {
-  depth_m <- params$map_depth_m
-  map <- plot_oxygen_map(field, obs, depth_m = depth_m)
+  map <- plot_oxygen_map(field, obs)
   if (is.null(map)) {
     cat("No field data available near the selected depth.")
   } else {
