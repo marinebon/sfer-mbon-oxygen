@@ -1,0 +1,84 @@
+---
+title: "SV18067 Report"
+format: html
+params:
+  batch_value: "SV18067"
+  batch_name: "cruise_anoxic_depth"
+---
+
+```{r setup}
+#| include: false
+ensure_packages <- function(pkgs) {
+  for (pkg in pkgs) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      install.packages(pkg, repos = "https://cloud.r-project.org")
+    }
+  }
+}
+
+ensure_packages(c(
+  "here", "glue", "dplyr", "leaflet",
+  "viridisLite", "htmlwidgets", "jsonlite"
+))
+
+library(here)
+library(glue)
+library(dplyr)
+library(leaflet)
+library(viridisLite)
+library(htmlwidgets)
+library(jsonlite)
+```
+
+```{r get-data}
+#| code-summary: Load cleaned observations and interpolated oxygen field
+source(here(glue("{params$batch_name}/getData.R")))
+source(here(glue("{params$batch_name}/anoxic_depth.R")))
+source(here(glue("{params$batch_name}/plot_anoxic_depth_map.R")))
+
+data <- getData(params$batch_value)
+obs <- data$observations
+field <- data$oxygen_field
+```
+
+## Cruise `r params$batch_value`
+
+This report maps the **shallowest depth** at which the interpolated dissolved oxygen field falls below a chosen threshold (anoxic/hypoxic boundary). Use the slider on the map to change the O₂ threshold; grid cells are colored by **depth in meters**.
+
+```{r data-summary}
+#| code-summary: Observation and field summary
+data.frame(
+  casts = length(unique(obs$cast_id)),
+  observation_rows = nrow(obs),
+  field_grid_points = if (is.null(field)) NA_integer_ else nrow(field),
+  oxygen_range_mg_l = if ("dissolved_oxygen" %in% names(obs)) {
+    range(obs$dissolved_oxygen, na.rm = TRUE)
+  } else {
+    c(NA_real_, NA_real_)
+  }
+)
+```
+
+## Anoxic depth map
+
+Pan and zoom to explore where oxygen drops below the threshold. Each colored cell shows the **lowest depth** (closest to the surface) where interpolated O₂ is below the threshold. Cells with no sub-threshold oxygen at any depth are left transparent. White markers are CTD observations.
+
+```{r anoxic-depth-map}
+#| code-summary: Interactive map of shallowest anoxic depth
+
+if (is.null(field)) {
+  cat(
+    "Interpolated field not found. Run `make interpolate CRUISE=",
+    params$batch_value,
+    "` first.",
+    sep = ""
+  )
+} else {
+  map <- plot_anoxic_depth_map(field, obs)
+  if (is.null(map)) {
+    cat("No interpolated field grid available for this cruise.")
+  } else {
+    map
+  }
+}
+```
