@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "cruise_anoxic_depth/listing.html",
+    "href": "cruise_anoxic_depth/listing.html",
+    "title": "cruise_anoxic_depth",
+    "section": "",
+    "text": "Click on any element for more details.\n\n\n\n\n\n\n\n\n\n\n\n\nSV18067 Report\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "cruise_oxygen/listing.html",
+    "href": "cruise_oxygen/listing.html",
+    "title": "cruise_oxygen",
+    "section": "",
+    "text": "Click on any element for more details.\n\n\n\n\n\n\n\n\n\n\n\n\nSV18067 Report\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "SFER MBON Oxygen",
+    "section": "",
+    "text": "Cruise reports generated from cleaned CTD data and DIVAnd-interpolated dissolved oxygen fields.\n\nOxygen field maps\nAnoxic depth maps"
+  },
+  {
+    "objectID": "cruise_oxygen/batched_reports/SV18067.html",
+    "href": "cruise_oxygen/batched_reports/SV18067.html",
+    "title": "SV18067 Report",
+    "section": "",
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+  },
+  {
+    "objectID": "cruise_oxygen/batched_reports/SV18067.html#cruise-sv18067",
+    "href": "cruise_oxygen/batched_reports/SV18067.html#cruise-sv18067",
+    "title": "SV18067 Report",
+    "section": "Cruise SV18067",
+    "text": "Cruise SV18067\nThis report compares the DIVAnd-interpolated dissolved oxygen field with cleaned CTD observations from data/02_clean/.\n\n\nObservation and field summary\ndata.frame(\n  casts = length(unique(obs$cast_id)),\n  observation_rows = nrow(obs),\n  field_grid_points = if (is.null(field)) NA_integer_ else nrow(field),\n  oxygen_range_mg_l = if (\"dissolved_oxygen\" %in% names(obs)) {\n    range(obs$dissolved_oxygen, na.rm = TRUE)\n  } else {\n    c(NA_real_, NA_real_)\n  }\n)\n\n\n  casts observation_rows field_grid_points oxygen_range_mg_l\n1    28             2637             21273            3.0294\n2    28             2637             21273            5.3231"
+  },
+  {
+    "objectID": "cruise_oxygen/batched_reports/SV18067.html#interpolated-field-map",
+    "href": "cruise_oxygen/batched_reports/SV18067.html#interpolated-field-map",
+    "title": "SV18067 Report",
+    "section": "Interpolated field map",
+    "text": "Interpolated field map\nThe map below is interactive: pan and zoom to explore the gridded dissolved oxygen field. Use Prev / Next to step through depth bands. CTD observations are colored with the same palette as the interpolated field.\n\n\nInteractive map with interpolated field and observation points\nif (is.null(field)) {\n  cat(\"Interpolated field not found. Run `make interpolate CRUISE=\", params$batch_value, \"` first.\", sep = \"\")\n} else {\n  map &lt;- plot_oxygen_map(field, obs)\n  if (is.null(map)) {\n    cat(\"No field data available near the selected depth.\")\n  } else {\n    map\n  }\n}"
+  },
+  {
+    "objectID": "cruise_anoxic_depth/batched_reports/SV18067.html",
+    "href": "cruise_anoxic_depth/batched_reports/SV18067.html",
+    "title": "SV18067 Report",
+    "section": "",
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+  },
+  {
+    "objectID": "cruise_anoxic_depth/batched_reports/SV18067.html#cruise-sv18067",
+    "href": "cruise_anoxic_depth/batched_reports/SV18067.html#cruise-sv18067",
+    "title": "SV18067 Report",
+    "section": "Cruise SV18067",
+    "text": "Cruise SV18067\nThis report maps the shallowest depth at which the interpolated dissolved oxygen field falls below a chosen threshold (anoxic/hypoxic boundary). Use the slider on the map to change the O₂ threshold; grid cells are colored by depth in meters.\n\n\nObservation and field summary\ndata.frame(\n  casts = length(unique(obs$cast_id)),\n  observation_rows = nrow(obs),\n  field_grid_points = if (is.null(field)) NA_integer_ else nrow(field),\n  oxygen_range_mg_l = if (\"dissolved_oxygen\" %in% names(obs)) {\n    range(obs$dissolved_oxygen, na.rm = TRUE)\n  } else {\n    c(NA_real_, NA_real_)\n  }\n)\n\n\n  casts observation_rows field_grid_points oxygen_range_mg_l\n1    28             2637             21273            3.0294\n2    28             2637             21273            5.3231"
+  },
+  {
+    "objectID": "cruise_anoxic_depth/batched_reports/SV18067.html#anoxic-depth-map",
+    "href": "cruise_anoxic_depth/batched_reports/SV18067.html#anoxic-depth-map",
+    "title": "SV18067 Report",
+    "section": "Anoxic depth map",
+    "text": "Anoxic depth map\nPan and zoom to explore where oxygen drops below the threshold. Each colored cell shows the shallowest depth (closest to the surface) where interpolated O₂ is below the threshold — not the depth where O₂ equals the threshold. When the threshold exceeds surface oxygen across the domain, expect uniform shallow depths (~2 m, the top of the interpolated grid). Hover a cell for its depth in meters. The color bar uses a fixed depth scale so colors are comparable across thresholds.\n\n\nInteractive map of shallowest anoxic depth\nif (is.null(field)) {\n  cat(\n    \"Interpolated field not found. Run `make interpolate CRUISE=\",\n    params$batch_value,\n    \"` first.\",\n    sep = \"\"\n  )\n} else {\n  map &lt;- plot_anoxic_depth_map(field, obs)\n  if (is.null(map)) {\n    cat(\"No interpolated field grid available for this cruise.\")\n  } else {\n    map\n  }\n}"
+  }
+]

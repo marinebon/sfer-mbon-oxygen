@@ -1,0 +1,14 @@
+[
+  {
+    "listing": "/cruise_anoxic_depth/listing.html",
+    "items": [
+      "/cruise_anoxic_depth/batched_reports/SV18067.html"
+    ]
+  },
+  {
+    "listing": "/cruise_oxygen/listing.html",
+    "items": [
+      "/cruise_oxygen/batched_reports/SV18067.html"
+    ]
+  }
+]
