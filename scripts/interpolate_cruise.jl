@@ -20,6 +20,11 @@ const DEPTH_RES_M = 4.0
 const MIN_GRID_POINTS = 30
 const MAX_GRID_POINTS = 100
 const MAX_GRID_POINTS_TOTAL = 120_000
+const MIN_BATHY_COVERAGE = 0.35
+const BATHY_GRID_SCALE = 3
+const MAX_BATHY_LON = 200
+const MAX_BATHY_LAT = 200
+const LAND_ELEVATION_M = -1.0
 
 function grid_size(span, resolution, min_points, max_points)
     n = max(min_points, round(Int, span / resolution) + 1)
@@ -122,7 +127,14 @@ function load_cruise_observations(cruise_id::AbstractString, clean_root::Abstrac
     return obs
 end
 
-function ensure_bluetopo(
+function bathymetry_grid_sizes(n_lon::Int, n_lat::Int)
+    (
+        min(n_lon * BATHY_GRID_SCALE, MAX_BATHY_LON),
+        min(n_lat * BATHY_GRID_SCALE, MAX_BATHY_LAT),
+    )
+end
+
+function ensure_land_mask(
     cruise_id::AbstractString,
     lon_min::Float64,
     lat_min::Float64,
@@ -132,38 +144,142 @@ function ensure_bluetopo(
     n_lat::Int,
 )
     mkpath(BATH_ROOT)
-    bath_file = joinpath(BATH_ROOT, "$(cruise_id)_bluetopo.tif")
+    mask_file = joinpath(BATH_ROOT, "$(cruise_id)_land_mask_$(n_lon)x$(n_lat).tif")
+    if isfile(mask_file)
+        return mask_file
+    end
+    script = joinpath(REPO_ROOT, "scripts", "rasterize_land_mask.py")
+    println("Rasterizing land mask for $(cruise_id) at $(n_lon)x$(n_lat)")
+    run(
+        `python3 $(script) $(lon_min) $(lat_min) $(lon_max) $(lat_max) --n-lon $(n_lon) --n-lat $(n_lat) -o $(mask_file)`,
+    )
+    return mask_file
+end
+
+function load_land_mask(path::AbstractString, n_lon::Int, n_lat::Int)
+    ArchGDAL.read(path) do dataset
+        width = ArchGDAL.width(dataset)
+        height = ArchGDAL.height(dataset)
+        if width != n_lon || height != n_lat
+            error("Land mask grid size $(width)x$(height) does not match $(n_lon)x$(n_lat)")
+        end
+        band = ArchGDAL.getband(dataset, 1)
+        reverse(ArchGDAL.read(band, 0, 0, width, height), dims=2)
+    end
+end
+
+function apply_land_mask_to_elevation!(
+    elevation::AbstractMatrix{<:Real},
+    land_mask::AbstractMatrix{<:Real},
+)
+    for idx in eachindex(elevation)
+        if land_mask[idx] >= 0.5
+            elevation[idx] = NaN
+        end
+    end
+    return elevation
+end
+
+function ensure_bluetopo(
+    cruise_id::AbstractString,
+    lon_min::Float64,
+    lat_min::Float64,
+    lon_max::Float64,
+    lat_max::Float64,
+    bath_n_lon::Int,
+    bath_n_lat::Int,
+)
+    mkpath(BATH_ROOT)
+    bath_file = joinpath(BATH_ROOT, "$(cruise_id)_bluetopo_$(bath_n_lon)x$(bath_n_lat).tif")
     if isfile(bath_file)
-        return bath_file
+        try
+            elev = load_bluetopo_elevation(bath_file, bath_n_lon, bath_n_lat)
+            coverage = count(isfinite.(elev)) / length(elev)
+            if coverage >= MIN_BATHY_COVERAGE
+                return bath_file
+            end
+            println(
+                "BlueTopo cache coverage $(round(100 * coverage, digits=1))%; re-fetching...",
+            )
+        catch
+            println("BlueTopo cache invalid for current grid; re-fetching...")
+        end
+        rm(bath_file; force=true)
     end
 
     script = joinpath(REPO_ROOT, "scripts", "download_bluetopo.py")
-    println("Fetching BlueTopo bathymetry for $(cruise_id)")
+    println("Fetching BlueTopo bathymetry for $(cruise_id) at $(bath_n_lon)x$(bath_n_lat)")
     run(
-        `python3 $(script) $(lon_min) $(lat_min) $(lon_max) $(lat_max) --n-lon $(n_lon) --n-lat $(n_lat) -o $(bath_file)`,
+        `python3 $(script) $(lon_min) $(lat_min) $(lon_max) $(lat_max) --n-lon $(bath_n_lon) --n-lat $(bath_n_lat) -o $(bath_file)`,
     )
     return bath_file
 end
 
-function load_bluetopo_elevation(path::AbstractString, n_lon::Int, n_lat::Int)
+function load_bluetopo_rasters(path::AbstractString, n_lon::Int, n_lat::Int)
     ArchGDAL.read(path) do dataset
         width = ArchGDAL.width(dataset)
         height = ArchGDAL.height(dataset)
         if width != n_lon || height != n_lat
             error("BlueTopo grid size $(width)x$(height) does not match $(n_lon)x$(n_lat)")
         end
-        band = ArchGDAL.getband(dataset, 1)
-        data = ArchGDAL.read(band, 0, 0, width, height)
-        reverse(data, dims=2)
+        elev_band = ArchGDAL.getband(dataset, 1)
+        elevation = ArchGDAL.read(elev_band, 0, 0, width, height)
+        elevation = reverse(elevation, dims=2)
+        land_mask = try
+            land_band = ArchGDAL.getband(dataset, 2)
+            reverse(ArchGDAL.read(land_band, 0, 0, width, height), dims=2)
+        catch
+            zeros(size(elevation))
+        end
+        (elevation, land_mask)
     end
 end
 
-function sea_mask_at_depth(elevation::AbstractMatrix{<:Real}, depth_m::Float64)
+function load_bluetopo_elevation(path::AbstractString, n_lon::Int, n_lat::Int)
+    load_bluetopo_rasters(path, n_lon, n_lat)[1]
+end
+
+function is_land_or_unknown(elev::Real)
+    !isfinite(elev) || elev >= LAND_ELEVATION_M
+end
+
+function sample_elevation_on_grid(
+    elevation::AbstractMatrix{<:Real},
+    land_mask::AbstractMatrix{<:Real},
+    lon_range,
+    lat_range,
+)
+    bath_n_lon, bath_n_lat = size(elevation)
+    bath_lons = range(first(lon_range), stop = last(lon_range), length = bath_n_lon)
+    bath_lats = range(first(lat_range), stop = last(lat_range), length = bath_n_lat)
+    n_lon = length(lon_range)
+    n_lat = length(lat_range)
+    coarse = Matrix{Float64}(undef, n_lon, n_lat)
+    for j in 1:n_lat, i in 1:n_lon
+        ii = argmin(abs.(collect(bath_lons) .- lon_range[i]))
+        jj = argmin(abs.(collect(bath_lats) .- lat_range[j]))
+        if land_mask[ii, jj] >= 0.5
+            coarse[i, j] = NaN
+        else
+            coarse[i, j] = elevation[ii, jj]
+        end
+    end
+    return coarse
+end
+
+function sea_mask_at_depth(
+    elevation::AbstractMatrix{<:Real},
+    depth_m::Float64,
+    depth_tol::Float64,
+)
     mask = falses(size(elevation))
     for idx in eachindex(elevation)
         elev = elevation[idx]
-        if isfinite(elev) && elev < 0
-            mask[idx] = (-elev) >= depth_m
+        if is_land_or_unknown(elev)
+            mask[idx] = false
+        else
+            bottom_depth = -elev
+            mask[idx] = bottom_depth + depth_tol >= depth_m
         end
     end
     return mask
@@ -255,9 +371,40 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
     depth_range = range(depth_min, stop = depth_max, length = n_depth)
     depth_tol = depth_slice_tolerance(depth_range)
 
-    bath_file = ensure_bluetopo(cruise_id, lon_min, lat_min, lon_max, lat_max, n_lon, n_lat)
-    elevation = load_bluetopo_elevation(bath_file, n_lon, n_lat)
-    println("Loaded BlueTopo bathymetry from $(basename(bath_file))")
+    bath_n_lon, bath_n_lat = bathymetry_grid_sizes(n_lon, n_lat)
+    bath_file = ensure_bluetopo(
+        cruise_id,
+        lon_min,
+        lat_min,
+        lon_max,
+        lat_max,
+        bath_n_lon,
+        bath_n_lat,
+    )
+    elevation_hi, land_mask_hi = load_bluetopo_rasters(bath_file, bath_n_lon, bath_n_lat)
+    elevation = sample_elevation_on_grid(
+        elevation_hi,
+        land_mask_hi,
+        lon_range,
+        lat_range,
+    )
+    land_mask_file = ensure_land_mask(
+        cruise_id,
+        lon_min,
+        lat_min,
+        lon_max,
+        lat_max,
+        n_lon,
+        n_lat,
+    )
+    land_mask = load_land_mask(land_mask_file, n_lon, n_lat)
+    apply_land_mask_to_elevation!(elevation, land_mask)
+    land_cells = count(is_land_or_unknown.(elevation))
+    println(
+        "Loaded BlueTopo ($(bath_n_lon)x$(bath_n_lat) 4 m) from $(basename(bath_file)); ",
+        "land/unknown cells: $(land_cells)/$(n_lon * n_lat) ",
+        "(NA and elev >= $(LAND_ELEVATION_M) m treated as land)",
+    )
 
     len_horiz = (0.05, 0.05)
     epsilon2 = 1.0
@@ -269,7 +416,7 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
     fi = Array{Float64}(undef, n_lon, n_lat, n_depth)
 
     for (idep, depth) in enumerate(depth_range)
-        sea_mask = sea_mask_at_depth(elevation, depth)
+        sea_mask = sea_mask_at_depth(elevation, depth, depth_tol)
         fi[:, :, idep] = interpolate_depth_slice(
             lon_range,
             lat_range,
@@ -300,7 +447,7 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
         end
     end
     for idep in 1:n_depth
-        sea_mask = sea_mask_at_depth(elevation, depth_range[idep])
+        sea_mask = sea_mask_at_depth(elevation, depth_range[idep], depth_tol)
         slice = fi[:, :, idep]
         for idx in eachindex(slice)
             if !sea_mask[idx]
