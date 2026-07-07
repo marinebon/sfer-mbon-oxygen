@@ -21,4 +21,5 @@ site_libs/*
 data/01_raw/
 data/02_clean/
 data/processed/
+data/bathymetry/
 data/interpolated/

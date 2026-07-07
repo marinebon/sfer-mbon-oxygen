@@ -8,10 +8,13 @@ using CSV
 using DataFrames
 using DIVAnd
 using Statistics
+using ArchGDAL
 
 const MAPPING_CSV = joinpath(@__DIR__, "..", "data", "ctd_datasetid_cruisename_stationname_mapping.csv")
 const CLEAN_ROOT = joinpath(@__DIR__, "..", "data", "02_clean")
 const INTERP_ROOT = joinpath(@__DIR__, "..", "data", "interpolated")
+const BATH_ROOT = joinpath(@__DIR__, "..", "data", "bathymetry")
+const REPO_ROOT = joinpath(@__DIR__, "..")
 const HORIZ_RES_DEG = 0.03
 const DEPTH_RES_M = 4.0
 const MIN_GRID_POINTS = 30
@@ -119,6 +122,53 @@ function load_cruise_observations(cruise_id::AbstractString, clean_root::Abstrac
     return obs
 end
 
+function ensure_bluetopo(
+    cruise_id::AbstractString,
+    lon_min::Float64,
+    lat_min::Float64,
+    lon_max::Float64,
+    lat_max::Float64,
+    n_lon::Int,
+    n_lat::Int,
+)
+    mkpath(BATH_ROOT)
+    bath_file = joinpath(BATH_ROOT, "$(cruise_id)_bluetopo.tif")
+    if isfile(bath_file)
+        return bath_file
+    end
+
+    script = joinpath(REPO_ROOT, "scripts", "download_bluetopo.py")
+    println("Fetching BlueTopo bathymetry for $(cruise_id)")
+    run(
+        `python3 $(script) $(lon_min) $(lat_min) $(lon_max) $(lat_max) --n-lon $(n_lon) --n-lat $(n_lat) -o $(bath_file)`,
+    )
+    return bath_file
+end
+
+function load_bluetopo_elevation(path::AbstractString, n_lon::Int, n_lat::Int)
+    ArchGDAL.read(path) do dataset
+        width = ArchGDAL.width(dataset)
+        height = ArchGDAL.height(dataset)
+        if width != n_lon || height != n_lat
+            error("BlueTopo grid size $(width)x$(height) does not match $(n_lon)x$(n_lat)")
+        end
+        band = ArchGDAL.getband(dataset, 1)
+        data = ArchGDAL.read(band, 0, 0, width, height)
+        reverse(data, dims=2)
+    end
+end
+
+function sea_mask_at_depth(elevation::AbstractMatrix{<:Real}, depth_m::Float64)
+    mask = falses(size(elevation))
+    for idx in eachindex(elevation)
+        elev = elevation[idx]
+        if isfinite(elev) && elev < 0
+            mask[idx] = (-elev) >= depth_m
+        end
+    end
+    return mask
+end
+
 function depth_slice_tolerance(depth_range)
     if length(depth_range) > 1
         return max(DEPTH_RES_M / 2, minimum(diff(collect(depth_range))) / 2)
@@ -137,19 +187,22 @@ function interpolate_depth_slice(
     f,
     len_horiz,
     epsilon2,
+    sea_mask,
 )
     mask_obs = abs.(z .- depth) .<= depth_tol
     n_obs = count(mask_obs)
 
     mask, (pm, pn), (xi, yi) = DIVAnd_rectdom(lon_range, lat_range)
+    mask .= sea_mask
 
     if n_obs < 3
         fill_value = if n_obs == 0
-            missing
+            NaN
         else
             mean(f[mask_obs])
         end
         fi = fill(fill_value, size(mask))
+        fi = ifelse.(sea_mask, fi, NaN)
         return fi
     end
 
@@ -168,7 +221,8 @@ function interpolate_depth_slice(
         epsilon2,
     )
 
-    return fi .+ f2_mean
+    fi = fi .+ f2_mean
+    return ifelse.(sea_mask, fi, NaN)
 end
 
 function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractString, interp_root::AbstractString)
@@ -201,6 +255,10 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
     depth_range = range(depth_min, stop = depth_max, length = n_depth)
     depth_tol = depth_slice_tolerance(depth_range)
 
+    bath_file = ensure_bluetopo(cruise_id, lon_min, lat_min, lon_max, lat_max, n_lon, n_lat)
+    elevation = load_bluetopo_elevation(bath_file, n_lon, n_lat)
+    println("Loaded BlueTopo bathymetry from $(basename(bath_file))")
+
     len_horiz = (0.05, 0.05)
     epsilon2 = 1.0
 
@@ -208,9 +266,10 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
         "Interpolating independently per depth slice (±$(round(depth_tol, digits=2)) m tolerance)",
     )
 
-    fi = Array{Union{Missing, Float64}}(undef, n_lon, n_lat, n_depth)
+    fi = Array{Float64}(undef, n_lon, n_lat, n_depth)
 
     for (idep, depth) in enumerate(depth_range)
+        sea_mask = sea_mask_at_depth(elevation, depth)
         fi[:, :, idep] = interpolate_depth_slice(
             lon_range,
             lat_range,
@@ -222,37 +281,52 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
             f,
             len_horiz,
             epsilon2,
+            sea_mask,
         )
     end
 
-    # Fill depth slices with no observations from neighboring depth means.
+    # Fill depth slices with no observations from neighboring depth means (sea only).
     depth_means = [
         begin
             mask_obs = abs.(z .- depth) .<= depth_tol
-            count(mask_obs) > 0 ? mean(f[mask_obs]) : missing
+            count(mask_obs) > 0 ? mean(f[mask_obs]) : NaN
         end
         for depth in depth_range
     ]
     for i in eachindex(depth_means)
-        if ismissing(depth_means[i])
-            neighbors = [depth_means[j] for j in eachindex(depth_means) if !ismissing(depth_means[j])]
+        if isnan(depth_means[i])
+            neighbors = [depth_means[j] for j in eachindex(depth_means) if !isnan(depth_means[j])]
             depth_means[i] = isempty(neighbors) ? mean(f) : mean(neighbors)
         end
     end
     for idep in 1:n_depth
-        if any(ismissing.(fi[:, :, idep]))
-            fi[:, :, idep] = replace(fi[:, :, idep], missing => depth_means[idep])
+        sea_mask = sea_mask_at_depth(elevation, depth_range[idep])
+        slice = fi[:, :, idep]
+        for idx in eachindex(slice)
+            if !sea_mask[idx]
+                slice[idx] = NaN
+            elseif isnan(slice[idx])
+                slice[idx] = depth_means[idep]
+            end
         end
+        fi[:, :, idep] = slice
     end
 
-    fi = Float64.(fi)
-
     grid = DataFrame(
-        longitude = vec([lon for lon in lon_range, lat in lat_range, depth in depth_range]),
-        latitude = vec([lat for lon in lon_range, lat in lat_range, depth in depth_range]),
-        depth_m = vec([depth for lon in lon_range, lat in lat_range, depth in depth_range]),
-        dissolved_oxygen = vec(fi),
+        longitude = Float64[],
+        latitude = Float64[],
+        depth_m = Float64[],
+        dissolved_oxygen = Float64[],
     )
+    for (idep, depth) in enumerate(depth_range)
+        slice = fi[:, :, idep]
+        for (j, lat) in enumerate(lat_range), (i, lon) in enumerate(lon_range)
+            value = slice[i, j]
+            if !isnan(value)
+                push!(grid, (longitude = lon, latitude = lat, depth_m = depth, dissolved_oxygen = value))
+            end
+        end
+    end
 
     CSV.write(output_file, grid)
     println("Wrote $output_file")

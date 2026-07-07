@@ -2,7 +2,7 @@
 #
 # Prerequisites: R, Julia (1.6+), Quarto CLI
 #   R packages: here, dplyr (installed automatically on first run)
-#   Julia packages: DIVAnd, CSV, DataFrames (installed via julia/Project.toml)
+#   Python (bathymetry): boto3, geopandas, rasterio (for scripts/download_bluetopo.py)
 
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
