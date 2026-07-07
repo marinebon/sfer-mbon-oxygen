@@ -15,14 +15,15 @@ plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
   }
 
   finite_depths <- grid$anoxic_depth_m[is.finite(grid$anoxic_depth_m)]
+  color_domain <- range(field$depth_m, na.rm = TRUE)
   depth_range <- if (length(finite_depths) > 0) {
     range(finite_depths, na.rm = TRUE)
   } else {
-    range(field$depth_m, na.rm = TRUE)
+    color_domain
   }
   pal <- leaflet::colorNumeric(
     viridisLite::viridis(256),
-    domain = depth_range,
+    domain = color_domain,
     na.color = "transparent"
   )
 
@@ -100,8 +101,8 @@ plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
     ) |>
     leaflet::addLegend(
       pal = pal,
-      values = depth_range,
-      title = sprintf("Depth of O\u2082 < %.1f mg/L (m)", threshold),
+      values = color_domain,
+      title = "Shallowest depth below threshold (m)",
       position = "bottomright"
     ) |>
     leaflet::addScaleBar(position = "bottomleft") |>
@@ -122,7 +123,7 @@ function(el, x) {
   var sliderMin = %s;
   var sliderMax = %s;
   var sliderStep = %s;
-  var depthRange = [%s, %s];
+  var depthDomain = [%s, %s];
   var map = null;
   var layerGroup = null;
   var legendEl = null;
@@ -161,13 +162,13 @@ function(el, x) {
     return minDepth;
   }
 
-  function colorForDepth(depth, minDepth, maxDepth) {
+  function colorForDepth(depth) {
     if (depth === null || !isFinite(depth)) {
       return 'transparent';
     }
-    var t = (depth - minDepth) / (maxDepth - minDepth);
+    var t = (depth - depthDomain[0]) / (depthDomain[1] - depthDomain[0]);
     if (!isFinite(t)) {
-      t = 0.5;
+      t = 0;
     }
     t = Math.max(0, Math.min(1, t));
     var palette = [
@@ -189,9 +190,6 @@ function(el, x) {
       }
     });
 
-    var minDepth = depths.length ? Math.min.apply(null, depths) : depthRange[0];
-    var maxDepth = depths.length ? Math.max.apply(null, depths) : depthRange[1];
-
     layerGroup.clearLayers();
     cells.forEach(function(cell) {
       var d = shallowAnoxicDepth(cell, o2Threshold);
@@ -205,16 +203,31 @@ function(el, x) {
       L.rectangle(bounds, {
         color: 'transparent',
         weight: 0,
-        fillColor: colorForDepth(d, minDepth, maxDepth),
+        fillColor: colorForDepth(d),
         fillOpacity: 0.88
-      }).addTo(layerGroup);
+      }).bindTooltip(
+        'Depth: ' + d.toFixed(1) + ' m',
+        { sticky: true, direction: 'top' }
+      ).addTo(layerGroup);
     });
 
     if (thresholdLabelEl) {
       thresholdLabelEl.textContent = 'O\u2082 threshold: ' + o2Threshold.toFixed(1) + ' mg/L';
     }
     if (legendEl) {
-      legendEl.textContent = 'Depth of O\u2082 < ' + o2Threshold.toFixed(1) + ' mg/L (m)';
+      if (depths.length === 0) {
+        legendEl.textContent = 'No cells below this O\u2082 threshold';
+      } else {
+        var activeMin = Math.min.apply(null, depths);
+        var activeMax = Math.max.apply(null, depths);
+        if (activeMin === activeMax) {
+          legendEl.textContent =
+            'All displayed cells: ' + activeMin.toFixed(1) + ' m (shallowest grid depth)';
+        } else {
+          legendEl.textContent =
+            'Displayed depths: ' + activeMin.toFixed(1) + '\u2013' + activeMax.toFixed(1) + ' m';
+        }
+      }
     }
   }
 
@@ -277,8 +290,8 @@ function(el, x) {
       slider_min,
       slider_max,
       slider_step,
-      depth_range[1],
-      depth_range[2],
+      color_domain[1],
+      color_domain[2],
       dy,
       dx,
       dy,
