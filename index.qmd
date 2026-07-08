@@ -1,5 +1,8 @@
 ---
-title: "quartobatch template"
+title: "SFER MBON Oxygen"
 ---
 
-This project uses [quartobatch](https://github.com/7yl4r/quartobatch).
+Cruise reports generated from cleaned CTD data and DIVAnd-interpolated dissolved oxygen fields.
+
+- [Oxygen field maps](cruise_oxygen/listing.qmd)
+- [Anoxic depth maps](cruise_anoxic_depth/listing.qmd)

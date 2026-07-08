@@ -1,9 +1,11 @@
 getListOfValues <- function() {
-  if (!requireNamespace("here", quietly = TRUE)) {
-    install.packages("here", repos = "https://cloud.r-project.org")
+  # Example batch placeholder; only render when matching processed data exists.
+  values <- "example_1"
+  processed_root <- if (requireNamespace("here", quietly = TRUE)) {
+    here::here("data", "processed")
+  } else {
+    "data/processed"
   }
 
-  source(here::here("scripts/read_ctd_mapping.R"), local = TRUE)
-  mapping <- read_ctd_mapping()
-  return(unique_cruise_ids(mapping))
+  values[file.exists(file.path(processed_root, values, "ctd_binned.csv"))]
 }

@@ -346,7 +346,9 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
     output_file = joinpath(output_dir, "oxygen_field.csv")
     mkpath(output_dir)
 
-    println("Interpolating oxygen field for $cruise_id")
+    println("# =========================================================")
+    println("# Interpolating oxygen field for $cruise_id")
+    println("# =========================================================")
     df = load_cruise_observations(cruise_id, clean_root)
 
     x = Vector{Float64}(df.longitude)
@@ -502,7 +504,15 @@ function main()
     end
 
     for cruise_id in cruise_ids
-        interpolate_cruise(cruise_id, CLEAN_ROOT, INTERP_ROOT)
+        try
+            interpolate_cruise(cruise_id, CLEAN_ROOT, INTERP_ROOT)
+        catch err
+            if err isa Exception && occursin("No cleaned CTD files", sprint(showerror, err))
+                println("Skipping $cruise_id (no cleaned CTD data).")
+            else
+                rethrow()
+            end
+        end
     end
 end
 

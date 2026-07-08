@@ -100,6 +100,7 @@ cat(
 )
 cat("Log written to:", log_file, "\n")
 
-if (stats["cleaned"] == 0L && stats["failed"] > 0L) {
+# Fail only when casts failed and none were cleaned or already up to date.
+if (stats["failed"] > 0L && stats["cleaned"] == 0L && stats["skipped"] == 0L) {
   quit(status = 1)
 }

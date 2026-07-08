@@ -14,7 +14,7 @@ INTERP_DIR := data/interpolated
 JULIA_PROJECT := julia
 CRUISE ?= SV18067
 
-.PHONY: help download process report-process interpolate clean
+.PHONY: help download process report-process interpolate interpolate-all render publish clean
 
 help:
 	@echo "SFER MBON Oxygen pipeline"
@@ -24,6 +24,9 @@ help:
 	@echo "  make process         Clean raw CTD casts with oce into data/02_clean/ (skips up-to-date outputs)"
 	@echo "  make report-process  Render reports/processing_summary.qmd (run after make process)"
 	@echo "  make interpolate     Build DIVAnd oxygen fields for one cruise (CRUISE=$(CRUISE))"
+	@echo "  make interpolate-all Build DIVAnd oxygen fields for every cruise with cleaned CTD data"
+	@echo "  make render          Render the Quarto website locally"
+	@echo "  make publish         Run full pipeline (download → process → interpolate), then quarto publish"
 	@echo "  make clean           Remove generated data and rendered site output"
 
 # all: render
@@ -31,20 +34,23 @@ help:
 download: data/ctd_datasetid_cruisename_stationname_mapping.csv
 	Rscript scripts/download_cruises.R
 
-process:
+process: download
 	Rscript scripts/clean_bin_ctd.R
 
 report-process:
 	quarto render reports/processing_summary.qmd
 
-interpolate:
+interpolate: process
 	julia --project=$(JULIA_PROJECT) scripts/interpolate_cruise.jl $(CRUISE)
-#
-# render:
-# 	quarto render
-#
-# publish: 
-# 	quarto publish
+
+interpolate-all: process
+	julia --project=$(JULIA_PROJECT) scripts/interpolate_cruise.jl
+
+render: interpolate-all
+	quarto render
+
+publish: interpolate-all
+	quarto publish
 
 clean:
 	rm -rf $(RAW_DIR) data/02_clean $(PROCESSED_DIR) $(INTERP_DIR) _site .quarto

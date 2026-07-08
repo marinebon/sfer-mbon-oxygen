@@ -1,24 +1,20 @@
 project:
   type: website
   pre-render:
-  - example_batch/generate_batch_qmds.R
   - cruise_oxygen/generate_batch_qmds.R
   - cruise_anoxic_depth/generate_batch_qmds.R
   render:
   - index.qmd
-  - example_batch/batched_reports/*.qmd
-  - example_batch/listing.qmd
   - cruise_oxygen/batched_reports/*.qmd
   - cruise_oxygen/listing.qmd
   - cruise_anoxic_depth/batched_reports/*.qmd
   - cruise_anoxic_depth/listing.qmd
 website:
-  title: QuartoBatch Example
+  title: SFER MBON Oxygen
   navbar:
     left:
     - href: index.qmd
       text: Home
-    - example_batch/listing.qmd
     - cruise_oxygen/listing.qmd
     - cruise_anoxic_depth/listing.qmd
     - href: https://github.com/7yl4r/quartobatch
