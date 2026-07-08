@@ -90,30 +90,21 @@ function load_cruise_observations(cruise_id::AbstractString, clean_root::Abstrac
         error("No cleaned CTD files found for $cruise_id under $clean_root. Run `make process` first.")
     end
 
-    dfs = DataFrame[]
+    rows = NamedTuple{(:longitude, :latitude, :depth_m, :dissolved_oxygen), Tuple{Float64, Float64, Float64, Float64}}[]
     for file in files
         df = DataFrame(CSV.File(file))
-        if !("cruise_id" in names(df))
-            df.cruise_id = fill(cruise_id, nrow(df))
+        depth_col = "depth" in names(df) ? :depth : :sea_water_pressure
+        if !("dissolved_oxygen" in names(df))
+            error("Column dissolved_oxygen not found in $file")
         end
-        push!(dfs, df)
-    end
-
-    combined = vcat(dfs...)
-
-    depth_col = "depth" in names(combined) ? :depth : :sea_water_pressure
-    if !("dissolved_oxygen" in names(combined))
-        error("Column dissolved_oxygen not found in cleaned data for $cruise_id")
-    end
-
-    rows = NamedTuple{(:longitude, :latitude, :depth_m, :dissolved_oxygen), Tuple{Float64, Float64, Float64, Float64}}[]
-    for row in eachrow(combined)
-        lon = parse_float64(row.longitude)
-        lat = parse_float64(row.latitude)
-        dep = parse_float64(row[depth_col])
-        oxy = parse_float64(row.dissolved_oxygen)
-        if !ismissing(lon) && !ismissing(lat) && !ismissing(dep) && !ismissing(oxy)
-            push!(rows, (longitude = lon, latitude = lat, depth_m = dep, dissolved_oxygen = oxy))
+        for row in eachrow(df)
+            lon = parse_float64(row.longitude)
+            lat = parse_float64(row.latitude)
+            dep = parse_float64(row[depth_col])
+            oxy = parse_float64(row.dissolved_oxygen)
+            if !ismissing(lon) && !ismissing(lat) && !ismissing(dep) && !ismissing(oxy)
+                push!(rows, (longitude = lon, latitude = lat, depth_m = dep, dissolved_oxygen = oxy))
+            end
         end
     end
 
