@@ -74,6 +74,10 @@ plot_oxygen_map <- function(field, observations) {
     }
 
     grid_slice <- field_slice_grid(field_slice)
+    grid_slice$popup_label <- sprintf(
+      "O\u2082: %.2f mg/L",
+      grid_slice$dissolved_oxygen
+    )
     obs_slice <- slice_observations_layer(
       observations,
       layer$depth_min,
@@ -97,7 +101,14 @@ plot_oxygen_map <- function(field, observations) {
         fillOpacity = 0.88,
         color = NA,
         weight = 0,
-        group = field_group
+        popup = ~popup_label,
+        group = field_group,
+        highlightOptions = leaflet::highlightOptions(
+          weight = 1,
+          color = "#333333",
+          fillOpacity = 0.95,
+          bringToFront = TRUE
+        )
       )
 
     if (nrow(obs_slice) > 0) {

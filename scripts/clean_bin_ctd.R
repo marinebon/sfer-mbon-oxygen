@@ -30,7 +30,7 @@ mapping <- read_ctd_mapping()
 stats <- c(cleaned = 0L, skipped = 0L, empty = 0L, failed = 0L)
 log_rows <- list()
 
-for (cruise_id in unique_cruise_ids(mapping)) {
+for (cruise_id in cruise_ids_for_run(mapping)) {
   cruise_raw_dir <- file.path(raw_root, cruise_id)
   if (!dir.exists(cruise_raw_dir)) {
     warning("No raw data directory for ", cruise_id, ". Run `make download` first.")

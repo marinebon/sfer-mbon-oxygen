@@ -15,16 +15,18 @@ const CLEAN_ROOT = joinpath(@__DIR__, "..", "data", "02_clean")
 const INTERP_ROOT = joinpath(@__DIR__, "..", "data", "interpolated")
 const BATH_ROOT = joinpath(@__DIR__, "..", "data", "bathymetry")
 const REPO_ROOT = joinpath(@__DIR__, "..")
-const HORIZ_RES_DEG = 0.03
+const HORIZ_RES_DEG = 0.01
 const DEPTH_RES_M = 4.0
 const MIN_GRID_POINTS = 30
-const MAX_GRID_POINTS = 100
+const MAX_GRID_POINTS = 150
 const MAX_GRID_POINTS_TOTAL = 120_000
 const MIN_BATHY_COVERAGE = 0.35
-const BATHY_GRID_SCALE = 3
-const MAX_BATHY_LON = 200
-const MAX_BATHY_LAT = 200
+const BATHY_GRID_SCALE = 8
+const MAX_BATHY_LON = 400
+const MAX_BATHY_LAT = 400
 const LAND_ELEVATION_M = -1.0
+const BBOX_PADDING_DEG = 0.02
+const OBS_SEA_RADIUS_CELLS = 4
 
 function grid_size(span, resolution, min_points, max_points)
     n = max(min_points, round(Int, span / resolution) + 1)
@@ -186,11 +188,14 @@ function ensure_bluetopo(
         try
             elev = load_bluetopo_elevation(bath_file, bath_n_lon, bath_n_lat)
             coverage = count(isfinite.(elev)) / length(elev)
-            if coverage >= MIN_BATHY_COVERAGE
+            has_land_band = ArchGDAL.read(bath_file) do dataset
+                ArchGDAL.nraster(dataset) >= 2
+            end
+            if coverage >= MIN_BATHY_COVERAGE && has_land_band
                 return bath_file
             end
             println(
-                "BlueTopo cache coverage $(round(100 * coverage, digits=1))%; re-fetching...",
+                "BlueTopo cache stale or low coverage $(round(100 * coverage, digits=1))%; re-fetching...",
             )
         catch
             println("BlueTopo cache invalid for current grid; re-fetching...")
@@ -276,6 +281,179 @@ function sea_mask_at_depth(
     return mask
 end
 
+function grid_index(lon_range, lat_range, lon::Float64, lat::Float64)
+    (
+        argmin(abs.(collect(lon_range) .- lon)),
+        argmin(abs.(collect(lat_range) .- lat)),
+    )
+end
+
+function clear_land_mask_near_observations!(
+    land_mask::AbstractMatrix{<:Real},
+    x,
+    y,
+    lon_range,
+    lat_range,
+    radius_cells::Int,
+)
+    for (lon, lat) in zip(x, y)
+        i, j = grid_index(lon_range, lat_range, lon, lat)
+        for di in -radius_cells:radius_cells, dj in -radius_cells:radius_cells
+            ii, jj = i + di, j + dj
+            if 1 <= ii <= size(land_mask, 1) && 1 <= jj <= size(land_mask, 2)
+                land_mask[ii, jj] = 0
+            end
+        end
+    end
+    return land_mask
+end
+
+function extend_sea_mask_for_observations!(
+    sea_mask::AbstractMatrix{Bool},
+    x,
+    y,
+    lon_range,
+    lat_range,
+    radius_cells::Int,
+)
+    for (lon, lat) in zip(x, y)
+        i, j = grid_index(lon_range, lat_range, lon, lat)
+        for di in -radius_cells:radius_cells, dj in -radius_cells:radius_cells
+            ii, jj = i + di, j + dj
+            if 1 <= ii <= size(sea_mask, 1) && 1 <= jj <= size(sea_mask, 2)
+                sea_mask[ii, jj] = true
+            end
+        end
+    end
+    return sea_mask
+end
+
+function ensure_water_elevation_near_observations!(
+    elevation::AbstractMatrix{<:Real},
+    sea_mask::AbstractMatrix{Bool},
+)
+    for idx in eachindex(elevation)
+        if sea_mask[idx] && !isfinite(elevation[idx])
+            elevation[idx] = -2.0
+        end
+    end
+    return elevation
+end
+
+function observation_component_labels(
+    sea_mask::AbstractMatrix{Bool},
+    labels::AbstractMatrix{Int},
+    x,
+    y,
+    lon_range,
+    lat_range,
+    search_deg::Float64,
+)
+    observed_labels = Set{Int}()
+    lon_step = length(lon_range) > 1 ? abs(lon_range[2] - lon_range[1]) : search_deg
+    lat_step = length(lat_range) > 1 ? abs(lat_range[2] - lat_range[1]) : search_deg
+    radius_i = max(1, ceil(Int, search_deg / lon_step))
+    radius_j = max(1, ceil(Int, search_deg / lat_step))
+
+    for (lon, lat) in zip(x, y)
+        i, j = grid_index(lon_range, lat_range, lon, lat)
+        if sea_mask[i, j] && labels[i, j] > 0
+            push!(observed_labels, labels[i, j])
+            continue
+        end
+
+        best_label = 0
+        best_dist = Inf
+        for ii in max(1, i - radius_i):min(size(sea_mask, 1), i + radius_i)
+            for jj in max(1, j - radius_j):min(size(sea_mask, 2), j + radius_j)
+                if sea_mask[ii, jj] && labels[ii, jj] > 0
+                    dist = hypot(lon_range[ii] - lon, lat_range[jj] - lat)
+                    if dist < best_dist
+                        best_dist = dist
+                        best_label = labels[ii, jj]
+                    end
+                end
+            end
+        end
+        if best_label > 0
+            push!(observed_labels, best_label)
+        end
+    end
+
+    return observed_labels
+end
+
+function label_sea_components(sea_mask::AbstractMatrix{Bool})
+    n_lon, n_lat = size(sea_mask)
+    labels = zeros(Int, n_lon, n_lat)
+    label = 0
+
+    for i in 1:n_lon, j in 1:n_lat
+        if !sea_mask[i, j] || labels[i, j] != 0
+            continue
+        end
+        label += 1
+        queue = [(i, j)]
+        labels[i, j] = label
+        while !isempty(queue)
+            ci, cj = popfirst!(queue)
+            for (di, dj) in ((1, 0), (-1, 0), (0, 1), (0, -1))
+                ni, nj = ci + di, cj + dj
+                if 1 <= ni <= n_lon &&
+                   1 <= nj <= n_lat &&
+                   sea_mask[ni, nj] &&
+                   labels[ni, nj] == 0
+                    labels[ni, nj] = label
+                    push!(queue, (ni, nj))
+                end
+            end
+        end
+    end
+
+    return labels
+end
+
+function mask_disconnected_components!(
+    fi::AbstractMatrix{<:Real},
+    sea_mask::AbstractMatrix{Bool},
+    x,
+    y,
+    lon_range,
+    lat_range,
+)
+    labels = label_sea_components(sea_mask)
+    observed_labels = observation_component_labels(
+        sea_mask,
+        labels,
+        x,
+        y,
+        lon_range,
+        lat_range,
+        0.05,
+    )
+
+    if isempty(observed_labels)
+        println("Warning: no observation-linked sea components found; field unchanged")
+        return fi
+    end
+
+    removed = 0
+    for idx in eachindex(fi)
+        if sea_mask[idx] && labels[idx] > 0 && !(labels[idx] in observed_labels)
+            if !isnan(fi[idx])
+                removed += 1
+            end
+            fi[idx] = NaN
+        end
+    end
+
+    println(
+        "Kept $(length(observed_labels)) sea component(s) with observations; ",
+        "removed $removed disconnected cell(s)",
+    )
+    return fi
+end
+
 function depth_slice_tolerance(depth_range)
     if length(depth_range) > 1
         return max(DEPTH_RES_M / 2, minimum(diff(collect(depth_range))) / 2)
@@ -350,6 +528,10 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
     lon_min, lon_max = extrema(x)
     lat_min, lat_max = extrema(y)
     depth_min, depth_max = extrema(z)
+    lon_min -= BBOX_PADDING_DEG
+    lon_max += BBOX_PADDING_DEG
+    lat_min -= BBOX_PADDING_DEG
+    lat_max += BBOX_PADDING_DEG
 
     n_lon, n_lat, n_depth = capped_grid_sizes(
         lon_max - lon_min,
@@ -391,6 +573,7 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
         n_lat,
     )
     land_mask = load_land_mask(land_mask_file, n_lon, n_lat)
+    clear_land_mask_near_observations!(land_mask, x, y, lon_range, lat_range, OBS_SEA_RADIUS_CELLS)
     apply_land_mask_to_elevation!(elevation, land_mask)
     land_cells = count(is_land_or_unknown.(elevation))
     println(
@@ -410,7 +593,14 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
 
     for (idep, depth) in enumerate(depth_range)
         sea_mask = sea_mask_at_depth(elevation, depth, depth_tol)
-        fi[:, :, idep] = interpolate_depth_slice(
+        mask_obs = abs.(z .- depth) .<= depth_tol
+        x2 = x[mask_obs]
+        y2 = y[mask_obs]
+        if !isempty(x2)
+            extend_sea_mask_for_observations!(sea_mask, x2, y2, lon_range, lat_range, OBS_SEA_RADIUS_CELLS)
+            ensure_water_elevation_near_observations!(elevation, sea_mask)
+        end
+        slice = interpolate_depth_slice(
             lon_range,
             lat_range,
             depth,
@@ -423,6 +613,10 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
             epsilon2,
             sea_mask,
         )
+        if !isempty(x2)
+            slice = mask_disconnected_components!(slice, sea_mask, x2, y2, lon_range, lat_range)
+        end
+        fi[:, :, idep] = slice
     end
 
     # Fill depth slices with no observations from neighboring depth means (sea only).

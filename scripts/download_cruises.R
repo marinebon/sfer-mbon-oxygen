@@ -33,7 +33,7 @@ download_one <- function(erddap_id, file_path) {
 log_rows <- list()
 stats <- c(downloaded = 0L, skipped = 0L, failed = 0L)
 
-for (cruise_id in unique_cruise_ids(mapping)) {
+for (cruise_id in cruise_ids_for_run(mapping)) {
   catalog_ids <- fetch_cruise_erddap_ids(cruise_id)
   cruise_dir <- here(loc, cruise_id)
   dir.create(cruise_dir, recursive = TRUE, showWarnings = FALSE)
@@ -96,6 +96,6 @@ cat(
 )
 cat("Log written to:", log_file, "\n")
 
-if (stats["downloaded"] == 0L && stats["failed"] > 0L) {
+if (stats["downloaded"] == 0L && stats["failed"] > 0L && stats["skipped"] == 0L) {
   quit(status = 1)
 }
