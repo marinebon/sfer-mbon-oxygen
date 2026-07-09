@@ -1,5 +1,7 @@
 ---
 title: "SV18067 Report"
+image: thumbnails/SV18067_anoxic.png
+image-alt: "Anoxic depth map for SV18067"
 format: html
 params:
   batch_value: "SV18067"
@@ -39,6 +41,19 @@ source(here(glue("{params$batch_name}/plot_anoxic_depth_map.R")))
 data <- getData(params$batch_value)
 obs <- data$observations
 field <- data$oxygen_field
+```
+
+```{r thumbnail}
+#| include: false
+#| code-summary: Generate listing thumbnail image
+source(here("R/plot_field_thumbnails.R"))
+source(here(glue("{params$batch_name}/anoxic_depth.R")))
+thumb_file <- here(
+  glue("{params$batch_name}/batched_reports/thumbnails/{params$batch_value}_anoxic.png")
+)
+if (!is.null(field)) {
+  save_anoxic_depth_thumbnail(field, thumb_file, observations = obs)
+}
 ```
 
 ## Cruise `r params$batch_value`
