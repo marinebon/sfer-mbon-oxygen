@@ -19,14 +19,8 @@ getData <- function(batch_value) {
     )
   }
 
-  observations <- do.call(
-    rbind,
-    lapply(clean_files, function(path) {
-      df <- read.csv(path, stringsAsFactors = FALSE)
-      df$cast_id <- sub("\\.csv$", "", basename(path))
-      df
-    })
-  )
+  source(here::here("R/load_clean_ctd_observations.R"), local = TRUE)
+  observations <- load_clean_ctd_observations(clean_files)
 
   interp_file <- here::here(
     "data", "interpolated", batch_value, "oxygen_field.csv"
