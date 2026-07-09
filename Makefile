@@ -66,7 +66,7 @@ example-cruise: render-cruise
 	@echo "Example cruise $(CRUISE) pipeline complete."
 
 publish: interpolate-all
-	quarto publish
+	quarto publish gh-pages --no-prompt
 
 clean:
 	rm -rf $(RAW_DIR) data/02_clean $(PROCESSED_DIR) $(INTERP_DIR) _site .quarto
