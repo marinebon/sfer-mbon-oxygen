@@ -1,7 +1,8 @@
 # Fixed domains derived from all cleaned observations and interpolated fields.
 # Set COLOR_SCALE_RESCAN=true to recompute from data on the next render.
 OXYGEN_COLOR_DOMAIN <- c(0, 5.5)
-ANOXIC_DEPTH_COLOR_DOMAIN <- c(0, 584.141)
+ANOXIC_DEPTH_COLOR_DOMAIN <- c(0, 20)
+ANOXIC_DEPTH_COLOR_LIMITS <- c(0, 584.141)
 
 OXYGEN_PALETTE <- function(n = 256) {
   viridisLite::turbo(n)
@@ -110,14 +111,14 @@ global_oxygen_color_domain <- function() {
   domain
 }
 
-global_anoxic_depth_color_domain <- function() {
-  if (!is.null(.color_domain_cache$anoxic_depth)) {
-    return(.color_domain_cache$anoxic_depth)
+global_anoxic_depth_color_limits <- function() {
+  if (!is.null(.color_domain_cache$anoxic_depth_limits)) {
+    return(.color_domain_cache$anoxic_depth_limits)
   }
 
   if (!identical(Sys.getenv("COLOR_SCALE_RESCAN"), "true")) {
-    .color_domain_cache$anoxic_depth <- ANOXIC_DEPTH_COLOR_DOMAIN
-    return(ANOXIC_DEPTH_COLOR_DOMAIN)
+    .color_domain_cache$anoxic_depth_limits <- ANOXIC_DEPTH_COLOR_LIMITS
+    return(ANOXIC_DEPTH_COLOR_LIMITS)
   }
 
   root <- Sys.getenv("COLOR_SCALE_ROOT", unset = getwd())
@@ -126,17 +127,21 @@ global_anoxic_depth_color_domain <- function() {
   )
 
   if (length(depths) == 0) {
-    domain <- ANOXIC_DEPTH_COLOR_DOMAIN
+    limits <- ANOXIC_DEPTH_COLOR_LIMITS
   } else {
-    domain <- c(0, max(depths))
+    limits <- c(0, max(depths))
   }
 
-  .color_domain_cache$anoxic_depth <- domain
-  domain
+  .color_domain_cache$anoxic_depth_limits <- limits
+  limits
 }
 
 anoxic_depth_color_domain <- function(field = NULL) {
-  global_anoxic_depth_color_domain()
+  ANOXIC_DEPTH_COLOR_DOMAIN
+}
+
+anoxic_depth_color_limits <- function(field = NULL) {
+  global_anoxic_depth_color_limits()
 }
 
 oxygen_color_domain <- function(field = NULL, observations = NULL) {

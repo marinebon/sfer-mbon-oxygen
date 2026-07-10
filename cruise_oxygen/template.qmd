@@ -77,7 +77,7 @@ data.frame(
 
 ## Interpolated field map
 
-The map below is interactive: pan and zoom to explore the gridded dissolved oxygen field. Use **Prev** / **Next** to step through depth bands. CTD observations are colored with the same palette as the interpolated field.
+The map below is interactive: pan and zoom to explore the gridded dissolved oxygen field. Use **Prev** / **Next** in the right-side panel to step through depth bands, and adjust the **O₂ color scale** limits in the same panel. CTD observations are colored with the same palette as the interpolated field.
 
 ```{r oxygen-map}
 #| code-summary: Interactive map with interpolated field and observation points

@@ -77,7 +77,7 @@ data.frame(
 
 ## Anoxic depth map
 
-Pan and zoom to explore where oxygen drops below the threshold. Each colored cell shows the **shallowest depth** (closest to the surface) where interpolated O₂ is below the threshold — not the depth where O₂ equals the threshold. When the threshold exceeds surface oxygen across the domain, expect uniform shallow depths (~2 m, the top of the interpolated grid). Hover a cell for its depth in meters. The color bar uses a **fixed depth scale** so colors are comparable across thresholds.
+Pan and zoom to explore where oxygen drops below the threshold. Each colored cell shows the **shallowest depth** (closest to the surface) where interpolated O₂ is below the threshold — not the depth where O₂ equals the threshold. When the threshold exceeds surface oxygen across the domain, expect uniform shallow depths (~2 m, the top of the interpolated grid). Hover a cell for its depth in meters. Use the **depth color scale** inputs to adjust the color bar limits.
 
 ```{r anoxic-depth-map}
 #| code-summary: Interactive map of shallowest anoxic depth

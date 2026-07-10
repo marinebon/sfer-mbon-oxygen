@@ -23,12 +23,8 @@ plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
   }
 
   color_domain <- anoxic_depth_color_domain(field)
+  color_limits <- anoxic_depth_color_limits(field)
   depth_palette <- ANOXIC_DEPTH_PALETTE(256)
-  pal <- leaflet::colorNumeric(
-    depth_palette,
-    domain = color_domain,
-    na.color = "transparent"
-  )
 
   lon_min <- min(grid$longitude, na.rm = TRUE)
   lon_max <- max(grid$longitude, na.rm = TRUE)
@@ -103,12 +99,6 @@ plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
       overlayGroups = if (length(overlay_groups) > 0) overlay_groups else NULL,
       options = leaflet::layersControlOptions(collapsed = TRUE)
     ) |>
-    leaflet::addLegend(
-      pal = pal,
-      values = color_domain,
-      title = "Shallowest depth below threshold (m)",
-      position = "bottomright"
-    ) |>
     leaflet::addScaleBar(position = "bottomleft") |>
     leaflet::fitBounds(
       lng1 = lon_min,
@@ -127,12 +117,17 @@ function(el, x) {
   var sliderMin = %s;
   var sliderMax = %s;
   var sliderStep = %s;
-  var depthDomain = [%s, %s];
+  var colorDomain = [%s, %s];
+  var colorLimits = [%s, %s];
   var depthPalette = %s;
   var map = null;
   var layerGroup = null;
   var legendEl = null;
   var thresholdLabelEl = null;
+  var colorMinInput = null;
+  var colorMaxInput = null;
+  var colorGradientEl = null;
+  var currentThreshold = threshold;
 
   function resolveMap() {
     if (window.HTMLWidgets && typeof window.HTMLWidgets.getInstance === 'function') {
@@ -171,7 +166,8 @@ function(el, x) {
     if (depth === null || !isFinite(depth)) {
       return 'transparent';
     }
-    var t = (depth - depthDomain[0]) / (depthDomain[1] - depthDomain[0]);
+    var span = colorDomain[1] - colorDomain[0];
+    var t = span === 0 ? 0 : (depth - colorDomain[0]) / span;
     if (!isFinite(t)) {
       t = 0;
     }
@@ -180,8 +176,43 @@ function(el, x) {
     return depthPalette[idx];
   }
 
+  function updateColorGradient() {
+    if (!colorGradientEl) return;
+    var stops = [];
+    for (var i = 0; i <= 20; i++) {
+      var t = i / 20;
+      var paletteIdx = Math.round(t * (depthPalette.length - 1));
+      var pct = (t * 100).toFixed(1) + '%%';
+      stops.push(depthPalette[paletteIdx] + ' ' + pct);
+    }
+    colorGradientEl.style.background =
+      'linear-gradient(to right, ' + stops.join(', ') + ')';
+  }
+
+  function syncColorInputs() {
+    if (colorMinInput) colorMinInput.value = colorDomain[0].toFixed(0);
+    if (colorMaxInput) colorMaxInput.value = colorDomain[1].toFixed(0);
+    updateColorGradient();
+  }
+
+  function applyColorDomain() {
+    var minVal = parseFloat(colorMinInput.value);
+    var maxVal = parseFloat(colorMaxInput.value);
+    if (!isFinite(minVal) || !isFinite(maxVal)) return;
+    minVal = Math.max(colorLimits[0], Math.min(colorLimits[1], minVal));
+    maxVal = Math.max(colorLimits[0], Math.min(colorLimits[1], maxVal));
+    if (minVal >= maxVal) {
+      maxVal = Math.min(colorLimits[1], minVal + 1);
+    }
+    colorDomain[0] = minVal;
+    colorDomain[1] = maxVal;
+    syncColorInputs();
+    updateFieldLayer(currentThreshold);
+  }
+
   function updateFieldLayer(o2Threshold) {
     if (!map || !layerGroup) return;
+    currentThreshold = o2Threshold;
 
     var depths = [];
     cells.forEach(function(cell) {
@@ -251,11 +282,25 @@ function(el, x) {
         '<span>' + sliderMin.toFixed(1) + ' mg/L</span>',
         '<span>' + sliderMax.toFixed(1) + ' mg/L</span>',
         '</div>',
+        '<div style=\"font-weight:700;margin:12px 0 8px;\">Depth color scale (m)</div>',
+        '<div style=\"display:flex;align-items:center;gap:6px;\">',
+        '<input type=\"number\" class=\"color-min\" step=\"1\" style=\"width:72px;padding:2px 4px;\">',
+        '<span style=\"color:#444;\">to</span>',
+        '<input type=\"number\" class=\"color-max\" step=\"1\" style=\"width:72px;padding:2px 4px;\">',
+        '</div>',
+        '<div class=\"color-gradient\" style=\"margin-top:8px;height:14px;border:1px solid #ccc;border-radius:2px;\"></div>',
         '<div class=\"legend-label\" style=\"margin-top:8px;color:#444;font-size:12px;\"></div>'
       ].join('');
 
       thresholdLabelEl = div.querySelector('.threshold-label');
       legendEl = div.querySelector('.legend-label');
+      colorMinInput = div.querySelector('.color-min');
+      colorMaxInput = div.querySelector('.color-max');
+      colorGradientEl = div.querySelector('.color-gradient');
+      colorMinInput.min = colorLimits[0];
+      colorMinInput.max = colorLimits[1];
+      colorMaxInput.min = colorLimits[0];
+      colorMaxInput.max = colorLimits[1];
       var slider = div.querySelector('.threshold-slider');
       slider.min = sliderMin;
       slider.max = sliderMax;
@@ -265,6 +310,9 @@ function(el, x) {
       slider.addEventListener('input', function() {
         updateFieldLayer(parseFloat(slider.value));
       });
+      colorMinInput.addEventListener('change', applyColorDomain);
+      colorMaxInput.addEventListener('change', applyColorDomain);
+      syncColorInputs();
 
       L.DomEvent.disableClickPropagation(div);
       return div;
@@ -293,6 +341,8 @@ function(el, x) {
       slider_step,
       color_domain[1],
       color_domain[2],
+      color_limits[1],
+      color_limits[2],
       depth_palette_json,
       dy,
       dx,
