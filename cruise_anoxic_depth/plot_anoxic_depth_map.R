@@ -3,6 +3,14 @@ plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
     return(NULL)
   }
 
+  if (!exists("anoxic_depth_color_domain")) {
+    if (requireNamespace("here", quietly = TRUE)) {
+      source(here::here("R/color_scales.R"), local = FALSE)
+    } else {
+      source("R/color_scales.R", local = FALSE)
+    }
+  }
+
   obs <- as.data.frame(observations)
   if (is.null(threshold)) {
     threshold <- default_anoxic_threshold(field, obs)
@@ -14,15 +22,10 @@ plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
     return(NULL)
   }
 
-  finite_depths <- grid$anoxic_depth_m[is.finite(grid$anoxic_depth_m)]
-  color_domain <- range(field$depth_m, na.rm = TRUE)
-  depth_range <- if (length(finite_depths) > 0) {
-    range(finite_depths, na.rm = TRUE)
-  } else {
-    color_domain
-  }
+  color_domain <- anoxic_depth_color_domain(field)
+  depth_palette <- ANOXIC_DEPTH_PALETTE(256)
   pal <- leaflet::colorNumeric(
-    viridisLite::viridis(256),
+    depth_palette,
     domain = color_domain,
     na.color = "transparent"
   )
@@ -48,6 +51,7 @@ plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
   widget_id <- paste0("anoxic-depth-map-", sample.int(1e8, 1L))
   profile_payload <- build_profile_payload(field)
   profile_json <- jsonlite::toJSON(profile_payload, auto_unbox = FALSE)
+  depth_palette_json <- jsonlite::toJSON(depth_palette, auto_unbox = FALSE)
 
   map <- leaflet::leaflet(
     width = "100%",
@@ -124,6 +128,7 @@ function(el, x) {
   var sliderMax = %s;
   var sliderStep = %s;
   var depthDomain = [%s, %s];
+  var depthPalette = %s;
   var map = null;
   var layerGroup = null;
   var legendEl = null;
@@ -171,12 +176,8 @@ function(el, x) {
       t = 0;
     }
     t = Math.max(0, Math.min(1, t));
-    var palette = [
-      '#440154', '#482878', '#3E4A89', '#31688E', '#26828E',
-      '#1F9E89', '#35B779', '#6DCD59', '#B4DE2C', '#FDE725'
-    ];
-    var idx = Math.round(t * (palette.length - 1));
-    return palette[idx];
+    var idx = Math.round(t * (depthPalette.length - 1));
+    return depthPalette[idx];
   }
 
   function updateFieldLayer(o2Threshold) {
@@ -292,6 +293,7 @@ function(el, x) {
       slider_step,
       color_domain[1],
       color_domain[2],
+      depth_palette_json,
       dy,
       dx,
       dy,

@@ -36,6 +36,7 @@ library(jsonlite)
 ```{r get-data}
 #| code-summary: Load cleaned observations and interpolated oxygen field
 source(here(glue("{params$batch_name}/getData.R")))
+source(here("R/color_scales.R"))
 source(here(glue("{params$batch_name}/depth_layers.R")))
 source(here(glue("{params$batch_name}/plot_oxygen_map.R")))
 

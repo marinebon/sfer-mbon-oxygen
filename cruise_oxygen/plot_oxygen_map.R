@@ -19,17 +19,22 @@ plot_oxygen_map <- function(field, observations) {
     return(NULL)
   }
 
+  if (!exists("oxygen_color_domain")) {
+    if (requireNamespace("here", quietly = TRUE)) {
+      source(here::here("R/color_scales.R"), local = FALSE)
+    } else {
+      source("R/color_scales.R", local = FALSE)
+    }
+  }
+
   max_depth <- max(field$depth_m, na.rm = TRUE)
   layers <- oxygen_depth_layers(max_depth = max_depth)
 
   obs <- as.data.frame(observations)
-  global_o2_range <- range(
-    c(field$dissolved_oxygen, obs$dissolved_oxygen),
-    na.rm = TRUE
-  )
+  o2_domain <- oxygen_color_domain(field, obs)
   pal <- leaflet::colorNumeric(
-    viridisLite::turbo(256),
-    domain = global_o2_range,
+    OXYGEN_PALETTE(256),
+    domain = o2_domain,
     na.color = "transparent"
   )
 
@@ -163,7 +168,7 @@ plot_oxygen_map <- function(field, observations) {
     ) |>
     leaflet::addLegend(
       pal = pal,
-      values = global_o2_range,
+      values = o2_domain,
       title = "O\u2082 (mg/L)",
       position = "bottomright"
     ) |>
