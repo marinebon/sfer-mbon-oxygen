@@ -68,6 +68,47 @@ slice_observations_layer <- function(observations, depth_min, depth_max) {
     obs_depth < depth_max
 
   obs_slice <- obs[keep, , drop = FALSE]
+  if (nrow(obs_slice) == 0) {
+    return(obs_slice)
+  }
+
   obs_slice$depth_m_obs <- obs_depth[keep]
-  obs_slice
+
+  # One marker per cast: multiple depth samples share the same lat/lon and
+  # otherwise stack invisibly, leaving only the top circle interactive.
+  split_key <- if ("cast_id" %in% names(obs_slice)) {
+    obs_slice$cast_id
+  } else {
+    interaction(obs_slice$station, obs_slice$longitude, obs_slice$latitude)
+  }
+
+  do.call(
+    rbind,
+    lapply(split(obs_slice, split_key), function(df) {
+      depth_min_obs <- min(df$depth_m_obs, na.rm = TRUE)
+      depth_max_obs <- max(df$depth_m_obs, na.rm = TRUE)
+      data.frame(
+        cast_id = if ("cast_id" %in% names(df)) df$cast_id[[1]] else NA_character_,
+        station = df$station[[1]],
+        longitude = df$longitude[[1]],
+        latitude = df$latitude[[1]],
+        dissolved_oxygen = mean(df$dissolved_oxygen, na.rm = TRUE),
+        depth_m_obs = mean(df$depth_m_obs, na.rm = TRUE),
+        depth_m_min = depth_min_obs,
+        depth_m_max = depth_max_obs,
+        stringsAsFactors = FALSE
+      )
+    })
+  )
+}
+
+format_obs_depth_label <- function(depth_m_min, depth_m_max) {
+  if (!is.finite(depth_m_min) || !is.finite(depth_m_max)) {
+    return("NA")
+  }
+  if (abs(depth_m_max - depth_m_min) < 0.05) {
+    sprintf("%.1f m", depth_m_min)
+  } else {
+    sprintf("%.1f–%.1f m", depth_m_min, depth_m_max)
+  }
 }

@@ -108,6 +108,11 @@ plot_oxygen_map <- function(field, observations) {
       )
 
     if (nrow(obs_slice) > 0) {
+      obs_slice$depth_label <- mapply(
+        format_obs_depth_label,
+        obs_slice$depth_m_min,
+        obs_slice$depth_m_max
+      )
       map <- map |>
         leaflet::addCircleMarkers(
           data = obs_slice,
@@ -120,16 +125,16 @@ plot_oxygen_map <- function(field, observations) {
           weight = 1,
           stroke = TRUE,
           label = ~sprintf(
-            "Station: %s\nO\u2082: %.2f mg/L\nDepth: %.1f m",
+            "Station: %s\nO\u2082: %.2f mg/L (layer mean)\nDepth: %s",
             station,
             dissolved_oxygen,
-            depth_m_obs
+            depth_label
           ),
           popup = ~sprintf(
-            "Station: %s<br>O\u2082: %.2f mg/L<br>Depth: %.1f m<br>Lat: %.5f<br>Lon: %.5f",
+            "Station: %s<br>O\u2082: %.2f mg/L (layer mean)<br>Depth: %s<br>Lat: %.5f<br>Lon: %.5f",
             station,
             dissolved_oxygen,
-            depth_m_obs,
+            depth_label,
             latitude,
             longitude
           ),
