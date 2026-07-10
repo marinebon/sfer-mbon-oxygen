@@ -75,8 +75,10 @@ plot_oxygen_map <- function(field, observations) {
 
     grid_slice <- field_slice_grid(field_slice)
     grid_slice$popup_label <- sprintf(
-      "O\u2082: %.2f mg/L",
-      grid_slice$dissolved_oxygen
+      "O\u2082: %.2f mg/L<br>Lat: %.5f<br>Lon: %.5f",
+      grid_slice$dissolved_oxygen,
+      grid_slice$latitude,
+      grid_slice$longitude
     )
     obs_slice <- slice_observations_layer(
       observations,
@@ -118,9 +120,18 @@ plot_oxygen_map <- function(field, observations) {
           weight = 1,
           stroke = TRUE,
           label = ~sprintf(
-            "O\u2082: %.2f mg/L\nDepth: %.1f m",
+            "Station: %s\nO\u2082: %.2f mg/L\nDepth: %.1f m",
+            station,
             dissolved_oxygen,
             depth_m_obs
+          ),
+          popup = ~sprintf(
+            "Station: %s<br>O\u2082: %.2f mg/L<br>Depth: %.1f m<br>Lat: %.5f<br>Lon: %.5f",
+            station,
+            dissolved_oxygen,
+            depth_m_obs,
+            latitude,
+            longitude
           ),
           group = obs_group
         )

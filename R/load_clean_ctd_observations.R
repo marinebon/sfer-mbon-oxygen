@@ -9,8 +9,16 @@ load_clean_ctd_observations <- function(clean_files) {
       stop("No depth column in ", path)
     }
 
+    cast_id <- sub("\\.csv$", "", basename(path))
+    station <- if ("station" %in% names(df)) {
+      as.character(df$station[[1]])
+    } else {
+      get_metadata_from_cast_id(cast_id)$station_id
+    }
+
     data.frame(
-      cast_id = sub("\\.csv$", "", basename(path)),
+      cast_id = cast_id,
+      station = station,
       longitude = as.numeric(df$longitude),
       latitude = as.numeric(df$latitude),
       depth = as.numeric(df[[depth_col]]),
