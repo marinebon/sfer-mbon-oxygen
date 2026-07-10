@@ -74,16 +74,8 @@ anoxic_depth_grid_rectangles <- function(grid) {
   grid
 }
 
-default_anoxic_threshold <- function(field, observations) {
-  values <- c(
-    if (!is.null(field)) field$dissolved_oxygen else numeric(),
-    if (!is.null(observations)) observations$dissolved_oxygen else numeric()
-  )
-  values <- values[is.finite(values)]
-  if (length(values) == 0) {
-    return(2.0)
-  }
+DEFAULT_ANOXIC_O2_THRESHOLD <- 3.8
 
-  # Start near the upper quartile so the default view shows structure on typical cruises.
-  as.numeric(stats::quantile(values, probs = 0.75, na.rm = TRUE))
+default_anoxic_threshold <- function(field, observations) {
+  DEFAULT_ANOXIC_O2_THRESHOLD
 }
