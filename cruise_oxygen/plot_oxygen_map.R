@@ -102,13 +102,7 @@ plot_oxygen_map <- function(field, observations) {
         color = NA,
         weight = 0,
         popup = ~popup_label,
-        group = field_group,
-        highlightOptions = leaflet::highlightOptions(
-          weight = 1,
-          color = "#333333",
-          fillOpacity = 0.95,
-          bringToFront = TRUE
-        )
+        group = field_group
       )
 
     if (nrow(obs_slice) > 0) {
