@@ -11,7 +11,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS23203.html",
     "title": "WS23203 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS23203.html#cruise-ws23203",
@@ -32,7 +32,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS23011.html",
     "title": "WS23011 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS23011.html#cruise-ws23011",
@@ -53,7 +53,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS22281.html",
     "title": "WS22281 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS22281.html#cruise-ws22281",
@@ -74,7 +74,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS22072.html",
     "title": "WS22072 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS22072.html#cruise-ws22072",
@@ -95,7 +95,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS21338.html",
     "title": "WS21338 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS21338.html#cruise-ws21338",
@@ -116,7 +116,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS21212.html",
     "title": "WS21212 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS21212.html#cruise-ws21212",
@@ -137,7 +137,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS21093.html",
     "title": "WS21093 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS21093.html#cruise-ws21093",
@@ -158,7 +158,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS20342.html",
     "title": "WS20342 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS20342.html#cruise-ws20342",
@@ -179,7 +179,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS20231.html",
     "title": "WS20231 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS20231.html#cruise-ws20231",
@@ -200,7 +200,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS19322.html",
     "title": "WS19322 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS19322.html#cruise-ws19322",
@@ -221,7 +221,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS19210.html",
     "title": "WS19210 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS19210.html#cruise-ws19210",
@@ -242,7 +242,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS19028.html",
     "title": "WS19028 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS19028.html#cruise-ws19028",
@@ -263,7 +263,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS18285.html",
     "title": "WS18285 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS18285.html#cruise-ws18285",
@@ -284,7 +284,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS18120.html",
     "title": "WS18120 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS18120.html#cruise-ws18120",
@@ -305,7 +305,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS17282.html",
     "title": "WS17282 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS17282.html#cruise-ws17282",
@@ -326,7 +326,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS17170.html",
     "title": "WS17170 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS17170.html#cruise-ws17170",
@@ -347,7 +347,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS17030.html",
     "title": "WS17030 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS17030.html#cruise-ws17030",
@@ -368,7 +368,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS16263.html",
     "title": "WS16263 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS16263.html#cruise-ws16263",
@@ -389,7 +389,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS16074.html",
     "title": "WS16074 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS16074.html#cruise-ws16074",
@@ -410,7 +410,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS15320.html",
     "title": "WS15320 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS15320.html#cruise-ws15320",
@@ -431,7 +431,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS15208.html",
     "title": "WS15208 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS15208.html#cruise-ws15208",
@@ -452,7 +452,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS15103.html",
     "title": "WS15103 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS15103.html#cruise-ws15103",
@@ -473,7 +473,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1212.html",
     "title": "WS1212 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1212.html#cruise-ws1212",
@@ -494,7 +494,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1202.html",
     "title": "WS1202 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1202.html#cruise-ws1202",
@@ -515,7 +515,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1113.html",
     "title": "WS1113 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1113.html#cruise-ws1113",
@@ -536,7 +536,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1102.html",
     "title": "WS1102 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1102.html#cruise-ws1102",
@@ -557,7 +557,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1015.html",
     "title": "WS1015 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1015.html#cruise-ws1015",
@@ -578,7 +578,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1004.html",
     "title": "WS1004 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1004.html#cruise-ws1004",
@@ -599,7 +599,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0919.html",
     "title": "WS0919 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0919.html#cruise-ws0919",
@@ -620,7 +620,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0906.html",
     "title": "WS0906 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0906.html#cruise-ws0906",
@@ -641,7 +641,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0807.html",
     "title": "WS0807 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0807.html#cruise-ws0807",
@@ -662,7 +662,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0718.html",
     "title": "WS0718 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0718.html#cruise-ws0718",
@@ -683,7 +683,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0623.html",
     "title": "WS0623 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0623.html#cruise-ws0623",
@@ -704,7 +704,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0612.html",
     "title": "WS0612 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0612.html#cruise-ws0612",
@@ -725,7 +725,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WB22215.html",
     "title": "WB22215 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WB22215.html#cruise-wb22215",
@@ -746,7 +746,7 @@
     "href": "cruise_anoxic_depth/batched_reports/SV18067.html",
     "title": "SV18067 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/SV18067.html#cruise-sv18067",
@@ -767,7 +767,7 @@
     "href": "cruise_oxygen/batched_reports/WS24139.html",
     "title": "WS24139 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS24139.html#cruise-ws24139",
@@ -788,7 +788,7 @@
     "href": "cruise_oxygen/batched_reports/WS23061.html",
     "title": "WS23061 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS23061.html#cruise-ws23061",
@@ -809,7 +809,7 @@
     "href": "cruise_oxygen/batched_reports/WS22337.html",
     "title": "WS22337 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS22337.html#cruise-ws22337",
@@ -830,7 +830,7 @@
     "href": "cruise_oxygen/batched_reports/WS22141.html",
     "title": "WS22141 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS22141.html#cruise-ws22141",
@@ -851,7 +851,7 @@
     "href": "cruise_oxygen/batched_reports/WS22022.html",
     "title": "WS22022 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS22022.html#cruise-ws22022",
@@ -872,7 +872,7 @@
     "href": "cruise_oxygen/batched_reports/WS21278.html",
     "title": "WS21278 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS21278.html#cruise-ws21278",
@@ -893,7 +893,7 @@
     "href": "cruise_oxygen/batched_reports/WS21151.html",
     "title": "WS21151 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS21151.html#cruise-ws21151",
@@ -914,7 +914,7 @@
     "href": "cruise_oxygen/batched_reports/WS21032.html",
     "title": "WS21032 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS21032.html#cruise-ws21032",
@@ -935,7 +935,7 @@
     "href": "cruise_oxygen/batched_reports/WS20279.html",
     "title": "WS20279 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS20279.html#cruise-ws20279",
@@ -956,7 +956,7 @@
     "href": "cruise_oxygen/batched_reports/WS20006.html",
     "title": "WS20006 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS20006.html#cruise-ws20006",
@@ -977,7 +977,7 @@
     "href": "cruise_oxygen/batched_reports/WS19266.html",
     "title": "WS19266 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS19266.html#cruise-ws19266",
@@ -998,7 +998,7 @@
     "href": "cruise_oxygen/batched_reports/WS19119.html",
     "title": "WS19119 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS19119.html#cruise-ws19119",
@@ -1019,7 +1019,7 @@
     "href": "cruise_oxygen/batched_reports/WS18351.html",
     "title": "WS18351 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS18351.html#cruise-ws18351",
@@ -1040,7 +1040,7 @@
     "href": "cruise_oxygen/batched_reports/WS18218.html",
     "title": "WS18218 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS18218.html#cruise-ws18218",
@@ -1061,7 +1061,7 @@
     "href": "cruise_oxygen/batched_reports/WS18008.html",
     "title": "WS18008 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS18008.html#cruise-ws18008",
@@ -1082,7 +1082,7 @@
     "href": "cruise_oxygen/batched_reports/WS17212.html",
     "title": "WS17212 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS17212.html#cruise-ws17212",
@@ -1103,7 +1103,7 @@
     "href": "cruise_oxygen/batched_reports/WS17086.html",
     "title": "WS17086 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS17086.html#cruise-ws17086",
@@ -1124,7 +1124,7 @@
     "href": "cruise_oxygen/batched_reports/WS16319.html",
     "title": "WS16319 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS16319.html#cruise-ws16319",
@@ -1145,7 +1145,7 @@
     "href": "cruise_oxygen/batched_reports/WS16207.html",
     "title": "WS16207 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS16207.html#cruise-ws16207",
@@ -1166,7 +1166,7 @@
     "href": "cruise_oxygen/batched_reports/WS16004.html",
     "title": "WS16004 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS16004.html#cruise-ws16004",
@@ -1187,7 +1187,7 @@
     "href": "cruise_oxygen/batched_reports/WS15264.html",
     "title": "WS15264 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS15264.html#cruise-ws15264",
@@ -1208,7 +1208,7 @@
     "href": "cruise_oxygen/batched_reports/WS15148.html",
     "title": "WS15148 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS15148.html#cruise-ws15148",
@@ -1229,7 +1229,7 @@
     "href": "cruise_oxygen/batched_reports/WS14335.html",
     "title": "WS14335 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS14335.html#cruise-ws14335",
@@ -1250,7 +1250,7 @@
     "href": "cruise_oxygen/batched_reports/WS1207.html",
     "title": "WS1207 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1207.html#cruise-ws1207",
@@ -1271,7 +1271,7 @@
     "href": "cruise_oxygen/batched_reports/WS1116.html",
     "title": "WS1116 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1116.html#cruise-ws1116",
@@ -1292,7 +1292,7 @@
     "href": "cruise_oxygen/batched_reports/WS1106.html",
     "title": "WS1106 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1106.html#cruise-ws1106",
@@ -1313,7 +1313,7 @@
     "href": "cruise_oxygen/batched_reports/WS1018.html",
     "title": "WS1018 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1018.html#cruise-ws1018",
@@ -1334,7 +1334,7 @@
     "href": "cruise_oxygen/batched_reports/WS1007.html",
     "title": "WS1007 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1007.html#cruise-ws1007",
@@ -1355,7 +1355,7 @@
     "href": "cruise_oxygen/batched_reports/WS0923.html",
     "title": "WS0923 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0923.html#cruise-ws0923",
@@ -1376,7 +1376,7 @@
     "href": "cruise_oxygen/batched_reports/WS0914.html",
     "title": "WS0914 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0914.html#cruise-ws0914",
@@ -1397,7 +1397,7 @@
     "href": "cruise_oxygen/batched_reports/WS0901.html",
     "title": "WS0901 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0901.html#cruise-ws0901",
@@ -1418,7 +1418,7 @@
     "href": "cruise_oxygen/batched_reports/WS0802.html",
     "title": "WS0802 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0802.html#cruise-ws0802",
@@ -1439,7 +1439,7 @@
     "href": "cruise_oxygen/batched_reports/WS0704.html",
     "title": "WS0704 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0704.html#cruise-ws0704",
@@ -1460,7 +1460,7 @@
     "href": "cruise_oxygen/batched_reports/WS0618.html",
     "title": "WS0618 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0618.html#cruise-ws0618",
@@ -1481,7 +1481,7 @@
     "href": "cruise_oxygen/batched_reports/WS0603.html",
     "title": "WS0603 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0603.html#cruise-ws0603",
@@ -1502,7 +1502,7 @@
     "href": "cruise_oxygen/batched_reports/SV18173.html",
     "title": "SV18173 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/SV18173.html#cruise-sv18173",
@@ -1530,7 +1530,7 @@
     "href": "cruise_oxygen/batched_reports/SV18067.html",
     "title": "SV18067 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/SV18067.html#cruise-sv18067",
@@ -1551,7 +1551,7 @@
     "href": "cruise_oxygen/batched_reports/WB22215.html",
     "title": "WB22215 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WB22215.html#cruise-wb22215",
@@ -1572,7 +1572,7 @@
     "href": "cruise_oxygen/batched_reports/WS0612.html",
     "title": "WS0612 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0612.html#cruise-ws0612",
@@ -1593,7 +1593,7 @@
     "href": "cruise_oxygen/batched_reports/WS0623.html",
     "title": "WS0623 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0623.html#cruise-ws0623",
@@ -1614,7 +1614,7 @@
     "href": "cruise_oxygen/batched_reports/WS0718.html",
     "title": "WS0718 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0718.html#cruise-ws0718",
@@ -1635,7 +1635,7 @@
     "href": "cruise_oxygen/batched_reports/WS0807.html",
     "title": "WS0807 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0807.html#cruise-ws0807",
@@ -1656,7 +1656,7 @@
     "href": "cruise_oxygen/batched_reports/WS0906.html",
     "title": "WS0906 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0906.html#cruise-ws0906",
@@ -1677,7 +1677,7 @@
     "href": "cruise_oxygen/batched_reports/WS0919.html",
     "title": "WS0919 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS0919.html#cruise-ws0919",
@@ -1698,7 +1698,7 @@
     "href": "cruise_oxygen/batched_reports/WS1004.html",
     "title": "WS1004 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1004.html#cruise-ws1004",
@@ -1719,7 +1719,7 @@
     "href": "cruise_oxygen/batched_reports/WS1015.html",
     "title": "WS1015 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1015.html#cruise-ws1015",
@@ -1740,7 +1740,7 @@
     "href": "cruise_oxygen/batched_reports/WS1102.html",
     "title": "WS1102 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1102.html#cruise-ws1102",
@@ -1761,7 +1761,7 @@
     "href": "cruise_oxygen/batched_reports/WS1113.html",
     "title": "WS1113 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1113.html#cruise-ws1113",
@@ -1782,7 +1782,7 @@
     "href": "cruise_oxygen/batched_reports/WS1202.html",
     "title": "WS1202 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1202.html#cruise-ws1202",
@@ -1803,7 +1803,7 @@
     "href": "cruise_oxygen/batched_reports/WS1212.html",
     "title": "WS1212 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS1212.html#cruise-ws1212",
@@ -1824,7 +1824,7 @@
     "href": "cruise_oxygen/batched_reports/WS15103.html",
     "title": "WS15103 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS15103.html#cruise-ws15103",
@@ -1845,7 +1845,7 @@
     "href": "cruise_oxygen/batched_reports/WS15208.html",
     "title": "WS15208 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS15208.html#cruise-ws15208",
@@ -1866,7 +1866,7 @@
     "href": "cruise_oxygen/batched_reports/WS15320.html",
     "title": "WS15320 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS15320.html#cruise-ws15320",
@@ -1887,7 +1887,7 @@
     "href": "cruise_oxygen/batched_reports/WS16074.html",
     "title": "WS16074 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS16074.html#cruise-ws16074",
@@ -1908,7 +1908,7 @@
     "href": "cruise_oxygen/batched_reports/WS16263.html",
     "title": "WS16263 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS16263.html#cruise-ws16263",
@@ -1929,7 +1929,7 @@
     "href": "cruise_oxygen/batched_reports/WS17030.html",
     "title": "WS17030 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS17030.html#cruise-ws17030",
@@ -1950,7 +1950,7 @@
     "href": "cruise_oxygen/batched_reports/WS17170.html",
     "title": "WS17170 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS17170.html#cruise-ws17170",
@@ -1971,7 +1971,7 @@
     "href": "cruise_oxygen/batched_reports/WS17282.html",
     "title": "WS17282 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS17282.html#cruise-ws17282",
@@ -1992,7 +1992,7 @@
     "href": "cruise_oxygen/batched_reports/WS18120.html",
     "title": "WS18120 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS18120.html#cruise-ws18120",
@@ -2013,7 +2013,7 @@
     "href": "cruise_oxygen/batched_reports/WS18285.html",
     "title": "WS18285 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS18285.html#cruise-ws18285",
@@ -2034,7 +2034,7 @@
     "href": "cruise_oxygen/batched_reports/WS19028.html",
     "title": "WS19028 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS19028.html#cruise-ws19028",
@@ -2055,7 +2055,7 @@
     "href": "cruise_oxygen/batched_reports/WS19210.html",
     "title": "WS19210 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS19210.html#cruise-ws19210",
@@ -2076,7 +2076,7 @@
     "href": "cruise_oxygen/batched_reports/WS19322.html",
     "title": "WS19322 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS19322.html#cruise-ws19322",
@@ -2097,7 +2097,7 @@
     "href": "cruise_oxygen/batched_reports/WS20231.html",
     "title": "WS20231 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS20231.html#cruise-ws20231",
@@ -2118,7 +2118,7 @@
     "href": "cruise_oxygen/batched_reports/WS20342.html",
     "title": "WS20342 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS20342.html#cruise-ws20342",
@@ -2139,7 +2139,7 @@
     "href": "cruise_oxygen/batched_reports/WS21093.html",
     "title": "WS21093 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS21093.html#cruise-ws21093",
@@ -2160,7 +2160,7 @@
     "href": "cruise_oxygen/batched_reports/WS21212.html",
     "title": "WS21212 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS21212.html#cruise-ws21212",
@@ -2181,7 +2181,7 @@
     "href": "cruise_oxygen/batched_reports/WS21338.html",
     "title": "WS21338 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS21338.html#cruise-ws21338",
@@ -2202,7 +2202,7 @@
     "href": "cruise_oxygen/batched_reports/WS22072.html",
     "title": "WS22072 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS22072.html#cruise-ws22072",
@@ -2223,7 +2223,7 @@
     "href": "cruise_oxygen/batched_reports/WS22281.html",
     "title": "WS22281 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS22281.html#cruise-ws22281",
@@ -2244,7 +2244,7 @@
     "href": "cruise_oxygen/batched_reports/WS23011.html",
     "title": "WS23011 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS23011.html#cruise-ws23011",
@@ -2265,7 +2265,7 @@
     "href": "cruise_oxygen/batched_reports/WS23203.html",
     "title": "WS23203 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/depth_layers.R\")))\nsource(here(glue(\"{params$batch_name}/plot_oxygen_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_oxygen/batched_reports/WS23203.html#cruise-ws23203",
@@ -2293,7 +2293,7 @@
     "href": "cruise_anoxic_depth/batched_reports/SV18173.html",
     "title": "SV18173 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/SV18173.html#cruise-sv18173",
@@ -2314,7 +2314,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0603.html",
     "title": "WS0603 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0603.html#cruise-ws0603",
@@ -2335,7 +2335,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0618.html",
     "title": "WS0618 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0618.html#cruise-ws0618",
@@ -2356,7 +2356,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0704.html",
     "title": "WS0704 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0704.html#cruise-ws0704",
@@ -2377,7 +2377,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0802.html",
     "title": "WS0802 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0802.html#cruise-ws0802",
@@ -2398,7 +2398,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0901.html",
     "title": "WS0901 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0901.html#cruise-ws0901",
@@ -2419,7 +2419,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0914.html",
     "title": "WS0914 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0914.html#cruise-ws0914",
@@ -2440,7 +2440,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS0923.html",
     "title": "WS0923 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS0923.html#cruise-ws0923",
@@ -2461,7 +2461,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1007.html",
     "title": "WS1007 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1007.html#cruise-ws1007",
@@ -2482,7 +2482,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1018.html",
     "title": "WS1018 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1018.html#cruise-ws1018",
@@ -2503,7 +2503,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1106.html",
     "title": "WS1106 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1106.html#cruise-ws1106",
@@ -2524,7 +2524,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1116.html",
     "title": "WS1116 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1116.html#cruise-ws1116",
@@ -2545,7 +2545,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS1207.html",
     "title": "WS1207 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS1207.html#cruise-ws1207",
@@ -2566,7 +2566,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS14335.html",
     "title": "WS14335 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS14335.html#cruise-ws14335",
@@ -2587,7 +2587,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS15148.html",
     "title": "WS15148 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS15148.html#cruise-ws15148",
@@ -2608,7 +2608,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS15264.html",
     "title": "WS15264 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS15264.html#cruise-ws15264",
@@ -2629,7 +2629,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS16004.html",
     "title": "WS16004 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS16004.html#cruise-ws16004",
@@ -2650,7 +2650,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS16207.html",
     "title": "WS16207 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS16207.html#cruise-ws16207",
@@ -2671,7 +2671,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS16319.html",
     "title": "WS16319 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS16319.html#cruise-ws16319",
@@ -2692,7 +2692,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS17086.html",
     "title": "WS17086 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS17086.html#cruise-ws17086",
@@ -2713,7 +2713,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS17212.html",
     "title": "WS17212 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS17212.html#cruise-ws17212",
@@ -2734,7 +2734,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS18008.html",
     "title": "WS18008 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS18008.html#cruise-ws18008",
@@ -2755,7 +2755,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS18218.html",
     "title": "WS18218 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS18218.html#cruise-ws18218",
@@ -2776,7 +2776,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS18351.html",
     "title": "WS18351 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS18351.html#cruise-ws18351",
@@ -2797,7 +2797,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS19119.html",
     "title": "WS19119 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS19119.html#cruise-ws19119",
@@ -2818,7 +2818,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS19266.html",
     "title": "WS19266 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS19266.html#cruise-ws19266",
@@ -2839,7 +2839,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS20006.html",
     "title": "WS20006 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS20006.html#cruise-ws20006",
@@ -2860,7 +2860,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS20279.html",
     "title": "WS20279 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS20279.html#cruise-ws20279",
@@ -2881,7 +2881,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS21032.html",
     "title": "WS21032 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS21032.html#cruise-ws21032",
@@ -2902,7 +2902,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS21151.html",
     "title": "WS21151 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS21151.html#cruise-ws21151",
@@ -2923,7 +2923,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS21278.html",
     "title": "WS21278 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS21278.html#cruise-ws21278",
@@ -2944,7 +2944,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS22022.html",
     "title": "WS22022 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS22022.html#cruise-ws22022",
@@ -2965,7 +2965,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS22141.html",
     "title": "WS22141 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS22141.html#cruise-ws22141",
@@ -2986,7 +2986,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS22337.html",
     "title": "WS22337 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS22337.html#cruise-ws22337",
@@ -3007,7 +3007,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS23061.html",
     "title": "WS23061 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS23061.html#cruise-ws23061",
@@ -3028,7 +3028,7 @@
     "href": "cruise_anoxic_depth/batched_reports/WS24139.html",
     "title": "WS24139 Report",
     "section": "",
-    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
+    "text": "Load cleaned observations and interpolated oxygen field\nsource(here(glue(\"{params$batch_name}/getData.R\")))\nsource(here(\"R/color_scales.R\"))\nsource(here(glue(\"{params$batch_name}/anoxic_depth.R\")))\nsource(here(glue(\"{params$batch_name}/plot_anoxic_depth_map.R\")))\n\ndata &lt;- getData(params$batch_value)\nobs &lt;- data$observations\nfield &lt;- data$oxygen_field"
   },
   {
     "objectID": "cruise_anoxic_depth/batched_reports/WS24139.html#cruise-ws24139",
