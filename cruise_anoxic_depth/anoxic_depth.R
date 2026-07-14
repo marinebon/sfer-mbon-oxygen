@@ -22,7 +22,13 @@ anoxic_depth_grid <- function(field, threshold) {
     depth <- if (!any(below)) {
       NA_real_
     } else {
-      min(profile$depth_m[below])
+      raw_depth <- min(profile$depth_m[below])
+      surface_depth <- min(profile$depth_m, na.rm = TRUE)
+      if (raw_depth <= surface_depth + 1e-6) {
+        0
+      } else {
+        max(0, raw_depth)
+      }
     }
 
     data.frame(

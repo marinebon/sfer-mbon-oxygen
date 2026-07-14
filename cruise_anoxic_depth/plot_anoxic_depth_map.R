@@ -152,14 +152,25 @@ function(el, x) {
     var depths = Array.isArray(cell.depths) ? cell.depths : [cell.depths];
     var oxygens = Array.isArray(cell.oxygens) ? cell.oxygens : [cell.oxygens];
     var minDepth = null;
+    var surfaceDepth = null;
     for (var i = 0; i < depths.length; i++) {
+      if (!isFinite(depths[i])) continue;
+      if (surfaceDepth === null || depths[i] < surfaceDepth) {
+        surfaceDepth = depths[i];
+      }
       if (oxygens[i] < o2Threshold) {
         if (minDepth === null || depths[i] < minDepth) {
           minDepth = depths[i];
         }
       }
     }
-    return minDepth;
+    if (minDepth === null || !isFinite(minDepth)) {
+      return null;
+    }
+    if (surfaceDepth !== null && minDepth <= surfaceDepth + 1e-6) {
+      return 0;
+    }
+    return Math.max(0, minDepth);
   }
 
   function colorForDepth(depth) {

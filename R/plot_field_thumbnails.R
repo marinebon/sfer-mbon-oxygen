@@ -153,19 +153,24 @@ save_anoxic_depth_thumbnail <- function(field, output_file, observations = NULL)
     return(invisible(FALSE))
   }
 
-  grid <- grid[is.finite(grid$anoxic_depth_m), , drop = FALSE]
-  if (nrow(grid) == 0) {
+  if (!any(is.finite(grid$anoxic_depth_m))) {
     return(invisible(FALSE))
   }
 
   mat_info <- field_to_matrix(grid, "anoxic_depth_m")
-  save_field_matrix_thumbnail(
-    mat_info$lons,
-    mat_info$lats,
+  lons <- mat_info$lons
+  lats <- mat_info$lats
+  cell_dx <- if (length(lons) > 1) diff(lons)[1] else 0.02
+  cell_dy <- if (length(lats) > 1) diff(lats)[1] else 0.02
+  save_matrix_rect_thumbnail(
+    lons,
+    lats,
     mat_info$mat,
     output_file,
     palette = ANOXIC_DEPTH_PALETTE(256),
     zlim = anoxic_depth_color_domain(field),
-    legend_title = "Depth below threshold (m)"
+    legend_title = "Depth below threshold (m)",
+    cell_dx = cell_dx,
+    cell_dy = cell_dy
   )
 }
