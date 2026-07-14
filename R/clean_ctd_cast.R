@@ -28,13 +28,6 @@ clean_ctd_cast <- function(
     ))
   }
 
-  metadata <- get_metadata_from_cast_id(cast_id, cruise_id = cruise_id, raw_file = raw_file)
-  cast <- ctd_load_from_csv(raw_file, cast_id = cast_id, cruise_id = cruise_id)
-
-  trimmed_cast <- oce::ctdTrim(cast)
-  decimated_cast <- oce::ctdDecimate(trimmed_cast, p = decimate_p)
-  cleaned_scans <- decimated_cast@data$scan
-
   if (!exists("read_erddap_tabledap_csv", mode = "function")) {
     if (requireNamespace("here", quietly = TRUE)) {
       source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
@@ -42,10 +35,32 @@ clean_ctd_cast <- function(
       source("R/erddap_ctd_resolve.R", local = TRUE)
     }
   }
+  if (!exists("apply_qc_filter", mode = "function")) {
+    if (requireNamespace("here", quietly = TRUE)) {
+      source(here::here("R/qc_filter.R"), local = TRUE)
+    } else {
+      source("R/qc_filter.R", local = TRUE)
+    }
+  }
 
+  metadata <- get_metadata_from_cast_id(cast_id, cruise_id = cruise_id, raw_file = raw_file)
   ctd_raw <- read_erddap_tabledap_csv(raw_file)
-  raw_rows <- sum(!is.na(ctd_raw$sea_water_pressure))
-  cast_df <- ctd_raw %>%
+  raw_rows <- count_qc_pressure_rows(ctd_raw)
+  ctd_qc <- apply_qc_filter(ctd_raw)
+  qc_rows <- count_qc_pressure_rows(ctd_qc)
+
+  cast <- ctd_load_from_csv(
+    raw_file,
+    cast_id = cast_id,
+    cruise_id = cruise_id,
+    ctd_raw = ctd_qc
+  )
+
+  trimmed_cast <- oce::ctdTrim(cast)
+  decimated_cast <- oce::ctdDecimate(trimmed_cast, p = decimate_p)
+  cleaned_scans <- decimated_cast@data$scan
+
+  cast_df <- ctd_qc %>%
     dplyr::filter(!is.na(sea_water_pressure)) %>%
     dplyr::mutate(row_num = dplyr::row_number()) %>%
     dplyr::filter(row_num %in% cleaned_scans) %>%
@@ -53,7 +68,8 @@ clean_ctd_cast <- function(
     dplyr::mutate(
       station = metadata$station_id,
       cruise_id = metadata$cruise_id
-    )
+    ) %>%
+    remove_qc_columns()
 
   if (nrow(cast_df) == 0) {
     return(list(
@@ -62,6 +78,7 @@ clean_ctd_cast <- function(
       cruise_id = cruise_id,
       output_file = output_file,
       raw_rows = raw_rows,
+      qc_rows = qc_rows,
       clean_rows = 0L
     ))
   }
@@ -76,6 +93,7 @@ clean_ctd_cast <- function(
     rows = nrow(cast_df),
     output_file = output_file,
     raw_rows = raw_rows,
+    qc_rows = qc_rows,
     clean_rows = nrow(cast_df)
   )
 }

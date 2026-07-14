@@ -1,17 +1,26 @@
-ctd_load_from_csv <- function(file, cast_id = NULL, cruise_id = NULL) {
-  if (is.null(cast_id)) {
-    cast_id <- sub("\\.csv$", "", basename(file))
-  }
-
-  if (!exists("read_erddap_tabledap_csv", mode = "function")) {
-    if (requireNamespace("here", quietly = TRUE)) {
-      source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
-    } else {
-      source("R/erddap_ctd_resolve.R", local = TRUE)
+ctd_load_from_csv <- function(file = NULL, cast_id = NULL, cruise_id = NULL, ctd_raw = NULL) {
+  if (is.null(ctd_raw)) {
+    if (is.null(file)) {
+      stop("Either file or ctd_raw must be provided.")
     }
-  }
+    if (is.null(cast_id)) {
+      cast_id <- sub("\\.csv$", "", basename(file))
+    }
 
-  ctd_raw <- read_erddap_tabledap_csv(file)
+    if (!exists("read_erddap_tabledap_csv", mode = "function")) {
+      if (requireNamespace("here", quietly = TRUE)) {
+        source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
+      } else {
+        source("R/erddap_ctd_resolve.R", local = TRUE)
+      }
+    }
+
+    ctd_raw <- read_erddap_tabledap_csv(file)
+  } else if (is.null(cast_id) && !is.null(file)) {
+    cast_id <- sub("\\.csv$", "", basename(file))
+  } else if (is.null(cast_id)) {
+    stop("cast_id is required when loading from ctd_raw.")
+  }
 
   metadata <- get_metadata_from_cast_id(cast_id, cruise_id = cruise_id)
   station_id <- metadata$station_id

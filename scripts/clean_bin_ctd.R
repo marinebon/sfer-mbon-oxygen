@@ -17,6 +17,7 @@ library(oce)
 
 source(here("R/get_metadata_from_cast_id.R"))
 source(here("R/ctd_load_from_csv.R"))
+source(here("R/qc_filter.R"))
 source(here("R/clean_ctd_cast.R"))
 source(here("R/summarize_processing.R"))
 source(here("scripts/read_ctd_mapping.R"))
@@ -80,6 +81,7 @@ for (cruise_id in cruise_ids_for_run(mapping)) {
       cruise_id = result$cruise_id,
       status = result$status,
       raw_rows = if (!is.null(result$raw_rows)) result$raw_rows else NA_integer_,
+      qc_rows = if (!is.null(result$qc_rows)) result$qc_rows else NA_integer_,
       clean_rows = if (!is.null(result$clean_rows)) result$clean_rows else NA_integer_,
       error = if (!is.null(result$error)) result$error else NA_character_,
       stringsAsFactors = FALSE
