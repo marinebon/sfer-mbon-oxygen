@@ -4,8 +4,7 @@ getListOfValues <- function() {
   }
 
   source(here::here("scripts/read_ctd_mapping.R"), local = TRUE)
-  mapping <- read_ctd_mapping()
-  cruises <- unique_cruise_ids(mapping)
+  cruises <- list_cruise_ids()
 
   values <- cruises[file.exists(
     here::here("data", "interpolated", cruises, "oxygen_field.csv")

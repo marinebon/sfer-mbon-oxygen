@@ -3,7 +3,15 @@ ctd_load_from_csv <- function(file, cast_id = NULL, cruise_id = NULL) {
     cast_id <- sub("\\.csv$", "", basename(file))
   }
 
-  ctd_raw <- readr::read_csv(file, show_col_types = FALSE)
+  if (!exists("read_erddap_tabledap_csv", mode = "function")) {
+    if (requireNamespace("here", quietly = TRUE)) {
+      source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
+    } else {
+      source("R/erddap_ctd_resolve.R", local = TRUE)
+    }
+  }
+
+  ctd_raw <- read_erddap_tabledap_csv(file)
 
   metadata <- get_metadata_from_cast_id(cast_id, cruise_id = cruise_id)
   station_id <- metadata$station_id

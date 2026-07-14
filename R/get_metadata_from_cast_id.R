@@ -1,12 +1,29 @@
-get_metadata_from_cast_id <- function(cast_id, cruise_id = NULL) {
+get_metadata_from_cast_id <- function(cast_id, cruise_id = NULL, raw_file = NULL) {
   if (grepl("^SFER_CTD_", cast_id)) {
-    if (is.null(cruise_id)) {
-      cruise_id <- sub("^SFER_CTD_([^_]+)_.*", "\\1", cast_id)
+    if (!exists("parse_sfer_ctd_id", mode = "function")) {
+      if (requireNamespace("here", quietly = TRUE)) {
+        source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
+      } else {
+        source("R/erddap_ctd_resolve.R", local = TRUE)
+      }
     }
-    station_id <- sub(paste0("^SFER_CTD_", cruise_id, "_"), "", cast_id)
+
+    parsed <- parse_sfer_ctd_id(cast_id)
+    if (is.null(parsed)) {
+      stop("Could not parse SFER CTD cast id: ", cast_id)
+    }
+
+    station_id <- parsed$station_id
+    if (!is.null(raw_file) && file.exists(raw_file)) {
+      station_from_file <- read_station_from_erddap_csv(raw_file)
+      if (!is.na(station_from_file) && nzchar(station_from_file)) {
+        station_id <- station_from_file
+      }
+    }
+
     return(list(
       cast_id = cast_id,
-      cruise_id = cruise_id,
+      cruise_id = if (is.null(cruise_id)) parsed$cruise_id else cruise_id,
       station_id = station_id
     ))
   }

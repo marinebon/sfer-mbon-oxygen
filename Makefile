@@ -20,7 +20,7 @@ help:
 	@echo "SFER MBON Oxygen pipeline"
 	@echo ""
 	@echo "Targets:"
-	@echo "  make download        Download raw CTD data for each cruise in data/ctd_datasetid_cruisename_stationname_mapping.csv"
+	@echo "  make download        Download SFER CTD datasets from GCOOS ERDDAP"
 	@echo "  make process         Clean raw CTD casts with oce into data/02_clean/ (skips up-to-date outputs)"
 	@echo "  make report-process  Render reports/processing_summary.qmd (run after make process)"
 	@echo "  make interpolate     Build DIVAnd oxygen fields for one cruise (CRUISE=$(CRUISE))"
@@ -32,10 +32,10 @@ help:
 
 # all: render
 
-download: data/ctd_datasetid_cruisename_stationname_mapping.csv
+download:
 	Rscript scripts/download_cruises.R
 
-download-cruise: data/ctd_datasetid_cruisename_stationname_mapping.csv
+download-cruise:
 	Rscript scripts/download_cruises.R $(CRUISE)
 
 process: download

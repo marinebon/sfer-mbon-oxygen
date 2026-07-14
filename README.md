@@ -15,7 +15,7 @@ On first run, R and Julia dependencies are installed automatically from `scripts
 
 ## Pipeline overview
 
-Cruises and stations are listed in [`data/ctd_datasetid_cruisename_stationname_mapping.csv`](data/ctd_datasetid_cruisename_stationname_mapping.csv). The Makefile runs these steps in order:
+Cruises and stations are discovered from GCOOS ERDDAP (`SFER_CTD_*` datasets). The Makefile runs these steps in order:
 
 | Step | Target | What it does |
 |------|--------|--------------|
@@ -52,7 +52,6 @@ make clean
 
 ```
 data/
-├── ctd_datasetid_cruisename_stationname_mapping.csv  # cruise inventory for reports (tracked in git)
 ├── 01_raw/                  # downloaded raw CTD files
 │   ├── {cruise_id}/         # one folder per cruise
 │   │   └── SFER_CTD_*.csv   # one file per ERDDAP dataset
@@ -68,13 +67,13 @@ reports/
 
 ### Cruise inventory
 
-[`data/ctd_datasetid_cruisename_stationname_mapping.csv`](data/ctd_datasetid_cruisename_stationname_mapping.csv) lists cruises included in the pipeline. CTD dataset naming is handled upstream on GCOOS ERDDAP (`SFER_CTD_{cruise_id}_{station}`).
+Cruises are listed by querying ERDDAP for datasets matching `SFER_CTD_*` (see [`R/erddap_ctd_resolve.R`](R/erddap_ctd_resolve.R)). Each dataset id follows `SFER_CTD_{cruise_id}_{station_id}`; underscores in the station segment represent decimal points (e.g. `9_5` → station 9.5), and suffixes like `_2` or `-2` mark repeat casts at the same station.
 
-[`example_batch/getListOfValues.R`](example_batch/getListOfValues.R) reads unique `cruise_id` values from this file. [`example_batch/getData.R`](example_batch/getData.R) loads processed and interpolated outputs for each report.
+[`scripts/read_ctd_mapping.R`](scripts/read_ctd_mapping.R) prefers cruise ids from cleaned or raw data on disk, then falls back to ERDDAP discovery. [`example_batch/getListOfValues.R`](example_batch/getListOfValues.R) uses the same listing for report batching.
 
 ### Downloading from ERDDAP
 
-[`scripts/download_cruises.R`](scripts/download_cruises.R) searches ERDDAP for `SFER_CTD_{cruise_id}_*` datasets and saves each as `data/01_raw/{cruise_id}/{erddap_dataset_id}.csv`. Existing files are skipped; results are logged to `data/01_raw/download_log.csv`.
+[`scripts/download_cruises.R`](scripts/download_cruises.R) discovers cruises from ERDDAP, then downloads each `SFER_CTD_{cruise_id}_{station_id}` dataset as `data/01_raw/{cruise_id}/{erddap_dataset_id}.csv`. Station labels in the CSV override parsed ids when present. Existing files are skipped; results are logged to `data/01_raw/download_log.csv`.
 
 
 ## Website deployment

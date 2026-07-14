@@ -1264,26 +1264,49 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
     println("Wrote $output_file")
 end
 
-function main()
-    cruise_filter = nothing
-    csv_path = MAPPING_CSV
-
-    if length(ARGS) >= 1
-        if endswith(ARGS[1], ".csv")
-            csv_path = ARGS[1]
-        else
-            cruise_filter = ARGS[1]
+function list_cruise_ids_from_clean(clean_root::AbstractString)
+    prefix_matches = String[]
+    for file in readdir(clean_root)
+        if startswith(file, "SFER_CTD_") && endswith(file, ".csv") && file != "processing_log.csv"
+            push!(prefix_matches, file)
         end
     end
 
-    mapping = read_ctd_mapping(csv_path)
-    cruise_ids = unique_cruise_ids(mapping)
+    cruise_ids = String[]
+    for file in prefix_matches
+        m = match(r"^SFER_CTD_([^_]+)_", file)
+        if m !== nothing
+            push!(cruise_ids, m.captures[1])
+        end
+    end
 
-    if !isnothing(cruise_filter)
+    sort(unique(cruise_ids))
+end
+
+function main()
+    cruise_filter = nothing
+
+    if length(ARGS) >= 1 && !endswith(ARGS[1], ".csv")
+        cruise_filter = ARGS[1]
+    end
+
+    cruise_ids = list_cruise_ids_from_clean(CLEAN_ROOT)
+    if isempty(cruise_ids) && isfile(MAPPING_CSV)
+        mapping = read_ctd_mapping(MAPPING_CSV)
+        cruise_ids = unique_cruise_ids(mapping)
+    end
+
+    if isnothing(cruise_filter)
+        # process all discovered cruises
+    else
         if !(cruise_filter in cruise_ids)
-            error("Cruise $cruise_filter not found in mapping file")
+            push!(cruise_ids, cruise_filter)
         end
         cruise_ids = [cruise_filter]
+    end
+
+    if isempty(cruise_ids)
+        error("No cruises found in cleaned CTD data under $CLEAN_ROOT")
     end
 
     for cruise_id in cruise_ids

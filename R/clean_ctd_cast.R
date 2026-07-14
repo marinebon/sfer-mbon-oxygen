@@ -28,14 +28,22 @@ clean_ctd_cast <- function(
     ))
   }
 
-  metadata <- get_metadata_from_cast_id(cast_id, cruise_id = cruise_id)
+  metadata <- get_metadata_from_cast_id(cast_id, cruise_id = cruise_id, raw_file = raw_file)
   cast <- ctd_load_from_csv(raw_file, cast_id = cast_id, cruise_id = cruise_id)
 
   trimmed_cast <- oce::ctdTrim(cast)
   decimated_cast <- oce::ctdDecimate(trimmed_cast, p = decimate_p)
   cleaned_scans <- decimated_cast@data$scan
 
-  ctd_raw <- readr::read_csv(raw_file, show_col_types = FALSE)
+  if (!exists("read_erddap_tabledap_csv", mode = "function")) {
+    if (requireNamespace("here", quietly = TRUE)) {
+      source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
+    } else {
+      source("R/erddap_ctd_resolve.R", local = TRUE)
+    }
+  }
+
+  ctd_raw <- read_erddap_tabledap_csv(raw_file)
   raw_rows <- sum(!is.na(ctd_raw$sea_water_pressure))
   cast_df <- ctd_raw %>%
     dplyr::filter(!is.na(sea_water_pressure)) %>%

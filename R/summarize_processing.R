@@ -1,5 +1,8 @@
 count_pressure_rows <- function(csv_file) {
-  df <- readr::read_csv(csv_file, show_col_types = FALSE)
+  if (!exists("read_erddap_tabledap_csv", mode = "function")) {
+    source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
+  }
+  df <- read_erddap_tabledap_csv(csv_file)
   sum(!is.na(df$sea_water_pressure))
 }
 
@@ -9,7 +12,10 @@ summarize_cast_processing <- function(raw_file, clean_root) {
   clean_file <- file.path(clean_root, paste0(cast_id, ".csv"))
 
   raw_rows <- count_pressure_rows(raw_file)
-  raw_df <- readr::read_csv(raw_file, show_col_types = FALSE)
+  if (!exists("read_erddap_tabledap_csv", mode = "function")) {
+    source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
+  }
+  raw_df <- read_erddap_tabledap_csv(raw_file)
   depth_col <- if ("depth" %in% names(raw_df)) "depth" else "sea_water_pressure"
 
   if (file.exists(clean_file)) {
@@ -56,10 +62,9 @@ summarize_all_processing <- function(
 ) {
   source(here::here("scripts/read_ctd_mapping.R"), local = TRUE)
 
-  mapping <- read_ctd_mapping()
   cast_summaries <- list()
 
-  for (cruise_id in unique_cruise_ids(mapping)) {
+  for (cruise_id in cruise_ids_for_run()) {
     cruise_raw_dir <- file.path(raw_root, cruise_id)
     if (!dir.exists(cruise_raw_dir)) {
       next
