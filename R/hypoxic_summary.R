@@ -1,5 +1,7 @@
 DEFAULT_HYPOXIC_O2_THRESHOLD <- 2.0
 
+source(here::here("R/depth_layers.R"))
+
 list_cruises_with_clean_ctd <- function(
     clean_root = here::here("data", "02_clean")) {
   if (!dir.exists(clean_root)) {
@@ -62,6 +64,35 @@ load_cruise_observations <- function(
   obs <- load_clean_ctd_observations(clean_files)
   obs$cruise_id <- cruise_id
   obs
+}
+
+load_all_cruise_observations <- function(
+    clean_root = here::here("data", "02_clean")) {
+  cruises <- list_cruises_with_clean_ctd(clean_root)
+  if (length(cruises) == 0) {
+    return(data.frame())
+  }
+
+  rows <- lapply(cruises, function(cruise_id) {
+    load_cruise_observations(cruise_id, clean_root)
+  })
+  rows <- Filter(Negate(is.null), rows)
+  if (length(rows) == 0) {
+    return(data.frame())
+  }
+
+  out <- do.call(rbind, rows)
+  rownames(out) <- NULL
+  out
+}
+
+depth_layers_for_observations <- function(observations) {
+  obs <- valid_observations(observations)
+  if (nrow(obs) == 0) {
+    return(oxygen_depth_layers())
+  }
+
+  oxygen_depth_layers(max_depth = max(obs$depth, na.rm = TRUE))
 }
 
 valid_observations <- function(observations) {
@@ -175,9 +206,7 @@ summarize_cruise_hypoxic <- function(
     )
 
   n_casts <- nrow(cast_summary)
-  hypoxic_casts <- cast_summary |>
-    dplyr::filter(.data$min_o2 < threshold)
-  n_hypoxic_casts <- nrow(hypoxic_casts)
+  n_hypoxic_casts <- sum(cast_summary$min_o2 < threshold, na.rm = TRUE)
 
   pct_casts_hypoxic <- if (n_casts > 0) {
     100 * n_hypoxic_casts / n_casts
@@ -232,14 +261,23 @@ summarize_cruise_hypoxic <- function(
 
 summarize_all_cruises_hypoxic <- function(
     threshold = DEFAULT_HYPOXIC_O2_THRESHOLD,
-    clean_root = here::here("data", "02_clean")) {
-  cruises <- list_cruises_with_clean_ctd(clean_root)
-  if (length(cruises) == 0) {
+    clean_root = here::here("data", "02_clean"),
+    observations = NULL) {
+  if (is.null(observations)) {
+    observations <- load_all_cruise_observations(clean_root)
+  }
+  if (nrow(observations) == 0) {
     return(data.frame())
   }
 
+  cruises <- sort(unique(observations$cruise_id))
   rows <- lapply(cruises, function(cruise_id) {
-    summarize_cruise_hypoxic(cruise_id, threshold, clean_root = clean_root)
+    cruise_obs <- observations[observations$cruise_id == cruise_id, , drop = FALSE]
+    summarize_cruise_hypoxic(
+      cruise_id,
+      threshold,
+      observations = cruise_obs
+    )
   })
   rows <- Filter(Negate(is.null), rows)
   if (length(rows) == 0) {
@@ -257,16 +295,20 @@ summarize_all_cruises_hypoxic <- function(
 hypoxic_extent_by_depth_all_cruises <- function(
     threshold = DEFAULT_HYPOXIC_O2_THRESHOLD,
     clean_root = here::here("data", "02_clean"),
+    observations = NULL,
     bin_m = 4) {
-  cruises <- list_cruises_with_clean_ctd(clean_root)
-  if (length(cruises) == 0) {
+  if (is.null(observations)) {
+    observations <- load_all_cruise_observations(clean_root)
+  }
+  if (nrow(observations) == 0) {
     return(data.frame())
   }
 
   dates <- cruise_dates_from_mapping()
+  cruises <- sort(unique(observations$cruise_id))
   rows <- lapply(cruises, function(cruise_id) {
-    obs <- load_cruise_observations(cruise_id, clean_root)
-    extent <- hypoxic_extent_by_depth(obs, threshold, bin_m = bin_m)
+    cruise_obs <- observations[observations$cruise_id == cruise_id, , drop = FALSE]
+    extent <- hypoxic_extent_by_depth(cruise_obs, threshold, bin_m = bin_m)
     if (is.null(extent)) {
       return(NULL)
     }
@@ -285,16 +327,20 @@ hypoxic_extent_by_depth_all_cruises <- function(
 
 hypoxic_observations_all_cruises <- function(
     threshold = DEFAULT_HYPOXIC_O2_THRESHOLD,
-    clean_root = here::here("data", "02_clean")) {
-  cruises <- list_cruises_with_clean_ctd(clean_root)
-  if (length(cruises) == 0) {
+    clean_root = here::here("data", "02_clean"),
+    observations = NULL) {
+  if (is.null(observations)) {
+    observations <- load_all_cruise_observations(clean_root)
+  }
+  if (nrow(observations) == 0) {
     return(data.frame())
   }
 
   dates <- cruise_dates_from_mapping()
+  cruises <- sort(unique(observations$cruise_id))
   rows <- lapply(cruises, function(cruise_id) {
-    obs <- load_cruise_observations(cruise_id, clean_root)
-    cast_summary <- summarize_hypoxic_casts(obs, threshold)
+    cruise_obs <- observations[observations$cruise_id == cruise_id, , drop = FALSE]
+    cast_summary <- summarize_hypoxic_casts(cruise_obs, threshold)
     if (is.null(cast_summary) || nrow(cast_summary) == 0) {
       return(NULL)
     }
@@ -309,4 +355,85 @@ hypoxic_observations_all_cruises <- function(
   out <- do.call(rbind, rows)
   out <- dplyr::left_join(out, dates, by = "cruise_id")
   out[order(out$cruise_date, out$cruise_id, out$shallowest_hypoxic_depth_m), , drop = FALSE]
+}
+
+#' Build per-layer payloads for the hypoxic events Leaflet map.
+build_hypoxic_events_map_payload <- function(
+    observations,
+    threshold,
+    layers = NULL) {
+  obs <- valid_observations(observations)
+  if (nrow(obs) == 0) {
+    return(list())
+  }
+
+  if (is.null(layers)) {
+    layers <- depth_layers_for_observations(obs)
+  }
+
+  depth_layers <- list()
+  for (layer in layers) {
+    slice <- slice_observations_in_layer(
+      obs,
+      layer$depth_min,
+      layer$depth_max
+    )
+    slice <- slice[slice$dissolved_oxygen < threshold, , drop = FALSE]
+    if (nrow(slice) == 0) {
+      next
+    }
+
+    events <- lapply(seq_len(nrow(slice)), function(i) {
+      row <- slice[i, , drop = FALSE]
+      list(
+        lon = as.numeric(row$longitude),
+        lat = as.numeric(row$latitude),
+        o2 = as.numeric(row$dissolved_oxygen),
+        depth = as.numeric(row$depth),
+        cruise_id = as.character(row$cruise_id),
+        cast_id = as.character(row$cast_id),
+        label = sprintf(
+          paste0(
+            "%s / %s\nO\u2082: %.2f mg/L\nDepth: %.1f m"
+          ),
+          row$cruise_id,
+          row$cast_id,
+          row$dissolved_oxygen,
+          row$depth
+        ),
+        popup = sprintf(
+          paste0(
+            "Cruise: %s<br>Cast: %s<br>",
+            "O\u2082: %.2f mg/L<br>Depth: %.1f m<br>",
+            "Lat: %.5f<br>Lon: %.5f"
+          ),
+          row$cruise_id,
+          row$cast_id,
+          row$dissolved_oxygen,
+          row$depth,
+          row$latitude,
+          row$longitude
+        )
+      )
+    })
+
+    depth_layers[[length(depth_layers) + 1L]] <- list(
+      label = layer$range_label,
+      n_events = length(events),
+      events = events
+    )
+  }
+
+  depth_layers
+}
+
+cruise_labels_ordered <- function(depth_extent) {
+  depth_extent |>
+    dplyr::filter(!is.na(.data$cruise_date)) |>
+    dplyr::arrange(.data$cruise_date, .data$cruise_id) |>
+    dplyr::distinct(.data$cruise_id, .data$cruise_date) |>
+    dplyr::mutate(
+      label = paste0(.data$cruise_id, " (", format(.data$cruise_date, "%Y-%m"), ")")
+    ) |>
+    dplyr::pull(.data$label)
 }

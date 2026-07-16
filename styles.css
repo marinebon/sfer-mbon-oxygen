@@ -1,1 +1,6 @@
 /* css styles */
+
+.leaflet-div-icon.hypoxic-x-marker {
+  background: transparent;
+  border: none;
+}
