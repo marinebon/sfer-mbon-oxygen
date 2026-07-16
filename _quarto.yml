@@ -5,6 +5,7 @@ project:
   - cruise_anoxic_depth/generate_batch_qmds.R
   render:
   - index.qmd
+  - reports/hypoxic_extent.qmd
   - cruise_oxygen/batched_reports/*.qmd
   - cruise_oxygen/listing.qmd
   - cruise_anoxic_depth/batched_reports/*.qmd
@@ -17,6 +18,7 @@ website:
       text: Home
     - cruise_oxygen/listing.qmd
     - cruise_anoxic_depth/listing.qmd
+    - reports/hypoxic_extent.qmd
     - href: https://github.com/7yl4r/quartobatch
       text: Source Code on GitHub
 format:

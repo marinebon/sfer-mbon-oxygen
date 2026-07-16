@@ -6,3 +6,4 @@ Cruise reports generated from cleaned CTD data and DIVAnd-interpolated dissolved
 
 - [Oxygen field maps](cruise_oxygen/listing.qmd)
 - [Anoxic depth maps](cruise_anoxic_depth/listing.qmd)
+- [Hypoxic extent across cruises](reports/hypoxic_extent.qmd)

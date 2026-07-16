@@ -1,0 +1,294 @@
+---
+title: "Hypoxic extent across cruises"
+subtitle: "When and where dissolved oxygen falls below a hypoxic threshold (CTD casts)"
+params:
+  o2_threshold: 2.0
+execute:
+  echo: false
+  message: false
+  warning: false
+---
+
+This report summarizes **when** (by cruise date and depth) and **where** (across the study domain) cleaned **CTD cast** dissolved oxygen falls below a hypoxic threshold. The default threshold is **2.0 mg/L**. Change `params.o2_threshold` in the YAML front matter or pass `--execute-params` when rendering:
+
+```bash
+quarto render reports/hypoxic_extent.qmd --execute-params '{"o2_threshold": 1.5}'
+```
+
+Run after processing:
+
+```bash
+make process
+make report-hypoxic
+```
+
+```{r setup}
+ensure_packages <- function(pkgs) {
+  for (pkg in pkgs) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      install.packages(pkg, repos = "https://cloud.r-project.org")
+    }
+  }
+}
+
+ensure_packages(c(
+  "here", "dplyr", "ggplot2", "knitr", "leaflet", "scales", "viridisLite"
+))
+
+library(here)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(leaflet)
+library(scales)
+library(viridisLite)
+
+o2_threshold <- params$o2_threshold
+if (!is.numeric(o2_threshold) || length(o2_threshold) != 1 || !is.finite(o2_threshold)) {
+  stop("params$o2_threshold must be a single finite number (mg/L).")
+}
+
+source(here("R/hypoxic_summary.R"))
+
+cruise_summary <- summarize_all_cruises_hypoxic(o2_threshold)
+depth_extent <- hypoxic_extent_by_depth_all_cruises(o2_threshold)
+hypoxic_obs <- hypoxic_observations_all_cruises(o2_threshold)
+n_cruises <- nrow(cruise_summary)
+n_hypoxic_casts <- if (nrow(hypoxic_obs) > 0) nrow(hypoxic_obs) else 0L
+```
+
+## Overview
+
+| Metric | Value |
+|--------|------:|
+| O₂ threshold (mg/L) | `r o2_threshold` |
+| Cruises with cleaned CTD data | `r n_cruises` |
+| Cruises with hypoxic casts | `r sum(cruise_summary$pct_casts_hypoxic > 0, na.rm = TRUE)` |
+| Hypoxic casts | `r n_hypoxic_casts` |
+| Total CTD observations | `r sum(cruise_summary$n_obs, na.rm = TRUE)` |
+
+## When: hypoxic extent over time
+
+The timeline below tracks hypoxia in each cruise's CTD casts. **Surface hypoxic** is the share of casts whose shallowest sample is below the threshold; **any depth** is the share of casts with at least one sample below the threshold.
+
+```{r timeline}
+#| fig-cap: "Hypoxic cast coverage by cruise date."
+
+if (n_cruises == 0) {
+  cat("No cleaned CTD data found. Run `make process` first.")
+} else {
+  cruise_summary |>
+    filter(!is.na(cruise_date)) |>
+    ggplot(aes(x = cruise_date)) +
+    geom_line(aes(y = pct_surface_hypoxic, color = "Shallowest sample"), linewidth = 0.7) +
+    geom_point(aes(y = pct_surface_hypoxic, color = "Shallowest sample"), size = 1.8) +
+    geom_line(aes(y = pct_casts_hypoxic, color = "Any depth in cast"), linewidth = 0.7) +
+    geom_point(aes(y = pct_casts_hypoxic, color = "Any depth in cast"), size = 1.8) +
+    scale_color_manual(
+      name = NULL,
+      values = c("Shallowest sample" = "#D95F0E", "Any depth in cast" = "#2C7FB8")
+    ) +
+    scale_y_continuous(limits = c(0, 100), labels = label_number(suffix = "%")) +
+    labs(
+      x = "Cruise date",
+      y = paste0("Casts below ", o2_threshold, " mg/L")
+    ) +
+    theme_minimal(base_size = 12) +
+    theme(legend.position = "bottom")
+}
+```
+
+Median shallow hypoxic depth summarizes how close to the surface hypoxia begins in each cruise (among casts that go hypoxic at any depth):
+
+```{r median-depth-timeline}
+#| fig-cap: "Median shallowest hypoxic depth among hypoxic casts, by cruise."
+
+if (n_cruises == 0) {
+  cat("No cleaned CTD data found.")
+} else {
+  ggplot(
+    cruise_summary |> filter(!is.na(cruise_date), is.finite(median_shallow_hypoxic_depth_m)),
+    aes(x = cruise_date, y = median_shallow_hypoxic_depth_m)
+  ) +
+    geom_line(color = "#756BB1", linewidth = 0.7) +
+    geom_point(color = "#756BB1", size = 1.8) +
+    scale_y_reverse() +
+    labs(
+      x = "Cruise date",
+      y = "Median shallow hypoxic depth (m)"
+    ) +
+    theme_minimal(base_size = 12)
+}
+```
+
+## When: hypoxic extent by depth
+
+Each row is a cruise; color is the percentage of CTD observations below the threshold in each depth bin.
+
+```{r depth-heatmap}
+#| fig-cap: "Percent of CTD observations below the hypoxic threshold at each depth."
+#| fig-height: 10
+
+depth_bin_m <- 4
+
+if (nrow(depth_extent) == 0) {
+  cat("No depth-level summaries available.")
+} else {
+  depth_labels <- depth_extent |>
+    filter(!is.na(cruise_date)) |>
+    arrange(cruise_date, cruise_id) |>
+    distinct(cruise_id, cruise_date) |>
+    mutate(label = paste0(cruise_id, " (", format(cruise_date, "%Y-%m"), ")")) |>
+    pull(label)
+
+  heatmap_df <- prepare_hypoxic_depth_heatmap(depth_extent, bin_m = depth_bin_m) |>
+    mutate(
+      cruise_label = factor(
+        paste0(cruise_id, " (", format(cruise_date, "%Y-%m"), ")"),
+        levels = depth_labels
+      )
+    )
+
+  ggplot(
+    heatmap_df,
+    aes(
+      x = depth_bin + depth_bin_m / 2,
+      y = cruise_label,
+      fill = pct_hypoxic
+    )
+  ) +
+    geom_tile(width = depth_bin_m, height = 0.85) +
+    scale_fill_viridis_c(
+      option = "C",
+      limits = c(0, 100),
+      name = "% hypoxic"
+    ) +
+    scale_x_continuous(expand = expansion(mult = c(0, 0.01))) +
+    labs(
+      x = "Depth (m)",
+      y = NULL
+    ) +
+    theme_minimal(base_size = 11) +
+    theme(axis.text.y = element_text(size = 7))
+}
+```
+
+## Where: cruise domains and hypoxic casts
+
+Cruise centroids (mean cast location) are colored by the share of casts with any hypoxic sample. Points show individual hypoxic casts.
+
+```{r spatial-map}
+#| fig-cap: "Cruise-level hypoxic extent and hypoxic CTD casts."
+
+if (n_cruises == 0) {
+  cat("No cleaned CTD data found.")
+} else {
+  pal <- colorNumeric(
+    palette = viridisLite::viridis(256, option = "C"),
+    domain = c(0, max(cruise_summary$pct_casts_hypoxic, na.rm = TRUE)),
+    na.color = "#cccccc"
+  )
+
+  map <- leaflet(cruise_summary, width = "100%", height = 520) |>
+    addProviderTiles(providers$Esri.OceanBasemap, group = "Ocean") |>
+    addProviderTiles(providers$CartoDB.Positron, group = "Light") |>
+    addCircleMarkers(
+      lng = ~mean_lon,
+      lat = ~mean_lat,
+      radius = 7,
+      stroke = TRUE,
+      weight = 1,
+      color = "#1a1a1a",
+      fillColor = ~pal(pct_casts_hypoxic),
+      fillOpacity = 0.85,
+      label = ~sprintf(
+        "%s\n%.0f%% casts hypoxic\nmedian shallow depth: %s m",
+        cruise_id,
+        pct_casts_hypoxic,
+        ifelse(
+          is.finite(median_shallow_hypoxic_depth_m),
+          sprintf("%.1f", median_shallow_hypoxic_depth_m),
+          "—"
+        )
+      )
+    )
+
+  if (nrow(hypoxic_obs) > 0) {
+    map <- map |>
+      addCircleMarkers(
+        data = hypoxic_obs,
+        lng = ~longitude,
+        lat = ~latitude,
+        radius = 4,
+        color = "#b30000",
+        fillColor = "#fc9272",
+        fillOpacity = 0.75,
+        weight = 1,
+        label = ~sprintf(
+          "%s / cast %s\nmin O\u2082: %.2f mg/L\nshallowest hypoxic depth: %.1f m",
+          cruise_id,
+          cast_id,
+          min_o2_mg_l,
+          shallowest_hypoxic_depth_m
+        ),
+        group = "Hypoxic casts"
+      ) |>
+      addLayersControl(
+        baseGroups = c("Ocean", "Light"),
+        overlayGroups = c("Hypoxic casts"),
+        options = layersControlOptions(collapsed = TRUE)
+      )
+  } else {
+    map <- map |>
+      addLayersControl(
+        baseGroups = c("Ocean", "Light"),
+        options = layersControlOptions(collapsed = TRUE)
+      )
+  }
+
+  map |>
+    addLegend(
+      pal = pal,
+      values = ~pct_casts_hypoxic,
+      title = paste0("% casts below ", o2_threshold, " mg/L"),
+      position = "bottomright"
+    ) |>
+    fitBounds(
+      lng1 = min(cruise_summary$mean_lon, na.rm = TRUE),
+      lat1 = min(cruise_summary$mean_lat, na.rm = TRUE),
+      lng2 = max(cruise_summary$mean_lon, na.rm = TRUE),
+      lat2 = max(cruise_summary$mean_lat, na.rm = TRUE)
+    )
+}
+```
+
+## Cruise summary table
+
+```{r cruise-table}
+if (n_cruises == 0) {
+  cat("No cruises to summarize.")
+} else {
+  cruise_summary |>
+    mutate(
+      cruise_date = format(cruise_date, "%Y-%m-%d"),
+      pct_casts_hypoxic = round(pct_casts_hypoxic, 1),
+      pct_surface_hypoxic = round(pct_surface_hypoxic, 1),
+      pct_obs_hypoxic = round(pct_obs_hypoxic, 1),
+      median_shallow_hypoxic_depth_m = round(median_shallow_hypoxic_depth_m, 1),
+      min_obs_o2_mg_l = round(min_obs_o2_mg_l, 2),
+      max_obs_o2_mg_l = round(max_obs_o2_mg_l, 2)
+    ) |>
+    select(
+      cruise_id, cruise_date, n_casts, n_hypoxic_casts, n_obs,
+      pct_surface_hypoxic, pct_casts_hypoxic, pct_obs_hypoxic,
+      median_shallow_hypoxic_depth_m, min_obs_o2_mg_l, max_obs_o2_mg_l
+    ) |>
+    kable(col.names = c(
+      "Cruise", "Date", "Casts", "Hypoxic casts", "Observations",
+      "% shallow hypoxic", "% casts hypoxic", "% obs hypoxic",
+      "Median shallow hypoxic depth (m)", "Min O₂ (mg/L)", "Max O₂ (mg/L)"
+    ))
+}
+```
+
+Generated on `r format(Sys.time(), "%Y-%m-%d %H:%M %Z")`.
