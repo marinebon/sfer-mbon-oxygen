@@ -23,7 +23,7 @@ help:
 	@echo "  make download        Download SFER CTD datasets from GCOOS ERDDAP"
 	@echo "  make process         Clean raw CTD casts with oce into data/02_clean/ (skips up-to-date outputs)"
 	@echo "  make report-process  Render reports/processing_summary.qmd (run after make process)"
-	@echo "  make report-hypoxic   Render reports/hypoxic_extent.qmd (run after make process)"
+	@echo "  make report-hypoxic   Render reports/hypoxic_extent.qmd (run after make process and make interpolate-all)"
 	@echo "  make interpolate     Build DIVAnd oxygen fields for one cruise (CRUISE=$(CRUISE))"
 	@echo "  make interpolate-all Build DIVAnd oxygen fields for every cruise with cleaned CTD data"
 	@echo "  make render          Render the Quarto website locally"

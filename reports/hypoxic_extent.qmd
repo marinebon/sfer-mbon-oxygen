@@ -9,16 +9,17 @@ execute:
   warning: false
 ---
 
-This report summarizes **when** (by cruise date and depth) and **where** (by ecological depth layer on the map) cleaned **CTD cast** dissolved oxygen falls below a hypoxic threshold. The default threshold is **2.0 mg/L**. Change `params.o2_threshold` in the YAML front matter or pass `--execute-params` when rendering:
+This report summarizes **when** (by cruise date and depth from CTD casts) and **where** (from interpolated oxygen fields) dissolved oxygen falls below a hypoxic threshold. The default threshold is **2.0 mg/L**. Change `params.o2_threshold` in the YAML front matter or pass `--execute-params` when rendering:
 
 ```bash
 quarto render reports/hypoxic_extent.qmd --execute-params '{"o2_threshold": 1.5}'
 ```
 
-Run after processing:
+Run after processing and interpolation:
 
 ```bash
 make process
+make interpolate-all
 make report-hypoxic
 ```
 
@@ -52,10 +53,11 @@ if (!is.numeric(o2_threshold) || length(o2_threshold) != 1 || !is.finite(o2_thre
 }
 
 source(here("R/hypoxic_summary.R"))
-source(here("R/plot_hypoxic_events_map.R"))
+source(here("R/hypoxic_field_summary.R"))
+source(here("R/plot_hypoxic_frequency_map.R"))
 
 all_obs <- load_all_cruise_observations()
-depth_layers <- depth_layers_for_observations(all_obs)
+field_layers <- depth_layers_for_observations(all_obs)
 
 cruise_summary <- summarize_all_cruises_hypoxic(
   o2_threshold,
@@ -69,7 +71,12 @@ hypoxic_obs <- hypoxic_observations_all_cruises(
   o2_threshold,
   observations = all_obs
 )
+field_frequency <- hypoxic_field_frequency_all_cruises(
+  o2_threshold,
+  layers = field_layers
+)
 n_cruises <- nrow(cruise_summary)
+n_interp_cruises <- length(list_interpolated_cruises())
 n_hypoxic_casts <- if (nrow(hypoxic_obs) > 0) nrow(hypoxic_obs) else 0L
 ```
 
@@ -79,6 +86,7 @@ n_hypoxic_casts <- if (nrow(hypoxic_obs) > 0) nrow(hypoxic_obs) else 0L
 |--------|------:|
 | O₂ threshold (mg/L) | `r o2_threshold` |
 | Cruises with cleaned CTD data | `r n_cruises` |
+| Cruises with interpolated fields | `r n_interp_cruises` |
 | Cruises with hypoxic casts | `r sum(cruise_summary$pct_casts_hypoxic > 0, na.rm = TRUE)` |
 | Hypoxic casts | `r n_hypoxic_casts` |
 | Total CTD observations | `r sum(cruise_summary$n_obs, na.rm = TRUE)` |
@@ -182,19 +190,21 @@ if (nrow(depth_extent) == 0) {
 }
 ```
 
-## Where: hypoxic events by depth layer
+## Where: hypoxia frequency from interpolated fields
 
-Use **Prev** / **Next** to step through depth layers. Each **×** marks a hypoxic CTD sample (O₂ below the threshold). Hover or click for cruise, cast, depth, and O₂ details.
+Use **Prev** / **Next** to step through ecological depth layers (same bins as the [oxygen field maps](../cruise_oxygen/listing.qmd)). Color shows the **log-scaled percentage of cruises** whose interpolated field is hypoxic (O₂ below the threshold) at each grid cell within that layer.
 
 ```{r spatial-map}
-#| code-summary: Interactive map of hypoxic CTD samples by depth layer
+#| code-summary: Interactive heatmap of hypoxia frequency from interpolated fields
 
-if (nrow(all_obs) == 0) {
-  cat("No cleaned CTD data found. Run `make process` first.")
+if (n_interp_cruises == 0) {
+  cat("No interpolated oxygen fields found. Run `make interpolate-all` first.")
+} else if (nrow(field_frequency) == 0) {
+  cat("No hypoxic cells found in interpolated fields below ", o2_threshold, " mg/L.", sep = "")
 } else {
-  map <- plot_hypoxic_events_map(all_obs, o2_threshold, layers = depth_layers)
+  map <- plot_hypoxic_frequency_map(field_frequency, field_layers, o2_threshold)
   if (is.null(map)) {
-    cat("No hypoxic CTD samples found below ", o2_threshold, " mg/L.", sep = "")
+    cat("Unable to build hypoxia frequency map.")
   } else {
     map
   }

@@ -111,3 +111,40 @@ format_obs_depth_label <- function(depth_m_min, depth_m_max) {
     sprintf("%.1f–%.1f m", depth_m_min, depth_m_max)
   }
 }
+
+field_cell_half_widths <- function(longitudes, latitudes) {
+  lons <- sort(unique(longitudes))
+  lats <- sort(unique(latitudes))
+  list(
+    dx = if (length(lons) > 1) diff(lons)[1] / 2 else 0.01,
+    dy = if (length(lats) > 1) diff(lats)[1] / 2 else 0.01
+  )
+}
+
+#' Median native grid spacing from interpolated fields (full cell width).
+field_grid_steps <- function(longitudes, latitudes) {
+  half <- field_cell_half_widths(longitudes, latitudes)
+  list(
+    lon_step = half$dx * 2,
+    lat_step = half$dy * 2
+  )
+}
+
+snap_to_field_grid <- function(longitude, latitude, lon_step, lat_step) {
+  data.frame(
+    longitude = round(longitude / lon_step) * lon_step,
+    latitude = round(latitude / lat_step) * lat_step,
+    stringsAsFactors = FALSE
+  )
+}
+
+add_field_cell_bounds <- function(grid, half = NULL) {
+  if (is.null(half)) {
+    half <- field_cell_half_widths(grid$longitude, grid$latitude)
+  }
+  grid$lon1 <- grid$longitude - half$dx
+  grid$lon2 <- grid$longitude + half$dx
+  grid$lat1 <- grid$latitude - half$dy
+  grid$lat2 <- grid$latitude + half$dy
+  grid
+}
