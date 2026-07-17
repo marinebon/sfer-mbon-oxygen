@@ -75,6 +75,11 @@ field_frequency <- hypoxic_field_frequency_all_cruises(
   o2_threshold,
   layers = field_layers
 )
+field_cruise_extent <- hypoxic_field_extent_by_cruise(
+  o2_threshold,
+  layers = field_layers
+)
+calendar_heatmap_df <- prepare_hypoxic_calendar_heatmap(field_cruise_extent)
 n_cruises <- nrow(cruise_summary)
 n_interp_cruises <- length(list_interpolated_cruises())
 n_hypoxic_casts <- if (nrow(hypoxic_obs) > 0) nrow(hypoxic_obs) else 0L
@@ -142,6 +147,23 @@ if (n_cruises == 0) {
       y = "Median shallow hypoxic depth (m)"
     ) +
     theme_minimal(base_size = 12)
+}
+```
+
+## When: calendar heatmap from interpolated fields
+
+Each tile is a cruise week (ISO year × week). Color shows the **log-scaled percentage of interpolated grid cells** below the threshold within each ecological depth layer—the same layers and metric as the spatial map below.
+
+```{r calendar-heatmap}
+#| fig-cap: "Hypoxic interpolated field extent by cruise week and depth layer."
+#| fig-height: 9
+
+if (n_interp_cruises == 0) {
+  cat("No interpolated oxygen fields found. Run `make interpolate-all` first.")
+} else if (nrow(calendar_heatmap_df) == 0) {
+  cat("No cruise dates available for calendar heatmap.")
+} else {
+  plot_hypoxic_calendar_heatmap(calendar_heatmap_df, o2_threshold)
 }
 ```
 

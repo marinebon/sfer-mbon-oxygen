@@ -229,3 +229,156 @@ build_hypoxic_frequency_map_payload <- function(frequency_df, layers) {
 
   depth_layers
 }
+
+#' Per-cruise share of interpolated grid cells hypoxic in each depth layer.
+hypoxic_field_extent_by_cruise <- function(
+    threshold = DEFAULT_HYPOXIC_O2_THRESHOLD,
+    interp_root = here::here("data", "interpolated"),
+    layers = NULL) {
+  cruises <- list_interpolated_cruises(interp_root)
+  if (length(cruises) == 0) {
+    return(data.frame())
+  }
+
+  if (is.null(layers)) {
+    max_depth <- 0
+    for (cruise_id in cruises) {
+      field <- load_cruise_field(cruise_id, interp_root)
+      if (!is.null(field) && nrow(field) > 0) {
+        max_depth <- max(max_depth, max(field$depth_m, na.rm = TRUE))
+      }
+    }
+    layers <- oxygen_depth_layers(max_depth = max_depth)
+  }
+
+  grid_steps <- median_field_grid_steps(cruises, interp_root)
+  dates <- cruise_dates_from_mapping()
+
+  rows <- lapply(cruises, function(cruise_id) {
+    field <- load_cruise_field(cruise_id, interp_root)
+    cells <- field_hypoxic_cells_by_layer(field, threshold, layers, grid_steps)
+    if (is.null(cells)) {
+      return(NULL)
+    }
+
+    cells |>
+      dplyr::group_by(.data$layer_id, .data$layer_label) |>
+      dplyr::summarize(
+        pct_hypoxic = 100 * mean(.data$hypoxic),
+        n_cells = dplyr::n(),
+        n_hypoxic_cells = sum(.data$hypoxic),
+        .groups = "drop"
+      ) |>
+      dplyr::mutate(cruise_id = cruise_id)
+  })
+
+  rows <- Filter(Negate(is.null), rows)
+  if (length(rows) == 0) {
+    return(data.frame())
+  }
+
+  out <- do.call(rbind, rows)
+  out <- dplyr::left_join(out, dates, by = "cruise_id")
+  out |>
+    dplyr::mutate(
+      layer_label = factor(.data$layer_label, levels = layer_range_labels(layers))
+    ) |>
+    as.data.frame()
+}
+
+#' Aggregate cruise-level hypoxia onto an ISO year × week calendar grid.
+prepare_hypoxic_calendar_heatmap <- function(cruise_extent) {
+  if (is.null(cruise_extent) || nrow(cruise_extent) == 0) {
+    return(cruise_extent)
+  }
+
+  cruise_extent |>
+    dplyr::filter(!is.na(.data$cruise_date)) |>
+    dplyr::mutate(
+      iso_year = as.integer(format(.data$cruise_date, "%G")),
+      iso_week = as.integer(format(.data$cruise_date, "%V"))
+    ) |>
+    dplyr::group_by(
+      .data$iso_year,
+      .data$iso_week,
+      .data$layer_id,
+      .data$layer_label
+    ) |>
+    dplyr::summarize(
+      pct_hypoxic = max(.data$pct_hypoxic, na.rm = TRUE),
+      n_cruises = dplyr::n(),
+      cruise_labels = paste(
+        paste0(.data$cruise_id, " (", format(.data$cruise_date, "%Y-%m-%d"), ")"),
+        collapse = "; "
+      ),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(.data$iso_year, .data$iso_week, .data$layer_id)
+}
+
+hypoxic_calendar_fill_limits <- function(calendar_df) {
+  active <- calendar_df$pct_hypoxic[
+    is.finite(calendar_df$pct_hypoxic) & calendar_df$pct_hypoxic > 0
+  ]
+  if (length(active) == 0) {
+    return(c(1, 100))
+  }
+
+  c(max(min(active), 0.1), 100)
+}
+
+plot_hypoxic_calendar_heatmap <- function(calendar_df, threshold) {
+  if (is.null(calendar_df) || nrow(calendar_df) == 0) {
+    return(NULL)
+  }
+
+  fill_limits <- hypoxic_calendar_fill_limits(calendar_df)
+  fill_breaks <- c(1, 2, 5, 10, 20, 50, 100)
+  fill_breaks <- fill_breaks[fill_breaks >= fill_limits[1] & fill_breaks <= fill_limits[2]]
+  if (length(fill_breaks) == 0) {
+    fill_breaks <- fill_limits
+  }
+
+  calendar_df |>
+    dplyr::mutate(
+      year_label = factor(
+        .data$iso_year,
+        levels = sort(unique(.data$iso_year))
+      )
+    ) |>
+    ggplot2::ggplot(ggplot2::aes(x = .data$iso_week, y = .data$year_label, fill = .data$pct_hypoxic)) +
+    ggplot2::geom_tile(color = "white", linewidth = 0.25) +
+    ggplot2::facet_wrap(
+      ggplot2::vars(.data$layer_label),
+      ncol = 1,
+      scales = "free_y"
+    ) +
+    ggplot2::scale_fill_viridis_c(
+      option = "C",
+      trans = "log10",
+      limits = fill_limits,
+      breaks = fill_breaks,
+      name = "% grid\nhypoxic",
+      oob = scales::squish,
+      na.value = "#f0f0f0"
+    ) +
+    ggplot2::scale_x_continuous(
+      breaks = seq(1, 52, by = 4),
+      expand = ggplot2::expansion(add = 0.6)
+    ) +
+    ggplot2::labs(
+      x = "ISO week",
+      y = NULL,
+      title = paste0(
+        "Hypoxic interpolated field extent by cruise week (O\u2082 < ",
+        threshold,
+        " mg/L)"
+      ),
+      caption = "Tile color uses log scale. Multiple cruises in the same week show the maximum layer extent."
+    ) +
+    ggplot2::theme_minimal(base_size = 11) +
+    ggplot2::theme(
+      strip.text = ggplot2::element_text(size = 10),
+      panel.grid = ggplot2::element_blank()
+    )
+}
