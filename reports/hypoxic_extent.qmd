@@ -34,7 +34,7 @@ ensure_packages <- function(pkgs) {
 
 ensure_packages(c(
   "here", "dplyr", "ggplot2", "knitr", "scales", "viridisLite",
-  "leaflet", "htmlwidgets", "jsonlite", "plotly", "terra"
+  "leaflet", "htmlwidgets", "jsonlite", "plotly", "terra", "sf"
 ))
 
 library(here)
@@ -217,7 +217,7 @@ if (nrow(depth_extent) == 0) {
 
 ## Where: 3D hypoxic volume
 
-Interactive 3D view of hypoxic regions from interpolated fields, with **BlueTopo bathymetry** as the seafloor surface. Each voxel shows the share of cruises with O₂ below the threshold at that location and depth. Hypoxic volumes render at **60% opacity**; non-hypoxic space is transparent. Drag to rotate, scroll to zoom.
+Interactive 3D view of hypoxic regions from interpolated fields, with **BlueTopo bathymetry** as the seafloor surface and **coastline basemap lines** at the sea surface. Each voxel shows the share of cruises with O₂ below the threshold at that location and depth. Hypoxic volumes render at **60% opacity**; non-hypoxic space is transparent. The color bar is pinned to 0–100%. Drag to rotate, scroll to zoom.
 
 ```{r volume-3d}
 #| code-summary: Interactive 3D volumetric display of hypoxic regions

@@ -39,6 +39,8 @@ plot_hypoxic_volume <- function(
   }
 
   fill_limits <- hypoxic_volume_fill_limits(grid_df)
+  volume_isomin <- fill_limits[1]
+  volume_isomax <- 1
   if (is.null(title)) {
     title <- paste0(
       "Hypoxic volume (O\u2082 < ",
@@ -49,11 +51,20 @@ plot_hypoxic_volume <- function(
 
   lons <- sort(unique(grid_df$longitude))
   lats <- sort(unique(grid_df$latitude))
+  lon_min <- min(lons)
+  lon_max <- max(lons)
+  lat_min <- min(lats)
+  lat_max <- max(lats)
   if (is.null(bathymetry)) {
     bathymetry <- sample_volume_bathymetry(lons, lats, bath_root = bath_root)
   }
 
   fig <- plotly::plot_ly()
+
+  coastline <- coastline_path_for_plotly(
+    coastline_segments_for_bbox(lon_min, lon_max, lat_min, lat_max),
+    z = 0
+  )
 
   if (!is.null(bathymetry) && any(is.finite(bathymetry$depth))) {
     depth_mat <- bathymetry$depth
@@ -82,7 +93,7 @@ plot_hypoxic_volume <- function(
       )
   }
 
-  fig |>
+  fig <- fig |>
     plotly::add_trace(
       data = grid_df,
       type = "volume",
@@ -90,14 +101,16 @@ plot_hypoxic_volume <- function(
       y = ~latitude,
       z = ~depth_m,
       value = ~volume_value,
-      isomin = fill_limits[1],
-      isomax = fill_limits[2],
+      isomin = volume_isomin,
+      isomax = volume_isomax,
       opacity = opacity,
       opacityscale = hypoxic_volume_opacityscale(opacity),
       colorscale = hypoxic_volume_colorscale(),
       colorbar = list(
         title = "% cruises\nhypoxic",
-        tickformat = ".0%",
+        tickmode = "array",
+        tickvals = seq(0, 1, by = 0.25),
+        ticktext = paste0(seq(0, 100, by = 25), "%"),
         len = 0.75
       ),
       surface = list(count = 0),
@@ -115,7 +128,24 @@ plot_hypoxic_volume <- function(
         "<extra></extra>"
       ),
       customdata = ~cbind(n_hypoxic, n_cruises, pct_hypoxic)
-    ) |>
+    )
+
+  if (!is.null(coastline)) {
+    fig <- fig |>
+      plotly::add_trace(
+        type = "scatter3d",
+        mode = "lines",
+        x = coastline$lon,
+        y = coastline$lat,
+        z = coastline$z,
+        line = list(color = "#1f2933", width = 4),
+        showlegend = FALSE,
+        hoverinfo = "skip",
+        name = "Coastline"
+      )
+  }
+
+  fig |>
     plotly::layout(
       title = list(text = title, x = 0.01, xanchor = "left"),
       margin = list(l = 0, r = 0, b = 0, t = 40),

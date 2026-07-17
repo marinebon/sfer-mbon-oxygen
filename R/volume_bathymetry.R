@@ -118,3 +118,68 @@ bathymetry_surface_colorscale <- function() {
     list(1, "#023047")
   )
 }
+
+default_coastline_geojson <- function(
+    bath_root = here::here("data", "bathymetry")) {
+  file.path(bath_root, "bluetopo_cache", "ne_10m_land.geojson")
+}
+
+#' Line segments for land/water boundaries clipped to a lon/lat bbox.
+coastline_segments_for_bbox <- function(
+    lon_min,
+    lon_max,
+    lat_min,
+    lat_max,
+    geojson_path = default_coastline_geojson()) {
+  if (!file.exists(geojson_path)) {
+    return(list())
+  }
+  if (!requireNamespace("sf", quietly = TRUE)) {
+    warning("Package 'sf' is not installed; skipping coastline overlay.")
+    return(list())
+  }
+
+  land <- sf::st_read(geojson_path, quiet = TRUE)
+  bbox <- sf::st_bbox(
+    c(xmin = lon_min, ymin = lat_min, xmax = lon_max, ymax = lat_max),
+    crs = sf::st_crs(land)
+  )
+  clip <- sf::st_crop(land, bbox)
+  if (nrow(clip) == 0) {
+    return(list())
+  }
+
+  lines <- sf::st_cast(sf::st_cast(clip, "MULTILINESTRING"), "LINESTRING")
+  segments <- lapply(seq_len(nrow(lines)), function(i) {
+    coords <- sf::st_coordinates(lines[i, ])
+    if (nrow(coords) < 2) {
+      return(NULL)
+    }
+    list(
+      lon = coords[, "X"],
+      lat = coords[, "Y"]
+    )
+  })
+
+  Filter(Negate(is.null), segments)
+}
+
+coastline_path_for_plotly <- function(segments, z = 0) {
+  if (length(segments) == 0) {
+    return(NULL)
+  }
+
+  n <- sum(vapply(segments, function(seg) length(seg$lon) + 1L, integer(1)))
+  lon <- lat <- z_vals <- rep(NA_real_, n)
+  idx <- 1L
+  for (seg in segments) {
+    len <- length(seg$lon)
+    end <- idx + len - 1L
+    lon[idx:end] <- seg$lon
+    lat[idx:end] <- seg$lat
+    z_vals[idx:end] <- z
+    idx <- end + 2L
+  }
+
+  list(lon = lon, lat = lat, z = z_vals)
+}
