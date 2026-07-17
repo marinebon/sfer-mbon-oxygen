@@ -1,8 +1,12 @@
+DEFAULT_HYPOXIC_VOLUME_OPACITY <- 0.6
+
 plot_hypoxic_volume <- function(
     grid_df,
     threshold,
     title = NULL,
-    opacity = 0.3) {
+    opacity = DEFAULT_HYPOXIC_VOLUME_OPACITY,
+    bathymetry = NULL,
+    bath_root = here::here("data", "bathymetry")) {
   if (!requireNamespace("plotly", quietly = TRUE)) {
     stop("Package 'plotly' is required for the hypoxic volume display.")
   }
@@ -26,6 +30,14 @@ plot_hypoxic_volume <- function(
     }
   }
 
+  if (is.null(bathymetry) && !exists("sample_volume_bathymetry", mode = "function")) {
+    if (requireNamespace("here", quietly = TRUE)) {
+      source(here::here("R/volume_bathymetry.R"), local = FALSE)
+    } else {
+      source("R/volume_bathymetry.R", local = FALSE)
+    }
+  }
+
   fill_limits <- hypoxic_volume_fill_limits(grid_df)
   if (is.null(title)) {
     title <- paste0(
@@ -35,38 +47,75 @@ plot_hypoxic_volume <- function(
     )
   }
 
-  plotly::plot_ly(
-    data = grid_df,
-    type = "volume",
-    x = ~longitude,
-    y = ~latitude,
-    z = ~depth_m,
-    value = ~volume_value,
-    isomin = fill_limits[1],
-    isomax = fill_limits[2],
-    opacity = opacity,
-    opacityscale = hypoxic_volume_opacityscale(opacity),
-    colorscale = hypoxic_volume_colorscale(),
-    colorbar = list(
-      title = "% cruises\nhypoxic",
-      tickformat = ".0%",
-      len = 0.75
-    ),
-    surface = list(count = 0),
-    caps = list(
-      x = list(show = FALSE),
-      y = list(show = FALSE),
-      z = list(show = FALSE)
-    ),
-    hovertemplate = paste0(
-      "Lon: %{x:.4f}<br>",
-      "Lat: %{y:.4f}<br>",
-      "Depth: %{z:.0f} m<br>",
-      "Hypoxic in %{customdata[0]} of %{customdata[1]} cruises (%{customdata[2]:.0f}%)",
-      "<extra></extra>"
-    ),
-    customdata = ~cbind(n_hypoxic, n_cruises, pct_hypoxic)
-  ) |>
+  lons <- sort(unique(grid_df$longitude))
+  lats <- sort(unique(grid_df$latitude))
+  if (is.null(bathymetry)) {
+    bathymetry <- sample_volume_bathymetry(lons, lats, bath_root = bath_root)
+  }
+
+  fig <- plotly::plot_ly()
+
+  if (!is.null(bathymetry) && any(is.finite(bathymetry$depth))) {
+    depth_mat <- bathymetry$depth
+    depth_mat[!is.finite(depth_mat)] <- NA
+    depth_range <- range(depth_mat, na.rm = TRUE)
+
+    fig <- fig |>
+      plotly::add_trace(
+        type = "surface",
+        x = bathymetry$lons,
+        y = bathymetry$lats,
+        z = depth_mat,
+        colorscale = bathymetry_surface_colorscale(),
+        cmin = depth_range[1],
+        cmax = depth_range[2],
+        showscale = FALSE,
+        opacity = 0.95,
+        connectgaps = FALSE,
+        name = "Bathymetry",
+        hovertemplate = paste0(
+          "Lon: %{x:.4f}<br>",
+          "Lat: %{y:.4f}<br>",
+          "Seafloor: %{z:.0f} m",
+          "<extra></extra>"
+        )
+      )
+  }
+
+  fig |>
+    plotly::add_trace(
+      data = grid_df,
+      type = "volume",
+      x = ~longitude,
+      y = ~latitude,
+      z = ~depth_m,
+      value = ~volume_value,
+      isomin = fill_limits[1],
+      isomax = fill_limits[2],
+      opacity = opacity,
+      opacityscale = hypoxic_volume_opacityscale(opacity),
+      colorscale = hypoxic_volume_colorscale(),
+      colorbar = list(
+        title = "% cruises\nhypoxic",
+        tickformat = ".0%",
+        len = 0.75
+      ),
+      surface = list(count = 0),
+      caps = list(
+        x = list(show = FALSE),
+        y = list(show = FALSE),
+        z = list(show = FALSE)
+      ),
+      name = "Hypoxic volume",
+      hovertemplate = paste0(
+        "Lon: %{x:.4f}<br>",
+        "Lat: %{y:.4f}<br>",
+        "Depth: %{z:.0f} m<br>",
+        "Hypoxic in %{customdata[0]} of %{customdata[1]} cruises (%{customdata[2]:.0f}%)",
+        "<extra></extra>"
+      ),
+      customdata = ~cbind(n_hypoxic, n_cruises, pct_hypoxic)
+    ) |>
     plotly::layout(
       title = list(text = title, x = 0.01, xanchor = "left"),
       margin = list(l = 0, r = 0, b = 0, t = 40),

@@ -34,7 +34,7 @@ ensure_packages <- function(pkgs) {
 
 ensure_packages(c(
   "here", "dplyr", "ggplot2", "knitr", "scales", "viridisLite",
-  "leaflet", "htmlwidgets", "jsonlite", "plotly"
+  "leaflet", "htmlwidgets", "jsonlite", "plotly", "terra"
 ))
 
 library(here)
@@ -55,6 +55,7 @@ if (!is.numeric(o2_threshold) || length(o2_threshold) != 1 || !is.finite(o2_thre
 source(here("R/hypoxic_summary.R"))
 source(here("R/hypoxic_field_summary.R"))
 source(here("R/plot_hypoxic_frequency_map.R"))
+source(here("R/volume_bathymetry.R"))
 source(here("R/plot_hypoxic_volume.R"))
 
 all_obs <- load_all_cruise_observations()
@@ -216,7 +217,7 @@ if (nrow(depth_extent) == 0) {
 
 ## Where: 3D hypoxic volume
 
-Interactive 3D view of hypoxic regions from interpolated fields. Each voxel shows the share of cruises with O₂ below the threshold at that location and depth. Hypoxic volumes render at **30% opacity**; non-hypoxic space is transparent. Drag to rotate, scroll to zoom.
+Interactive 3D view of hypoxic regions from interpolated fields, with **BlueTopo bathymetry** as the seafloor surface. Each voxel shows the share of cruises with O₂ below the threshold at that location and depth. Hypoxic volumes render at **60% opacity**; non-hypoxic space is transparent. Drag to rotate, scroll to zoom.
 
 ```{r volume-3d}
 #| code-summary: Interactive 3D volumetric display of hypoxic regions
@@ -233,8 +234,7 @@ if (n_interp_cruises == 0) {
       "Hypoxic volume across cruises (O\u2082 < ",
       o2_threshold,
       " mg/L)"
-    ),
-    opacity = 0.3
+    )
   )
   if (is.null(volume)) {
     cat("Unable to build hypoxic volume display.")

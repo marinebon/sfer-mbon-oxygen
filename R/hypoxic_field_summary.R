@@ -503,7 +503,7 @@ hypoxic_volume_colorscale <- function() {
   )
 }
 
-hypoxic_volume_opacityscale <- function(opacity = 0.3) {
+hypoxic_volume_opacityscale <- function(opacity = 0.6) {
   list(
     list(0, 0),
     list(0.001, opacity),
