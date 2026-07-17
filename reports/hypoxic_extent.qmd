@@ -222,7 +222,7 @@ Each tile is a cruise week (ISO year × week). Color shows the **log-scaled perc
 
 ```{r calendar-heatmap}
 #| fig-cap: "Hypoxic interpolated field extent by cruise week and depth layer."
-#| fig-height: 9
+#| fig-height: 18
 
 if (n_interp_cruises == 0) {
   cat("No interpolated oxygen fields found. Run `make interpolate-all` first.")

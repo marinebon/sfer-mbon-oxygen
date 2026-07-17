@@ -317,14 +317,17 @@ prepare_hypoxic_calendar_heatmap <- function(cruise_extent) {
 }
 
 hypoxic_calendar_fill_limits <- function(calendar_df) {
-  active <- calendar_df$pct_hypoxic[
-    is.finite(calendar_df$pct_hypoxic) & calendar_df$pct_hypoxic > 0
-  ]
-  if (length(active) == 0) {
-    return(c(1, 100))
-  }
+  c(1, 100)
+}
 
-  c(max(min(active), 0.1), 100)
+hypoxic_calendar_year_spacing <- function(n_years) {
+  if (n_years <= 6L) {
+    2.1
+  } else if (n_years <= 10L) {
+    2.0
+  } else {
+    1.9
+  }
 }
 
 plot_hypoxic_calendar_heatmap <- function(calendar_df, threshold) {
@@ -334,33 +337,40 @@ plot_hypoxic_calendar_heatmap <- function(calendar_df, threshold) {
 
   fill_limits <- hypoxic_calendar_fill_limits(calendar_df)
   fill_breaks <- c(1, 2, 5, 10, 20, 50, 100)
-  fill_breaks <- fill_breaks[fill_breaks >= fill_limits[1] & fill_breaks <= fill_limits[2]]
-  if (length(fill_breaks) == 0) {
-    fill_breaks <- fill_limits
-  }
+  years <- sort(unique(calendar_df$iso_year))
+  year_spacing <- hypoxic_calendar_year_spacing(length(years))
+  tile_height <- year_spacing * 0.62
 
-  calendar_df |>
+  plot_df <- calendar_df |>
     dplyr::mutate(
-      year_label = factor(
-        .data$iso_year,
-        levels = sort(unique(.data$iso_year))
-      )
-    ) |>
-    ggplot2::ggplot(ggplot2::aes(x = .data$iso_week, y = .data$year_label, fill = .data$pct_hypoxic)) +
-    ggplot2::geom_tile(color = "white", linewidth = 0.25) +
+      year_y = match(.data$iso_year, years) * year_spacing,
+      pct_hypoxic = pmax(.data$pct_hypoxic, fill_limits[1])
+    )
+
+  ggplot2::ggplot(
+    plot_df,
+    ggplot2::aes(x = .data$iso_week, y = .data$year_y, fill = .data$pct_hypoxic)
+  ) +
+    ggplot2::geom_tile(height = tile_height, width = 0.92, color = NA) +
     ggplot2::facet_wrap(
       ggplot2::vars(.data$layer_label),
       ncol = 1,
-      scales = "free_y"
+      scales = "fixed"
     ) +
     ggplot2::scale_fill_viridis_c(
       option = "C",
       trans = "log10",
       limits = fill_limits,
       breaks = fill_breaks,
+      labels = fill_breaks,
       name = "% grid\nhypoxic",
       oob = scales::squish,
       na.value = "#f0f0f0"
+    ) +
+    ggplot2::scale_y_continuous(
+      breaks = seq_along(years) * year_spacing,
+      labels = years,
+      expand = ggplot2::expansion(mult = c(0.03, 0.03))
     ) +
     ggplot2::scale_x_continuous(
       breaks = seq(1, 52, by = 4),
@@ -374,12 +384,19 @@ plot_hypoxic_calendar_heatmap <- function(calendar_df, threshold) {
         threshold,
         " mg/L)"
       ),
-      caption = "Tile color uses log scale. Multiple cruises in the same week show the maximum layer extent."
+      caption = "Tile color uses log scale (1–100%). Multiple cruises in the same week show the maximum layer extent."
     ) +
     ggplot2::theme_minimal(base_size = 11) +
     ggplot2::theme(
       strip.text = ggplot2::element_text(size = 10),
-      panel.grid = ggplot2::element_blank()
+      panel.grid = ggplot2::element_blank(),
+      panel.spacing.y = ggplot2::unit(12, "pt"),
+      axis.text.y = ggplot2::element_text(
+        size = 8,
+        lineheight = 0.9,
+        margin = ggplot2::margin(t = 6, b = 6, unit = "pt")
+      ),
+      axis.ticks.y = ggplot2::element_line(linewidth = 0.3)
     )
 }
 
