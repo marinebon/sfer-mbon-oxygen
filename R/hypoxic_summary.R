@@ -238,6 +238,14 @@ summarize_cruise_hypoxic <- function(
     dplyr::filter(is.finite(.data$shallowest_hypoxic_depth_m)) |>
     dplyr::pull(.data$shallowest_hypoxic_depth_m)
 
+  cast_max_depths <- obs |>
+    dplyr::group_by(.data$cast_id) |>
+    dplyr::summarize(
+      max_depth_m = max(.data$depth, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::pull(.data$max_depth_m)
+
   data.frame(
     cruise_id = cruise_id,
     n_obs = nrow(obs),
@@ -248,6 +256,11 @@ summarize_cruise_hypoxic <- function(
     pct_obs_hypoxic = pct_obs_hypoxic,
     median_shallow_hypoxic_depth_m = if (length(shallow_hypoxic_depths) > 0) {
       stats::median(shallow_hypoxic_depths)
+    } else {
+      NA_real_
+    },
+    median_cast_depth_m = if (length(cast_max_depths) > 0) {
+      stats::median(cast_max_depths, na.rm = TRUE)
     } else {
       NA_real_
     },

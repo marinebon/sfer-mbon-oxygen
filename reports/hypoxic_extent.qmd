@@ -101,55 +101,118 @@ n_hypoxic_casts <- if (nrow(hypoxic_obs) > 0) nrow(hypoxic_obs) else 0L
 
 ## When: hypoxic extent over time
 
-The timeline below tracks hypoxia in each cruise's CTD casts. **Surface hypoxic** is the share of casts whose shallowest sample is below the threshold; **any depth** is the share of casts with at least one sample below the threshold.
+The timeline below tracks hypoxia in each cruise's CTD casts. **Surface hypoxic** is the share of casts whose shallowest sample is below the threshold; **any depth** is the share of casts with at least one sample below the threshold. **Median cast depth** (right axis) is the median deepest sample depth per cruise.
 
 ```{r timeline}
 #| fig-cap: "Hypoxic cast coverage by cruise date."
 
+timeline_colors <- c(
+  "Shallowest sample" = "#D55E00",
+  "Any depth in cast" = "#0072B2",
+  "Median cast depth" = "#009E73"
+)
+
 if (n_cruises == 0) {
   cat("No cleaned CTD data found. Run `make process` first.")
 } else {
-  cruise_summary |>
-    filter(!is.na(cruise_date)) |>
-    ggplot(aes(x = cruise_date)) +
-    geom_line(aes(y = pct_surface_hypoxic, color = "Shallowest sample"), linewidth = 0.7) +
-    geom_point(aes(y = pct_surface_hypoxic, color = "Shallowest sample"), size = 1.8) +
-    geom_line(aes(y = pct_casts_hypoxic, color = "Any depth in cast"), linewidth = 0.7) +
-    geom_point(aes(y = pct_casts_hypoxic, color = "Any depth in cast"), size = 1.8) +
-    scale_color_manual(
-      name = NULL,
-      values = c("Shallowest sample" = "#D95F0E", "Any depth in cast" = "#2C7FB8")
+  timeline_df <- cruise_summary |> filter(!is.na(cruise_date))
+  max_cast_depth <- max(timeline_df$median_cast_depth_m, na.rm = TRUE)
+
+  ggplot(timeline_df, aes(x = cruise_date)) +
+    geom_line(
+      aes(y = pct_surface_hypoxic, color = "Shallowest sample"),
+      linewidth = 0.85
     ) +
-    scale_y_continuous(limits = c(0, 100), labels = label_number(suffix = "%")) +
-    labs(
-      x = "Cruise date",
-      y = paste0("Casts below ", o2_threshold, " mg/L")
+    geom_point(
+      aes(y = pct_surface_hypoxic, color = "Shallowest sample"),
+      size = 1.8
     ) +
+    geom_line(
+      aes(y = pct_casts_hypoxic, color = "Any depth in cast"),
+      linewidth = 0.85
+    ) +
+    geom_point(
+      aes(y = pct_casts_hypoxic, color = "Any depth in cast"),
+      size = 1.8
+    ) +
+    geom_line(
+      aes(y = median_cast_depth_m / max_cast_depth * 100, color = "Median cast depth"),
+      linewidth = 0.85,
+      linetype = "22"
+    ) +
+    geom_point(
+      aes(y = median_cast_depth_m / max_cast_depth * 100, color = "Median cast depth"),
+      size = 1.8
+    ) +
+    scale_color_manual(name = NULL, values = timeline_colors) +
+    scale_y_continuous(
+      limits = c(0, 100),
+      labels = label_number(suffix = "%"),
+      name = paste0("Casts below ", o2_threshold, " mg/L"),
+      sec.axis = sec_axis(
+        trans = ~ . * max_cast_depth / 100,
+        name = "Median cast depth (m)",
+        labels = label_number(accuracy = 1)
+      )
+    ) +
+    labs(x = "Cruise date") +
     theme_minimal(base_size = 12) +
     theme(legend.position = "bottom")
 }
 ```
 
-Median shallow hypoxic depth summarizes how close to the surface hypoxia begins in each cruise (among casts that go hypoxic at any depth):
+Median shallow hypoxic depth summarizes how close to the surface hypoxia begins in each cruise (among casts that go hypoxic at any depth). **Median cast depth** (right axis) shows how deep casts typically sampled.
 
 ```{r median-depth-timeline}
 #| fig-cap: "Median shallowest hypoxic depth among hypoxic casts, by cruise."
 
+depth_timeline_colors <- c(
+  "Median shallow hypoxic depth" = "#0072B2",
+  "Median cast depth" = "#D55E00"
+)
+
 if (n_cruises == 0) {
   cat("No cleaned CTD data found.")
 } else {
-  ggplot(
-    cruise_summary |> filter(!is.na(cruise_date), is.finite(median_shallow_hypoxic_depth_m)),
-    aes(x = cruise_date, y = median_shallow_hypoxic_depth_m)
-  ) +
-    geom_line(color = "#756BB1", linewidth = 0.7) +
-    geom_point(color = "#756BB1", size = 1.8) +
-    scale_y_reverse() +
-    labs(
-      x = "Cruise date",
-      y = "Median shallow hypoxic depth (m)"
+  depth_df <- cruise_summary |>
+    filter(
+      !is.na(cruise_date),
+      is.finite(median_shallow_hypoxic_depth_m) | is.finite(median_cast_depth_m)
+    )
+  hyp_max <- max(depth_df$median_shallow_hypoxic_depth_m, na.rm = TRUE)
+  cast_max <- max(depth_df$median_cast_depth_m, na.rm = TRUE)
+
+  ggplot(depth_df, aes(x = cruise_date)) +
+    geom_line(
+      aes(y = median_shallow_hypoxic_depth_m, color = "Median shallow hypoxic depth"),
+      linewidth = 0.85
     ) +
-    theme_minimal(base_size = 12)
+    geom_point(
+      aes(y = median_shallow_hypoxic_depth_m, color = "Median shallow hypoxic depth"),
+      size = 1.8
+    ) +
+    geom_line(
+      aes(y = median_cast_depth_m * hyp_max / cast_max, color = "Median cast depth"),
+      linewidth = 0.85,
+      linetype = "22"
+    ) +
+    geom_point(
+      aes(y = median_cast_depth_m * hyp_max / cast_max, color = "Median cast depth"),
+      size = 1.8
+    ) +
+    scale_color_manual(name = NULL, values = depth_timeline_colors) +
+    scale_y_reverse(
+      name = "Median shallow hypoxic depth (m)",
+      limits = c(hyp_max * 1.05, 0),
+      sec.axis = sec_axis(
+        trans = ~ . * cast_max / hyp_max,
+        name = "Median cast depth (m)",
+        labels = label_number(accuracy = 1)
+      )
+    ) +
+    labs(x = "Cruise date") +
+    theme_minimal(base_size = 12) +
+    theme(legend.position = "bottom")
 }
 ```
 
