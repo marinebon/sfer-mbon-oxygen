@@ -400,11 +400,15 @@ plot_hypoxic_calendar_heatmap <- function(calendar_df, threshold) {
     )
 }
 
+FIELD_VOLUME_DEPTH_BIN_M <- 4
+HYPOXIC_VOLUME_ABSENT_VALUE <- -1
+
 #' Per-voxel share of cruises hypoxic on a common snapped 3D grid.
 hypoxic_field_volume_frequency <- function(
     threshold = DEFAULT_HYPOXIC_O2_THRESHOLD,
     interp_root = here::here("data", "interpolated"),
-    subsample = 2L) {
+    subsample = 2L,
+    depth_bin_m = FIELD_VOLUME_DEPTH_BIN_M) {
   cruises <- list_interpolated_cruises(interp_root)
   if (length(cruises) == 0) {
     return(data.frame())
@@ -422,15 +426,19 @@ hypoxic_field_volume_frequency <- function(
       dplyr::mutate(
         longitude = round(.data$longitude / grid_steps$lon_step) * grid_steps$lon_step,
         latitude = round(.data$latitude / grid_steps$lat_step) * grid_steps$lat_step,
+        depth_m = round(.data$depth_m / depth_bin_m) * depth_bin_m,
         hypoxic = .data$dissolved_oxygen < threshold,
         cruise_id = cruise_id
       ) |>
-      dplyr::select(
-        "longitude",
-        "latitude",
-        "depth_m",
-        "hypoxic",
-        "cruise_id"
+      dplyr::group_by(
+        .data$longitude,
+        .data$latitude,
+        .data$depth_m,
+        .data$cruise_id
+      ) |>
+      dplyr::summarize(
+        hypoxic = any(.data$hypoxic),
+        .groups = "drop"
       )
   })
 
@@ -444,7 +452,10 @@ hypoxic_field_volume_frequency <- function(
     dplyr::summarize(
       n_cruises = dplyr::n_distinct(.data$cruise_id),
       n_hypoxic = sum(.data$hypoxic),
-      pct_hypoxic = 100 * sum(.data$hypoxic) / dplyr::n_distinct(.data$cruise_id),
+      pct_hypoxic = pmin(
+        100,
+        100 * sum(.data$hypoxic) / dplyr::n_distinct(.data$cruise_id)
+      ),
       .groups = "drop"
     ) |>
     dplyr::filter(.data$n_hypoxic > 0)
@@ -455,6 +466,7 @@ hypoxic_field_volume_frequency <- function(
 
   dense_grid <- densify_hypoxic_volume_grid(freq, subsample = subsample)
   attr(dense_grid, "grid_steps") <- grid_steps
+  attr(dense_grid, "depth_bin_m") <- depth_bin_m
   dense_grid
 }
 
@@ -508,16 +520,52 @@ hypoxic_volume_fill_limits <- function(grid_df) {
   c(max(min(active), 0.01), 1)
 }
 
-hypoxic_volume_colorscale <- function() {
-  palette <- viridisLite::viridis(256, option = "C")
-  idx <- round(seq(1, length(palette), length.out = 8))
-  cols <- palette[idx]
+hypoxic_pct_log_breaks <- function() {
+  pct <- c(1, 2, 5, 10, 20, 50, 100)
+  list(
+    tickvals = log10(pct),
+    ticktext = paste0(pct, "%")
+  )
+}
+
+hypoxic_volume_log_limits <- function(grid_df) {
+  c(0, log10(100))
+}
+
+prepare_hypoxic_volume_plot_data <- function(grid_df) {
+  plot_df <- grid_df
+  plot_df$volume_value_log <- ifelse(
+    is.finite(plot_df$pct_hypoxic) & plot_df$pct_hypoxic > 0,
+    log10(pmax(plot_df$pct_hypoxic, 1)),
+    HYPOXIC_VOLUME_ABSENT_VALUE
+  )
+  plot_df
+}
+
+hypoxic_volume_opacityscale_log <- function(opacity, value_min = 0) {
+  # Map only visible (log-scaled) hypoxic values to the target opacity.
+  # Absent voxels use HYPOXIC_VOLUME_ABSENT_VALUE and are hidden via isomin.
+  list(
+    list(value_min, opacity),
+    list(log10(100), opacity)
+  )
+}
+
+hypoxic_pct_palette <- function(n = 256) {
+  viridisLite::viridis(n, option = "C")
+}
+
+hypoxic_pct_colorscale_plotly <- function(stops = 9L) {
+  cols <- hypoxic_pct_palette(as.integer(stops))
+  vals <- seq(0, 1, length.out = length(cols))
   stats::setNames(
-    lapply(seq_along(cols), function(i) {
-      list(max(i / length(cols), 0.001), cols[i])
-    }),
+    Map(function(value, color) list(value, color), vals, cols),
     NULL
   )
+}
+
+hypoxic_volume_colorscale <- function() {
+  hypoxic_pct_colorscale_plotly()
 }
 
 hypoxic_volume_opacityscale <- function(opacity = 0.6) {

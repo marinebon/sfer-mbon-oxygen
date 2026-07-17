@@ -19,7 +19,15 @@ plot_hypoxic_frequency_map <- function(
     stop("Package 'viridisLite' is required.")
   }
 
-  palette <- viridisLite::viridis(256, option = "C")
+  if (!exists("hypoxic_pct_palette", mode = "function")) {
+    if (requireNamespace("here", quietly = TRUE)) {
+      source(here::here("R/hypoxic_field_summary.R"), local = FALSE)
+    } else {
+      source("R/hypoxic_field_summary.R", local = FALSE)
+    }
+  }
+
+  palette <- hypoxic_pct_palette(256)
   palette_json <- jsonlite::toJSON(palette, auto_unbox = FALSE)
 
   active_pct <- frequency_df$pct_hypoxic[
