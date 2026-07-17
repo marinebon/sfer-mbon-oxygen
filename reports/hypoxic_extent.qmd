@@ -34,7 +34,7 @@ ensure_packages <- function(pkgs) {
 
 ensure_packages(c(
   "here", "dplyr", "ggplot2", "knitr", "scales", "viridisLite",
-  "leaflet", "htmlwidgets", "jsonlite"
+  "leaflet", "htmlwidgets", "jsonlite", "plotly"
 ))
 
 library(here)
@@ -55,6 +55,7 @@ if (!is.numeric(o2_threshold) || length(o2_threshold) != 1 || !is.finite(o2_thre
 source(here("R/hypoxic_summary.R"))
 source(here("R/hypoxic_field_summary.R"))
 source(here("R/plot_hypoxic_frequency_map.R"))
+source(here("R/plot_hypoxic_volume.R"))
 
 all_obs <- load_all_cruise_observations()
 field_layers <- depth_layers_for_observations(all_obs)
@@ -80,6 +81,7 @@ field_cruise_extent <- hypoxic_field_extent_by_cruise(
   layers = field_layers
 )
 calendar_heatmap_df <- prepare_hypoxic_calendar_heatmap(field_cruise_extent)
+volume_grid <- hypoxic_field_volume_frequency(o2_threshold, subsample = 2L)
 n_cruises <- nrow(cruise_summary)
 n_interp_cruises <- length(list_interpolated_cruises())
 n_hypoxic_casts <- if (nrow(hypoxic_obs) > 0) nrow(hypoxic_obs) else 0L
@@ -209,6 +211,36 @@ if (nrow(depth_extent) == 0) {
     ) +
     theme_minimal(base_size = 11) +
     theme(axis.text.y = element_text(size = 7))
+}
+```
+
+## Where: 3D hypoxic volume
+
+Interactive 3D view of hypoxic regions from interpolated fields. Each voxel shows the share of cruises with O₂ below the threshold at that location and depth. Hypoxic volumes render at **30% opacity**; non-hypoxic space is transparent. Drag to rotate, scroll to zoom.
+
+```{r volume-3d}
+#| code-summary: Interactive 3D volumetric display of hypoxic regions
+
+if (n_interp_cruises == 0) {
+  cat("No interpolated oxygen fields found. Run `make interpolate-all` first.")
+} else if (nrow(volume_grid) == 0) {
+  cat("No hypoxic voxels found in interpolated fields below ", o2_threshold, " mg/L.", sep = "")
+} else {
+  volume <- plot_hypoxic_volume(
+    volume_grid,
+    o2_threshold,
+    title = paste0(
+      "Hypoxic volume across cruises (O\u2082 < ",
+      o2_threshold,
+      " mg/L)"
+    ),
+    opacity = 0.3
+  )
+  if (is.null(volume)) {
+    cat("Unable to build hypoxic volume display.")
+  } else {
+    volume
+  }
 }
 ```
 

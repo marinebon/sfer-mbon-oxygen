@@ -382,3 +382,131 @@ plot_hypoxic_calendar_heatmap <- function(calendar_df, threshold) {
       panel.grid = ggplot2::element_blank()
     )
 }
+
+#' Per-voxel share of cruises hypoxic on a common snapped 3D grid.
+hypoxic_field_volume_frequency <- function(
+    threshold = DEFAULT_HYPOXIC_O2_THRESHOLD,
+    interp_root = here::here("data", "interpolated"),
+    subsample = 2L) {
+  cruises <- list_interpolated_cruises(interp_root)
+  if (length(cruises) == 0) {
+    return(data.frame())
+  }
+
+  grid_steps <- median_field_grid_steps(cruises, interp_root)
+  rows <- lapply(cruises, function(cruise_id) {
+    field <- load_cruise_field(cruise_id, interp_root)
+    if (is.null(field) || nrow(field) == 0) {
+      return(NULL)
+    }
+
+    field <- field[!is.na(field$dissolved_oxygen), , drop = FALSE]
+    field |>
+      dplyr::mutate(
+        longitude = round(.data$longitude / grid_steps$lon_step) * grid_steps$lon_step,
+        latitude = round(.data$latitude / grid_steps$lat_step) * grid_steps$lat_step,
+        hypoxic = .data$dissolved_oxygen < threshold,
+        cruise_id = cruise_id
+      ) |>
+      dplyr::select(
+        "longitude",
+        "latitude",
+        "depth_m",
+        "hypoxic",
+        "cruise_id"
+      )
+  })
+
+  rows <- Filter(Negate(is.null), rows)
+  if (length(rows) == 0) {
+    return(data.frame())
+  }
+
+  freq <- dplyr::bind_rows(rows) |>
+    dplyr::group_by(.data$longitude, .data$latitude, .data$depth_m) |>
+    dplyr::summarize(
+      n_cruises = dplyr::n_distinct(.data$cruise_id),
+      n_hypoxic = sum(.data$hypoxic),
+      pct_hypoxic = 100 * sum(.data$hypoxic) / dplyr::n_distinct(.data$cruise_id),
+      .groups = "drop"
+    ) |>
+    dplyr::filter(.data$n_hypoxic > 0)
+
+  if (nrow(freq) == 0) {
+    return(data.frame())
+  }
+
+  dense_grid <- densify_hypoxic_volume_grid(freq, subsample = subsample)
+  attr(dense_grid, "grid_steps") <- grid_steps
+  dense_grid
+}
+
+densify_hypoxic_volume_grid <- function(freq, subsample = 2L) {
+  if (is.null(freq) || nrow(freq) == 0) {
+    return(freq)
+  }
+
+  subsample <- as.integer(subsample)
+  if (!is.finite(subsample) || subsample < 1L) {
+    subsample <- 1L
+  }
+
+  lons <- sort(unique(freq$longitude))
+  lats <- sort(unique(freq$latitude))
+  depths <- sort(unique(freq$depth_m))
+  if (subsample > 1L) {
+    lons <- lons[seq(1L, length(lons), by = subsample)]
+    lats <- lats[seq(1L, length(lats), by = subsample)]
+    depths <- depths[seq(1L, length(depths), by = subsample)]
+  }
+
+  grid <- expand.grid(
+    longitude = lons,
+    latitude = lats,
+    depth_m = depths,
+    KEEP.OUT.ATTRS = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  out <- dplyr::left_join(
+    grid,
+    freq[, c("longitude", "latitude", "depth_m", "pct_hypoxic", "n_cruises", "n_hypoxic")],
+    by = c("longitude", "latitude", "depth_m")
+  )
+  out$pct_hypoxic[is.na(out$pct_hypoxic)] <- 0
+  out$n_cruises[is.na(out$n_cruises)] <- 0L
+  out$n_hypoxic[is.na(out$n_hypoxic)] <- 0L
+  out$volume_value <- out$pct_hypoxic / 100
+  out
+}
+
+hypoxic_volume_fill_limits <- function(grid_df) {
+  active <- grid_df$volume_value[
+    is.finite(grid_df$volume_value) & grid_df$volume_value > 0
+  ]
+  if (length(active) == 0) {
+    return(c(0.01, 1))
+  }
+
+  c(max(min(active), 0.01), 1)
+}
+
+hypoxic_volume_colorscale <- function() {
+  palette <- viridisLite::viridis(256, option = "C")
+  idx <- round(seq(1, length(palette), length.out = 8))
+  cols <- palette[idx]
+  stats::setNames(
+    lapply(seq_along(cols), function(i) {
+      list(max(i / length(cols), 0.001), cols[i])
+    }),
+    NULL
+  )
+}
+
+hypoxic_volume_opacityscale <- function(opacity = 0.3) {
+  list(
+    list(0, 0),
+    list(0.001, opacity),
+    list(1, opacity)
+  )
+}
