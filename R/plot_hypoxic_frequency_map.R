@@ -30,15 +30,11 @@ plot_hypoxic_frequency_map <- function(
   palette <- hypoxic_pct_palette(256)
   palette_json <- jsonlite::toJSON(palette, auto_unbox = FALSE)
 
-  active_pct <- frequency_df$pct_hypoxic[
-    is.finite(frequency_df$pct_hypoxic) & frequency_df$pct_hypoxic > 0
-  ]
-  color_log_min <- if (length(active_pct) > 0) {
-    log10(min(active_pct))
-  } else {
-    0
-  }
-  color_log_max <- log10(100)
+  color_limits <- hypoxic_pct_log_limits()
+  color_log_min <- color_limits$log_min
+  color_log_max <- color_limits$log_max
+  legend_gradient <- hypoxic_pct_legend_gradient(palette = palette)
+  legend_gradient_json <- jsonlite::toJSON(legend_gradient, auto_unbox = TRUE)
 
   bounds <- hypoxic_frequency_map_bounds(frequency_df)
   if (is.null(bounds)) {
@@ -84,6 +80,7 @@ function(el, x) {
   var threshold = %s;
   var colorLogMin = %s;
   var colorLogMax = %s;
+  var legendGradient = %s;
   var idx = 0;
   var map = null;
   var fieldGroup = null;
@@ -116,12 +113,23 @@ function(el, x) {
     if (pct === null || !isFinite(pct) || pct <= 0) {
       return 'transparent';
     }
+    pct = Math.max(pct, Math.pow(10, colorLogMin));
     var logVal = Math.log10(pct);
     var span = colorLogMax - colorLogMin;
     var t = span === 0 ? 0 : (logVal - colorLogMin) / span;
     t = Math.max(0, Math.min(1, t));
     var paletteIdx = Math.round(t * (palette.length - 1));
     return palette[paletteIdx];
+  }
+
+  function legendGradientCss() {
+    return 'linear-gradient(to right, ' + legendGradient.map(function(stop) {
+      return stop.color + ' ' + stop.position.toFixed(1) + '%%';
+    }).join(', ') + ')';
+  }
+
+  function legendTickLabels() {
+    return '<span>1%%</span><span>100%%</span>';
   }
 
   function renderDepthLayer(layerIdx) {
@@ -181,10 +189,9 @@ function(el, x) {
         '<div class=\"depth-meta\" style=\"margin-top:6px;text-align:center;color:#444;font-size:12px;\"></div>',
         '<div class=\"legend-label\" style=\"margin-top:8px;color:#444;font-size:12px;\"></div>',
         '<div style=\"margin-top:8px;height:14px;border:1px solid #ccc;border-radius:2px;',
-        'background:linear-gradient(to right, ' + palette[0] + ', ' + palette[palette.length - 1] + ');\"></div>',
+        'background:' + legendGradientCss() + ';\"></div>',
         '<div style=\"display:flex;justify-content:space-between;color:#444;font-size:11px;margin-top:4px;\">',
-        '<span>' + Math.pow(10, colorLogMin).toFixed(1) + '%%</span>',
-        '<span>100%%</span>',
+        legendTickLabels(),
         '</div>'
       ].join('');
 
@@ -231,7 +238,8 @@ function(el, x) {
       palette_json,
       threshold,
       color_log_min,
-      color_log_max
+      color_log_max,
+      legend_gradient_json
     ))
 
   map

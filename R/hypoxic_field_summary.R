@@ -523,8 +523,47 @@ hypoxic_volume_fill_limits <- function(grid_df) {
 hypoxic_pct_log_breaks <- function() {
   pct <- c(1, 2, 5, 10, 20, 50, 100)
   list(
+    pct = pct,
     tickvals = log10(pct),
     ticktext = paste0(pct, "%")
+  )
+}
+
+hypoxic_pct_log_limits <- function() {
+  list(
+    pct_min = 1,
+    pct_max = 100,
+    log_min = log10(1),
+    log_max = log10(100)
+  )
+}
+
+hypoxic_pct_color_for <- function(
+    pct,
+    palette = hypoxic_pct_palette(256)) {
+  limits <- hypoxic_pct_log_limits()
+  pct <- pmax(pct, limits$pct_min)
+  span <- limits$log_max - limits$log_min
+  t <- (log10(pct) - limits$log_min) / span
+  t <- pmax(0, pmin(1, t))
+  palette[round(t * (length(palette) - 1)) + 1L]
+}
+
+hypoxic_pct_legend_gradient <- function(
+    palette = hypoxic_pct_palette(256)) {
+  breaks <- hypoxic_pct_log_breaks()
+  limits <- hypoxic_pct_log_limits()
+  span <- limits$log_max - limits$log_min
+  Map(
+    function(pct) {
+      t <- (log10(pct) - limits$log_min) / span
+      list(
+        pct = pct,
+        position = 100 * t,
+        color = hypoxic_pct_color_for(pct, palette = palette)
+      )
+    },
+    breaks$pct
   )
 }
 
