@@ -286,38 +286,191 @@ hypoxic_field_extent_by_cruise <- function(
     as.data.frame()
 }
 
-#' Aggregate cruise-level hypoxia onto an ISO year × week calendar grid.
-prepare_hypoxic_calendar_heatmap <- function(cruise_extent) {
-  if (is.null(cruise_extent) || nrow(cruise_extent) == 0) {
-    return(cruise_extent)
+#' Shallowest hypoxic depth (m) in each cruise's interpolated field.
+hypoxic_min_depth_by_cruise <- function(
+    threshold = DEFAULT_HYPOXIC_O2_THRESHOLD,
+    interp_root = here::here("data", "interpolated")) {
+  if (!exists("anoxic_depth_grid", mode = "function")) {
+    source(here::here("cruise_anoxic_depth/anoxic_depth.R"), local = FALSE)
   }
 
-  cruise_extent |>
-    dplyr::filter(!is.na(.data$cruise_date)) |>
+  cruises <- list_interpolated_cruises(interp_root)
+  if (length(cruises) == 0) {
+    return(data.frame())
+  }
+
+  dates <- cruise_dates_from_mapping()
+  rows <- lapply(cruises, function(cruise_id) {
+    field <- load_cruise_field(cruise_id, interp_root)
+    if (is.null(field) || nrow(field) == 0) {
+      return(NULL)
+    }
+
+    grid <- anoxic_depth_grid(field, threshold)
+    if (is.null(grid) || nrow(grid) == 0) {
+      return(data.frame(
+        cruise_id = cruise_id,
+        min_hypoxic_depth_m = NA_real_,
+        stringsAsFactors = FALSE
+      ))
+    }
+
+    depths <- grid$anoxic_depth_m[is.finite(grid$anoxic_depth_m)]
+    data.frame(
+      cruise_id = cruise_id,
+      min_hypoxic_depth_m = if (length(depths) > 0) min(depths) else NA_real_,
+      stringsAsFactors = FALSE
+    )
+  })
+
+  rows <- Filter(Negate(is.null), rows)
+  if (length(rows) == 0) {
+    return(data.frame())
+  }
+
+  out <- do.call(rbind, rows)
+  out <- dplyr::left_join(out, dates, by = "cruise_id")
+  out[order(out$cruise_date, out$cruise_id), , drop = FALSE]
+}
+
+#' Aggregate cruise-level minimum hypoxic depth onto an ISO year x week grid.
+prepare_hypoxic_calendar_heatmap <- function(cruise_depths) {
+  if (is.null(cruise_depths) || nrow(cruise_depths) == 0) {
+    return(cruise_depths)
+  }
+
+  cruise_depths |>
+    dplyr::filter(
+      !is.na(.data$cruise_date),
+      is.finite(.data$min_hypoxic_depth_m)
+    ) |>
     dplyr::mutate(
       iso_year = as.integer(format(.data$cruise_date, "%G")),
       iso_week = as.integer(format(.data$cruise_date, "%V"))
     ) |>
-    dplyr::group_by(
-      .data$iso_year,
-      .data$iso_week,
-      .data$layer_id,
-      .data$layer_label
-    ) |>
+    dplyr::group_by(.data$iso_year, .data$iso_week) |>
     dplyr::summarize(
-      pct_hypoxic = max(.data$pct_hypoxic, na.rm = TRUE),
+      min_hypoxic_depth_m = min(.data$min_hypoxic_depth_m, na.rm = TRUE),
       n_cruises = dplyr::n(),
       cruise_labels = paste(
-        paste0(.data$cruise_id, " (", format(.data$cruise_date, "%Y-%m-%d"), ")"),
+        paste0(
+          .data$cruise_id,
+          " (",
+          format(.data$cruise_date, "%Y-%m-%d"),
+          ", ",
+          round(.data$min_hypoxic_depth_m, 1),
+          " m)"
+        ),
         collapse = "; "
       ),
       .groups = "drop"
     ) |>
-    dplyr::arrange(.data$iso_year, .data$iso_week, .data$layer_id)
+    dplyr::arrange(.data$iso_year, .data$iso_week)
 }
 
-hypoxic_calendar_fill_limits <- function(calendar_df) {
-  c(1, 100)
+hypoxic_calendar_depth_limits <- function(calendar_df) {
+  active <- calendar_df$min_hypoxic_depth_m[
+    is.finite(calendar_df$min_hypoxic_depth_m)
+  ]
+  if (length(active) == 0) {
+    return(c(0, 1))
+  }
+
+  lo <- min(active)
+  hi <- max(active)
+  if (hi <= lo) {
+    hi <- lo + 1
+  }
+  c(lo, hi)
+}
+
+hypoxic_calendar_year_depth_limits <- function(year_df) {
+  active <- year_df$min_hypoxic_depth_m[
+    is.finite(year_df$min_hypoxic_depth_m)
+  ]
+  if (length(active) == 0) {
+    return(c(0, 1))
+  }
+
+  lo <- min(active)
+  hi <- max(active)
+  if (hi <= lo) {
+    hi <- lo + 1
+  }
+  c(lo, hi)
+}
+
+hypoxic_calendar_depth_breaks <- function(limits) {
+  pretty(limits, n = 4)
+}
+
+hypoxic_depth_color_for <- function(
+    depth_m,
+    limits,
+    palette = hypoxic_pct_palette(256)) {
+  depth_m <- pmax(depth_m, limits[1])
+  depth_m <- pmin(depth_m, limits[2])
+  span <- limits[2] - limits[1]
+  if (!is.finite(span) || span <= 0) {
+    span <- 1
+  }
+  t <- (depth_m - limits[1]) / span
+  t <- pmax(0, pmin(1, t))
+  t <- 1 - t
+  palette[round(t * (length(palette) - 1)) + 1L]
+}
+
+hypoxic_calendar_year_colorbar_grob <- function(
+    limits,
+    title = "Min depth\n(m)",
+    breaks = NULL) {
+  if (is.null(breaks)) {
+    breaks <- hypoxic_calendar_depth_breaks(limits)
+  }
+  if (length(breaks) < 2L) {
+    breaks <- limits
+  }
+
+  bar_df <- data.frame(
+    x = 1,
+    y = 1,
+    value = mean(limits)
+  )
+  legend_plot <- ggplot2::ggplot(
+    bar_df,
+    ggplot2::aes(
+      x = .data$x,
+      y = .data$y,
+      fill = .data$value
+    )
+  ) +
+    ggplot2::geom_tile() +
+    ggplot2::scale_fill_viridis_c(
+      option = "C",
+      limits = limits,
+      breaks = breaks,
+      labels = breaks,
+      direction = -1,
+      name = title,
+      oob = scales::squish
+    ) +
+    ggplot2::guides(
+      fill = ggplot2::guide_colorbar(
+        barheight = ggplot2::unit(1.1, "cm"),
+        barwidth = ggplot2::unit(0.35, "cm"),
+        title.position = "top",
+        title.hjust = 0.5
+      )
+    ) +
+    ggplot2::theme_void() +
+    ggplot2::theme(legend.position = "right")
+
+  legend_grob <- ggplot2::ggplotGrob(legend_plot)
+  legend_idx <- which(legend_grob$layout$name == "guide-box")
+  if (length(legend_idx) == 0) {
+    return(NULL)
+  }
+  legend_grob$grobs[[legend_idx[1]]]
 }
 
 hypoxic_calendar_year_spacing <- function(n_years) {
@@ -335,35 +488,37 @@ plot_hypoxic_calendar_heatmap <- function(calendar_df, threshold) {
     return(NULL)
   }
 
-  fill_limits <- hypoxic_calendar_fill_limits(calendar_df)
-  fill_breaks <- c(1, 2, 5, 10, 20, 50, 100)
   years <- sort(unique(calendar_df$iso_year))
   year_spacing <- hypoxic_calendar_year_spacing(length(years))
   tile_height <- year_spacing * 0.62
+  fill_limits <- hypoxic_calendar_depth_limits(calendar_df)
+  fill_breaks <- hypoxic_calendar_depth_breaks(fill_limits)
 
   plot_df <- calendar_df |>
     dplyr::mutate(
-      year_y = match(.data$iso_year, years) * year_spacing,
-      pct_hypoxic = pmax(.data$pct_hypoxic, fill_limits[1])
+      year_y = match(.data$iso_year, years) * year_spacing
     )
 
   ggplot2::ggplot(
     plot_df,
-    ggplot2::aes(x = .data$iso_week, y = .data$year_y, fill = .data$pct_hypoxic)
+    ggplot2::aes(
+      x = .data$iso_week,
+      y = .data$year_y,
+      fill = .data$min_hypoxic_depth_m
+    )
   ) +
-    ggplot2::geom_tile(height = tile_height, width = 0.92, color = NA) +
-    ggplot2::facet_wrap(
-      ggplot2::vars(.data$layer_label),
-      ncol = 1,
-      scales = "fixed"
+    ggplot2::geom_tile(
+      height = tile_height,
+      width = 0.92,
+      color = NA
     ) +
     ggplot2::scale_fill_viridis_c(
       option = "C",
-      trans = "log10",
       limits = fill_limits,
       breaks = fill_breaks,
       labels = fill_breaks,
-      name = "% grid\nhypoxic",
+      direction = -1,
+      name = "Min depth (m)",
       oob = scales::squish,
       na.value = "#f0f0f0"
     ) +
@@ -380,17 +535,22 @@ plot_hypoxic_calendar_heatmap <- function(calendar_df, threshold) {
       x = "ISO week",
       y = NULL,
       title = paste0(
-        "Hypoxic interpolated field extent by cruise week (O\u2082 < ",
+        "Shallowest hypoxic depth by cruise week (O\u2082 < ",
         threshold,
         " mg/L)"
       ),
-      caption = "Tile color uses log scale (1–100%). Multiple cruises in the same week show the maximum layer extent."
+      caption = paste(
+        "Tile color shows the shallowest hypoxic depth (m) in the interpolated field.",
+        "Shallow = yellow, deeper = purple.",
+        "Multiple cruises in the same week show the shallowest depth."
+      )
     ) +
     ggplot2::theme_minimal(base_size = 11) +
     ggplot2::theme(
-      strip.text = ggplot2::element_text(size = 10),
       panel.grid = ggplot2::element_blank(),
-      panel.spacing.y = ggplot2::unit(12, "pt"),
+      legend.position = "bottom",
+      legend.key.width = ggplot2::unit(2.4, "cm"),
+      legend.key.height = ggplot2::unit(0.45, "cm"),
       axis.text.y = ggplot2::element_text(
         size = 8,
         lineheight = 0.9,
@@ -540,11 +700,21 @@ hypoxic_pct_log_limits <- function() {
 
 hypoxic_pct_color_for <- function(
     pct,
-    palette = hypoxic_pct_palette(256)) {
-  limits <- hypoxic_pct_log_limits()
-  pct <- pmax(pct, limits$pct_min)
-  span <- limits$log_max - limits$log_min
-  t <- (log10(pct) - limits$log_min) / span
+    palette = hypoxic_pct_palette(256),
+    limits = NULL) {
+  if (is.null(limits)) {
+    default_limits <- hypoxic_pct_log_limits()
+    limits <- c(default_limits$pct_min, default_limits$pct_max)
+  }
+  pct <- pmax(pct, limits[1])
+  pct <- pmin(pct, limits[2])
+  log_min <- log10(limits[1])
+  log_max <- log10(limits[2])
+  span <- log_max - log_min
+  if (!is.finite(span) || span <= 0) {
+    span <- 1
+  }
+  t <- (log10(pct) - log_min) / span
   t <- pmax(0, pmin(1, t))
   palette[round(t * (length(palette) - 1)) + 1L]
 }

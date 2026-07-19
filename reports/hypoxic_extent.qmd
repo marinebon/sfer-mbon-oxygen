@@ -34,7 +34,7 @@ ensure_packages <- function(pkgs) {
 
 ensure_packages(c(
   "here", "dplyr", "ggplot2", "knitr", "scales", "viridisLite",
-  "leaflet", "htmlwidgets", "jsonlite", "plotly", "terra", "sf"
+  "leaflet", "htmlwidgets", "jsonlite", "plotly", "terra", "sf", "patchwork"
 ))
 
 library(here)
@@ -77,11 +77,10 @@ field_frequency <- hypoxic_field_frequency_all_cruises(
   o2_threshold,
   layers = field_layers
 )
-field_cruise_extent <- hypoxic_field_extent_by_cruise(
-  o2_threshold,
-  layers = field_layers
+field_min_depth_by_cruise <- hypoxic_min_depth_by_cruise(
+  o2_threshold
 )
-calendar_heatmap_df <- prepare_hypoxic_calendar_heatmap(field_cruise_extent)
+calendar_heatmap_df <- prepare_hypoxic_calendar_heatmap(field_min_depth_by_cruise)
 volume_grid <- hypoxic_field_volume_frequency(o2_threshold, subsample = 2L)
 n_cruises <- nrow(cruise_summary)
 n_interp_cruises <- length(list_interpolated_cruises())
@@ -218,16 +217,16 @@ if (n_cruises == 0) {
 
 ## When: calendar heatmap from interpolated fields
 
-Each tile is a cruise week (ISO year × week). Color shows the **log-scaled percentage of interpolated grid cells** below the threshold within each ecological depth layer—the same layers and metric as the spatial map below.
+Each tile is a cruise week (ISO year × week). Color shows the **shallowest hypoxic depth (m)** in the interpolated oxygen field— the minimum depth at which O₂ falls below the threshold (default **2.0 mg/L**, set via `params.o2_threshold`). Shallow hypoxia is yellow; deeper hypoxia is purple. Weeks with no hypoxia are left blank.
 
 ```{r calendar-heatmap}
-#| fig-cap: "Hypoxic interpolated field extent by cruise week and depth layer."
-#| fig-height: 18
+#| fig-cap: "Shallowest hypoxic depth by cruise week from interpolated fields."
+#| fig-height: 10
 
 if (n_interp_cruises == 0) {
   cat("No interpolated oxygen fields found. Run `make interpolate-all` first.")
 } else if (nrow(calendar_heatmap_df) == 0) {
-  cat("No cruise dates available for calendar heatmap.")
+  cat("No hypoxic interpolated fields found below ", o2_threshold, " mg/L.", sep = "")
 } else {
   plot_hypoxic_calendar_heatmap(calendar_heatmap_df, o2_threshold)
 }
