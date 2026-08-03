@@ -19,7 +19,7 @@ website:
     - cruise_oxygen/listing.qmd
     - cruise_hypoxic_depth/listing.qmd
     - reports/hypoxic_extent.qmd
-    - href: https://github.com/7yl4r/quartobatch
+    - href: https://github.com/marinebon/sfer-mbon-oxygen
       text: Source Code on GitHub
 format:
   html:

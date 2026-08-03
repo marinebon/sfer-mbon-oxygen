@@ -15,7 +15,7 @@ On first run, R and Julia dependencies are installed automatically from `scripts
 
 ## Pipeline overview
 
-Cruises and stations are discovered from GCOOS ERDDAP (`SFER_CTD_*` datasets). The Makefile runs these steps in order:
+Cruises and stations are discovered from GCOOS ERDDAP (`SFER_CTD_*` datasets). The Makefile runs these steps in orde:
 
 | Step | Target | What it does |
 |------|--------|--------------|
