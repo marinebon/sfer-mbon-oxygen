@@ -5,5 +5,5 @@ title: "SFER MBON Oxygen"
 Cruise reports generated from cleaned CTD data and DIVAnd-interpolated dissolved oxygen fields.
 
 - [Oxygen field maps](cruise_oxygen/listing.qmd)
-- [Anoxic depth maps](cruise_anoxic_depth/listing.qmd)
+- [Hypoxic depth maps](cruise_hypoxic_depth/listing.qmd)
 - [Hypoxic extent across cruises](reports/hypoxic_extent.qmd)

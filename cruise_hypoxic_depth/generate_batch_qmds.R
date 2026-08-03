@@ -9,7 +9,7 @@
 # === setup
 # =====================================================================
 # creates a report template .qmd for each
-BATCH_NAME <- "cruise_anoxic_depth"  # must match folder name
+BATCH_NAME <- "cruise_hypoxic_depth"  # must match folder name
 # =====================================================================
 TEMPLATE_REPLACEMENTS <- list(
   # raw string = replacement string

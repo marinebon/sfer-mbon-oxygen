@@ -2,7 +2,7 @@
 #'
 #' For each horizontal grid cell, scans the interpolated profile from the
 #' surface downward and returns the minimum depth at which O₂ < threshold.
-anoxic_depth_grid <- function(field, threshold) {
+hypoxic_depth_grid <- function(field, threshold) {
   if (is.null(field) || nrow(field) == 0) {
     return(NULL)
   }
@@ -34,7 +34,7 @@ anoxic_depth_grid <- function(field, threshold) {
     data.frame(
       longitude = lon,
       latitude = lat,
-      anoxic_depth_m = depth,
+      hypoxic_depth_m = depth,
       stringsAsFactors = FALSE
     )
   })
@@ -63,7 +63,7 @@ build_profile_payload <- function(field) {
   list(cells = cells)
 }
 
-anoxic_depth_grid_rectangles <- function(grid) {
+hypoxic_depth_grid_rectangles <- function(grid) {
   if (is.null(grid) || nrow(grid) == 0) {
     return(NULL)
   }
@@ -80,8 +80,8 @@ anoxic_depth_grid_rectangles <- function(grid) {
   grid
 }
 
-DEFAULT_ANOXIC_O2_THRESHOLD <- 3.8
+DEFAULT_HYPOXIC_DEPTH_O2_THRESHOLD <- 3.8
 
-default_anoxic_threshold <- function(field, observations) {
-  DEFAULT_ANOXIC_O2_THRESHOLD
+default_hypoxic_threshold <- function(field, observations) {
+  DEFAULT_HYPOXIC_DEPTH_O2_THRESHOLD
 }

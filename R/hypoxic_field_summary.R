@@ -290,8 +290,8 @@ hypoxic_field_extent_by_cruise <- function(
 hypoxic_min_depth_by_cruise <- function(
     threshold = DEFAULT_HYPOXIC_O2_THRESHOLD,
     interp_root = here::here("data", "interpolated")) {
-  if (!exists("anoxic_depth_grid", mode = "function")) {
-    source(here::here("cruise_anoxic_depth/anoxic_depth.R"), local = FALSE)
+  if (!exists("hypoxic_depth_grid", mode = "function")) {
+    source(here::here("cruise_hypoxic_depth/hypoxic_depth.R"), local = FALSE)
   }
 
   cruises <- list_interpolated_cruises(interp_root)
@@ -306,7 +306,7 @@ hypoxic_min_depth_by_cruise <- function(
       return(NULL)
     }
 
-    grid <- anoxic_depth_grid(field, threshold)
+    grid <- hypoxic_depth_grid(field, threshold)
     if (is.null(grid) || nrow(grid) == 0) {
       return(data.frame(
         cruise_id = cruise_id,
@@ -315,7 +315,7 @@ hypoxic_min_depth_by_cruise <- function(
       ))
     }
 
-    depths <- grid$anoxic_depth_m[is.finite(grid$anoxic_depth_m)]
+    depths <- grid$hypoxic_depth_m[is.finite(grid$hypoxic_depth_m)]
     data.frame(
       cruise_id = cruise_id,
       min_hypoxic_depth_m = if (length(depths) > 0) min(depths) else NA_real_,

@@ -1,6 +1,6 @@
 ---
-title: "cruise_anoxic_depth"
-description: "Anoxic depth maps for each cruise with interpolated oxygen fields."
+title: "cruise_hypoxic_depth"
+description: "Hypoxic depth maps for each cruise with interpolated oxygen fields."
 code-fold: true
 listing:
   contents: batched_reports

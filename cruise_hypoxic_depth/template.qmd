@@ -1,11 +1,11 @@
 ---
 title: "SV18067 Report"
-image: thumbnails/SV18067_anoxic.png
-image-alt: "Anoxic depth map for SV18067"
+image: thumbnails/SV18067_hypoxic.png
+image-alt: "Hypoxic depth map for SV18067"
 format: html
 params:
   batch_value: "SV18067"
-  batch_name: "cruise_anoxic_depth"
+  batch_name: "cruise_hypoxic_depth"
 ---
 
 ```{r setup}
@@ -36,8 +36,8 @@ library(jsonlite)
 #| code-summary: Load cleaned observations and interpolated oxygen field
 source(here(glue("{params$batch_name}/getData.R")))
 source(here("R/color_scales.R"))
-source(here(glue("{params$batch_name}/anoxic_depth.R")))
-source(here(glue("{params$batch_name}/plot_anoxic_depth_map.R")))
+source(here(glue("{params$batch_name}/hypoxic_depth.R")))
+source(here(glue("{params$batch_name}/plot_hypoxic_depth_map.R")))
 
 data <- getData(params$batch_value)
 obs <- data$observations
@@ -48,18 +48,18 @@ field <- data$oxygen_field
 #| include: false
 #| code-summary: Generate listing thumbnail image
 source(here("R/plot_field_thumbnails.R"))
-source(here(glue("{params$batch_name}/anoxic_depth.R")))
+source(here(glue("{params$batch_name}/hypoxic_depth.R")))
 thumb_file <- here(
-  glue("{params$batch_name}/batched_reports/thumbnails/{params$batch_value}_anoxic.png")
+  glue("{params$batch_name}/batched_reports/thumbnails/{params$batch_value}_hypoxic.png")
 )
 if (!is.null(field)) {
-  save_anoxic_depth_thumbnail(field, thumb_file, observations = obs)
+  save_hypoxic_depth_thumbnail(field, thumb_file, observations = obs)
 }
 ```
 
 ## Cruise `r params$batch_value`
 
-This report maps the **shallowest depth** at which the interpolated dissolved oxygen field falls below a chosen threshold (anoxic/hypoxic boundary). Use the slider on the map to change the O₂ threshold; grid cells are colored by **depth in meters**.
+This report maps the **shallowest depth** at which the interpolated dissolved oxygen field falls below a chosen threshold (hypoxic boundary). Use the slider on the map to change the O₂ threshold; grid cells are colored by **depth in meters**.
 
 ```{r data-summary}
 #| code-summary: Observation and field summary
@@ -75,12 +75,12 @@ data.frame(
 )
 ```
 
-## Anoxic depth map
+## Hypoxic depth map
 
 Pan and zoom to explore where oxygen drops below the threshold. Each colored cell shows the **shallowest depth** (closest to the surface) where interpolated O₂ is below the threshold — not the depth where O₂ equals the threshold. When the threshold exceeds surface oxygen across the domain, expect uniform shallow depths (~2 m, the top of the interpolated grid). Hover a cell for its depth in meters. Use the **depth color scale** inputs to adjust the color bar limits.
 
-```{r anoxic-depth-map}
-#| code-summary: Interactive map of shallowest anoxic depth
+```{r hypoxic-depth-map}
+#| code-summary: Interactive map of shallowest hypoxic depth
 
 if (is.null(field)) {
   cat(
@@ -90,7 +90,7 @@ if (is.null(field)) {
     sep = ""
   )
 } else {
-  map <- plot_anoxic_depth_map(field, obs)
+  map <- plot_hypoxic_depth_map(field, obs)
   if (is.null(map)) {
     cat("No interpolated field grid available for this cruise.")
   } else {

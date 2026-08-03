@@ -1,14 +1,14 @@
 # Fixed domains derived from all cleaned observations and interpolated fields.
 # Set COLOR_SCALE_RESCAN=true to recompute from data on the next render.
 OXYGEN_COLOR_DOMAIN <- c(0, 5.5)
-ANOXIC_DEPTH_COLOR_DOMAIN <- c(0, 20)
-ANOXIC_DEPTH_COLOR_LIMITS <- c(0, 584.141)
+HYPOXIC_DEPTH_COLOR_DOMAIN <- c(0, 20)
+HYPOXIC_DEPTH_COLOR_LIMITS <- c(0, 584.141)
 
 OXYGEN_PALETTE <- function(n = 256) {
   viridisLite::turbo(n)
 }
 
-ANOXIC_DEPTH_PALETTE <- function(n = 256) {
+HYPOXIC_DEPTH_PALETTE <- function(n = 256) {
   viridisLite::viridis(n)
 }
 
@@ -111,14 +111,14 @@ global_oxygen_color_domain <- function() {
   domain
 }
 
-global_anoxic_depth_color_limits <- function() {
-  if (!is.null(.color_domain_cache$anoxic_depth_limits)) {
-    return(.color_domain_cache$anoxic_depth_limits)
+global_hypoxic_depth_color_limits <- function() {
+  if (!is.null(.color_domain_cache$hypoxic_depth_limits)) {
+    return(.color_domain_cache$hypoxic_depth_limits)
   }
 
   if (!identical(Sys.getenv("COLOR_SCALE_RESCAN"), "true")) {
-    .color_domain_cache$anoxic_depth_limits <- ANOXIC_DEPTH_COLOR_LIMITS
-    return(ANOXIC_DEPTH_COLOR_LIMITS)
+    .color_domain_cache$hypoxic_depth_limits <- HYPOXIC_DEPTH_COLOR_LIMITS
+    return(HYPOXIC_DEPTH_COLOR_LIMITS)
   }
 
   root <- Sys.getenv("COLOR_SCALE_ROOT", unset = getwd())
@@ -127,21 +127,21 @@ global_anoxic_depth_color_limits <- function() {
   )
 
   if (length(depths) == 0) {
-    limits <- ANOXIC_DEPTH_COLOR_LIMITS
+    limits <- HYPOXIC_DEPTH_COLOR_LIMITS
   } else {
     limits <- c(0, max(depths))
   }
 
-  .color_domain_cache$anoxic_depth_limits <- limits
+  .color_domain_cache$hypoxic_depth_limits <- limits
   limits
 }
 
-anoxic_depth_color_domain <- function(field = NULL) {
-  ANOXIC_DEPTH_COLOR_DOMAIN
+hypoxic_depth_color_domain <- function(field = NULL) {
+  HYPOXIC_DEPTH_COLOR_DOMAIN
 }
 
-anoxic_depth_color_limits <- function(field = NULL) {
-  global_anoxic_depth_color_limits()
+hypoxic_depth_color_limits <- function(field = NULL) {
+  global_hypoxic_depth_color_limits()
 }
 
 oxygen_color_domain <- function(field = NULL, observations = NULL) {

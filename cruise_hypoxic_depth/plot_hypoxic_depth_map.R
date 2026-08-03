@@ -1,9 +1,9 @@
-plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
+plot_hypoxic_depth_map <- function(field, observations, threshold = NULL) {
   if (is.null(field) || nrow(field) == 0) {
     return(NULL)
   }
 
-  if (!exists("anoxic_depth_color_domain")) {
+  if (!exists("hypoxic_depth_color_domain")) {
     if (requireNamespace("here", quietly = TRUE)) {
       source(here::here("R/color_scales.R"), local = FALSE)
     } else {
@@ -13,18 +13,18 @@ plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
 
   obs <- as.data.frame(observations)
   if (is.null(threshold)) {
-    threshold <- default_anoxic_threshold(field, obs)
+    threshold <- default_hypoxic_threshold(field, obs)
   }
 
-  grid <- anoxic_depth_grid(field, threshold)
-  grid <- anoxic_depth_grid_rectangles(grid)
+  grid <- hypoxic_depth_grid(field, threshold)
+  grid <- hypoxic_depth_grid_rectangles(grid)
   if (is.null(grid) || nrow(grid) == 0) {
     return(NULL)
   }
 
-  color_domain <- anoxic_depth_color_domain(field)
-  color_limits <- anoxic_depth_color_limits(field)
-  depth_palette <- ANOXIC_DEPTH_PALETTE(256)
+  color_domain <- hypoxic_depth_color_domain(field)
+  color_limits <- hypoxic_depth_color_limits(field)
+  depth_palette <- HYPOXIC_DEPTH_PALETTE(256)
 
   lon_min <- min(grid$longitude, na.rm = TRUE)
   lon_max <- max(grid$longitude, na.rm = TRUE)
@@ -44,7 +44,7 @@ plot_anoxic_depth_map <- function(field, observations, threshold = NULL) {
   slider_max <- ceiling(o2_max * 10) / 10
   slider_step <- max(0.1, round((slider_max - slider_min) / 100, digits = 2))
 
-  widget_id <- paste0("anoxic-depth-map-", sample.int(1e8, 1L))
+  widget_id <- paste0("hypoxic-depth-map-", sample.int(1e8, 1L))
   profile_payload <- build_profile_payload(field)
   profile_json <- jsonlite::toJSON(profile_payload, auto_unbox = FALSE)
   depth_palette_json <- jsonlite::toJSON(depth_palette, auto_unbox = FALSE)
@@ -148,7 +148,7 @@ function(el, x) {
     return null;
   }
 
-  function shallowAnoxicDepth(cell, o2Threshold) {
+  function shallowHypoxicDepth(cell, o2Threshold) {
     var depths = Array.isArray(cell.depths) ? cell.depths : [cell.depths];
     var oxygens = Array.isArray(cell.oxygens) ? cell.oxygens : [cell.oxygens];
     var minDepth = null;
@@ -227,7 +227,7 @@ function(el, x) {
 
     var depths = [];
     cells.forEach(function(cell) {
-      var d = shallowAnoxicDepth(cell, o2Threshold);
+      var d = shallowHypoxicDepth(cell, o2Threshold);
       if (d !== null && isFinite(d)) {
         depths.push(d);
       }
@@ -235,7 +235,7 @@ function(el, x) {
 
     layerGroup.clearLayers();
     cells.forEach(function(cell) {
-      var d = shallowAnoxicDepth(cell, o2Threshold);
+      var d = shallowHypoxicDepth(cell, o2Threshold);
       if (d === null || !isFinite(d)) {
         return;
       }
@@ -277,7 +277,7 @@ function(el, x) {
   function initThresholdControl() {
     var control = L.control({ position: 'topright' });
     control.onAdd = function() {
-      var div = L.DomUtil.create('div', 'anoxic-threshold-control');
+      var div = L.DomUtil.create('div', 'hypoxic-threshold-control');
       div.style.cssText = [
         'background:#fff',
         'padding:10px 12px',

@@ -2,14 +2,14 @@ project:
   type: website
   pre-render:
   - cruise_oxygen/generate_batch_qmds.R
-  - cruise_anoxic_depth/generate_batch_qmds.R
+  - cruise_hypoxic_depth/generate_batch_qmds.R
   render:
   - index.qmd
   - reports/hypoxic_extent.qmd
   - cruise_oxygen/batched_reports/*.qmd
   - cruise_oxygen/listing.qmd
-  - cruise_anoxic_depth/batched_reports/*.qmd
-  - cruise_anoxic_depth/listing.qmd
+  - cruise_hypoxic_depth/batched_reports/*.qmd
+  - cruise_hypoxic_depth/listing.qmd
 website:
   title: SFER MBON Oxygen
   navbar:
@@ -17,7 +17,7 @@ website:
     - href: index.qmd
       text: Home
     - cruise_oxygen/listing.qmd
-    - cruise_anoxic_depth/listing.qmd
+    - cruise_hypoxic_depth/listing.qmd
     - reports/hypoxic_extent.qmd
     - href: https://github.com/7yl4r/quartobatch
       text: Source Code on GitHub

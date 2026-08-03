@@ -142,22 +142,22 @@ save_oxygen_field_thumbnail <- function(
   )
 }
 
-save_anoxic_depth_thumbnail <- function(field, output_file, observations = NULL) {
+save_hypoxic_depth_thumbnail <- function(field, output_file, observations = NULL) {
   if (is.null(field) || nrow(field) == 0) {
     return(invisible(FALSE))
   }
 
-  threshold <- default_anoxic_threshold(field, observations)
-  grid <- anoxic_depth_grid(field, threshold)
+  threshold <- default_hypoxic_threshold(field, observations)
+  grid <- hypoxic_depth_grid(field, threshold)
   if (is.null(grid) || nrow(grid) == 0) {
     return(invisible(FALSE))
   }
 
-  if (!any(is.finite(grid$anoxic_depth_m))) {
+  if (!any(is.finite(grid$hypoxic_depth_m))) {
     return(invisible(FALSE))
   }
 
-  mat_info <- field_to_matrix(grid, "anoxic_depth_m")
+  mat_info <- field_to_matrix(grid, "hypoxic_depth_m")
   lons <- mat_info$lons
   lats <- mat_info$lats
   cell_dx <- if (length(lons) > 1) diff(lons)[1] else 0.02
@@ -167,8 +167,8 @@ save_anoxic_depth_thumbnail <- function(field, output_file, observations = NULL)
     lats,
     mat_info$mat,
     output_file,
-    palette = ANOXIC_DEPTH_PALETTE(256),
-    zlim = anoxic_depth_color_domain(field),
+    palette = HYPOXIC_DEPTH_PALETTE(256),
+    zlim = hypoxic_depth_color_domain(field),
     legend_title = "Depth below threshold (m)",
     cell_dx = cell_dx,
     cell_dy = cell_dy
