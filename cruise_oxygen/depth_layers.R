@@ -50,17 +50,27 @@ build_oxygen_map_payload <- function(field, observations, layers) {
     grid_slice <- field_slice_grid(field_slice)
     field_cells <- lapply(seq_len(nrow(grid_slice)), function(i) {
       row <- grid_slice[i, ]
+      nearest <- nearest_layer_obs(
+        row$longitude,
+        row$latitude,
+        observations,
+        layer$depth_min,
+        layer$depth_max
+      )
       list(
         lon1 = row$lon1,
         lat1 = row$lat1,
         lon2 = row$lon2,
         lat2 = row$lat2,
         o2 = row$dissolved_oxygen,
-        popup = sprintf(
-          "O\u2082: %.2f mg/L<br>Lat: %.5f<br>Lon: %.5f",
-          row$dissolved_oxygen,
-          row$latitude,
-          row$longitude
+        popup = paste0(
+          sprintf(
+            "O\u2082: %.2f mg/L<br>Lat: %.5f<br>Lon: %.5f",
+            row$dissolved_oxygen,
+            row$latitude,
+            row$longitude
+          ),
+          format_nearest_obs_popup(nearest)
         )
       )
     })

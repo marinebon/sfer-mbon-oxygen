@@ -33,6 +33,9 @@ const LEN_HORIZ_DEG = 0.035
 const EPSILON2 = 0.01
 const LEN_HORIZ_BG_DEG = 0.08
 const EPSILON2_BG = 1.0
+# Clamp interpolated values to [min, max] of observations within this radius
+# (matches background correlation length so nearby casts define plausible bounds).
+const CLAMP_RADIUS_DEG = LEN_HORIZ_BG_DEG
 
 function grid_size(span, resolution, min_points, max_points)
     n = max(min_points, round(Int, span / resolution) + 1)
@@ -760,6 +763,64 @@ function label_sea_components(sea_mask::AbstractMatrix{Bool})
     return labels
 end
 
+function local_obs_bounds(
+    lon::Float64,
+    lat::Float64,
+    x,
+    y,
+    f,
+    radius_deg::Float64,
+)
+    lo = Inf
+    hi = -Inf
+    found = false
+    for k in eachindex(x)
+        if hypot(x[k] - lon, y[k] - lat) <= radius_deg
+            found = true
+            lo = min(lo, f[k])
+            hi = max(hi, f[k])
+        end
+    end
+    found ? (lo, hi) : (nothing, nothing)
+end
+
+function clamp_to_local_observations!(
+    fi::AbstractMatrix{<:Real},
+    sea_mask::AbstractMatrix{Bool},
+    x,
+    y,
+    f,
+    lon_range,
+    lat_range,
+    radius_deg::Float64 = CLAMP_RADIUS_DEG,
+)
+    isempty(x) && return fi
+
+    clamped = 0
+    for (j, lat) in enumerate(lat_range), (i, lon) in enumerate(lon_range)
+        if !sea_mask[i, j] || isnan(fi[i, j])
+            continue
+        end
+        lo, hi = local_obs_bounds(lon, lat, x, y, f, radius_deg)
+        if lo === nothing
+            continue
+        end
+        original = fi[i, j]
+        fi[i, j] = clamp(original, lo, hi)
+        if fi[i, j] != original
+            clamped += 1
+        end
+    end
+
+    if clamped > 0
+        println(
+            "Clamped $clamped cell(s) to local observation range ",
+            "(within $(round(radius_deg, digits=4))° of nearest obs)",
+        )
+    end
+    return fi
+end
+
 function mask_disconnected_components!(
     fi::AbstractMatrix{<:Real},
     sea_mask::AbstractMatrix{Bool},
@@ -1242,6 +1303,27 @@ function interpolate_cruise(cruise_id::AbstractString, clean_root::AbstractStrin
             end
         end
         fi[:, :, idep] = slice
+    end
+
+    # Prevent multiscale DIVAnd overshoot: bound each cell by nearby observations.
+    for (idep, depth) in enumerate(depth_range)
+        sea_mask = sea_mask_at_depth(elevation, depth, depth_tol)
+        mask_obs = abs.(z .- depth) .<= depth_tol
+        x2 = x[mask_obs]
+        y2 = y[mask_obs]
+        f2 = f[mask_obs]
+        if isempty(x2)
+            continue
+        end
+        fi[:, :, idep] = clamp_to_local_observations!(
+            fi[:, :, idep],
+            sea_mask,
+            x2,
+            y2,
+            f2,
+            lon_range,
+            lat_range,
+        )
     end
 
     grid = DataFrame(

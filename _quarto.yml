@@ -6,6 +6,7 @@ project:
   render:
   - index.qmd
   - reports/hypoxic_extent.qmd
+  - reports/interpolation.qmd
   - cruise_oxygen/batched_reports/*.qmd
   - cruise_oxygen/listing.qmd
   - cruise_hypoxic_depth/batched_reports/*.qmd
@@ -19,6 +20,7 @@ website:
     - cruise_oxygen/listing.qmd
     - cruise_hypoxic_depth/listing.qmd
     - reports/hypoxic_extent.qmd
+    - reports/interpolation.qmd
     - href: https://github.com/marinebon/sfer-mbon-oxygen
       text: Source Code on GitHub
 format:

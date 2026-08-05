@@ -22,7 +22,7 @@ Cruises and stations are discovered from GCOOS ERDDAP (`SFER_CTD_*` datasets). T
 | 1 | `make download` | Run [`scripts/download_cruises.R`](scripts/download_cruises.R) to fetch CTD datasets from GCOOS ERDDAP into `data/01_raw/{cruise_id}/` |
 | 2 | `make process` | Run [`scripts/clean_bin_ctd.R`](scripts/clean_bin_ctd.R) to apply IOOS QARTOD QC filtering, then clean each cast with `oce::ctdTrim()` and `oce::ctdDecimate()` into `data/02_clean/` (skips casts whose output is already up to date) |
 | 2b | `make report-process` | Render [`reports/processing_summary.qmd`](reports/processing_summary.qmd) summarizing raw vs cleaned row counts and example profiles |
-| 3 | `make interpolate` | Run [`scripts/interpolate_cruise.jl`](scripts/interpolate_cruise.jl) to build gridded dissolved oxygen fields with [DIVAnd.jl](https://github.com/gher-uliege/DIVAnd.jl) from `data/02_clean/` (default: `CRUISE=SV18067`) |
+| 3 | `make interpolate` | Run [`scripts/interpolate_cruise.jl`](scripts/interpolate_cruise.jl) to build gridded dissolved oxygen fields with [DIVAnd.jl](https://github.com/gher-uliege/DIVAnd.jl) from `data/02_clean/` (default: `CRUISE=SV18067`). See [Interpolation Methods](reports/interpolation.qmd) for algorithm details. |
 | 4 | `make render` | Render the Quarto website: expand [`example_batch/template.qmd`](example_batch/template.qmd) into per-cruise `.qmd` files and build HTML reports |
 | 5 | `make publish` | Run the full pipeline above, then `quarto publish` to deploy the site (e.g. GitHub Pages) |
 

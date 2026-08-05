@@ -138,6 +138,40 @@ snap_to_field_grid <- function(longitude, latitude, lon_step, lat_step) {
   )
 }
 
+#' Nearest observation cast in a depth layer (unique station locations).
+nearest_layer_obs <- function(longitude, latitude, observations, depth_min, depth_max) {
+  obs_slice <- slice_observations_layer(observations, depth_min, depth_max)
+  if (nrow(obs_slice) == 0) {
+    return(NULL)
+  }
+
+  dists <- sqrt(
+    (obs_slice$longitude - longitude)^2 +
+      (obs_slice$latitude - latitude)^2
+  )
+  idx <- which.min(dists)
+  dist_deg <- dists[[idx]]
+  # Rough km at mid-latitudes (~25°N): 1° lon ≈ 100 km, 1° lat ≈ 111 km.
+  dist_km <- dist_deg * 105
+
+  list(
+    station = as.character(obs_slice$station[[idx]]),
+    dist_deg = dist_deg,
+    dist_km = dist_km
+  )
+}
+
+format_nearest_obs_popup <- function(nearest) {
+  if (is.null(nearest)) {
+    return("")
+  }
+  sprintf(
+    "<br>Nearest station: %s (%.1f km)",
+    nearest$station,
+    nearest$dist_km
+  )
+}
+
 add_field_cell_bounds <- function(grid, half = NULL) {
   if (is.null(half)) {
     half <- field_cell_half_widths(grid$longitude, grid$latitude)
