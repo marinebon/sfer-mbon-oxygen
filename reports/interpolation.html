@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Interpolation Methods – SFER MBON Oxygen</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-fed2927b5d71da76dad1d9df0395c5a2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">SFER MBON Oxygen</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../cruise_oxygen/listing.html"> 
+<span class="menu-text">cruise_oxygen</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../cruise_hypoxic_depth/listing.html"> 
+<span class="menu-text">cruise_hypoxic_depth</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../reports/hypoxic_extent.html"> 
+<span class="menu-text">Hypoxic extent across cruises</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="../reports/interpolation.html" aria-current="page"> 
+<span class="menu-text">Interpolation Methods</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/marinebon/sfer-mbon-oxygen"> 
+<span class="menu-text">Source Code on GitHub</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#input-data" id="toc-input-data" class="nav-link" data-scroll-target="#input-data">Input data</a></li>
+  <li><a href="#algorithm-divand" id="toc-algorithm-divand" class="nav-link" data-scroll-target="#algorithm-divand">Algorithm: DIVAnd</a></li>
+  <li><a href="#grid-construction" id="toc-grid-construction" class="nav-link" data-scroll-target="#grid-construction">Grid construction</a></li>
+  <li><a href="#bathymetry-and-sea-masking" id="toc-bathymetry-and-sea-masking" class="nav-link" data-scroll-target="#bathymetry-and-sea-masking">Bathymetry and sea masking</a>
+  <ul class="collapse">
+  <li><a href="#connecting-observations-across-barriers" id="toc-connecting-observations-across-barriers" class="nav-link" data-scroll-target="#connecting-observations-across-barriers">Connecting observations across barriers</a></li>
+  </ul></li>
+  <li><a href="#post-processing-and-quality-control" id="toc-post-processing-and-quality-control" class="nav-link" data-scroll-target="#post-processing-and-quality-control">Post-processing and quality control</a>
+  <ul class="collapse">
+  <li><a href="#depth-mean-gap-fill" id="toc-depth-mean-gap-fill" class="nav-link" data-scroll-target="#depth-mean-gap-fill">Depth-mean gap fill</a></li>
+  <li><a href="#local-observation-clamping" id="toc-local-observation-clamping" class="nav-link" data-scroll-target="#local-observation-clamping">Local observation clamping</a></li>
+  <li><a href="#observation-fit-reporting" id="toc-observation-fit-reporting" class="nav-link" data-scroll-target="#observation-fit-reporting">Observation fit reporting</a></li>
+  </ul></li>
+  <li><a href="#output-format" id="toc-output-format" class="nav-link" data-scroll-target="#output-format">Output format</a></li>
+  <li><a href="#how-maps-use-the-gridded-field" id="toc-how-maps-use-the-gridded-field" class="nav-link" data-scroll-target="#how-maps-use-the-gridded-field">How maps use the gridded field</a></li>
+  <li><a href="#key-parameters-reference" id="toc-key-parameters-reference" class="nav-link" data-scroll-target="#key-parameters-reference">Key parameters reference</a></li>
+  <li><a href="#limitations-and-interpretation" id="toc-limitations-and-interpretation" class="nav-link" data-scroll-target="#limitations-and-interpretation">Limitations and interpretation</a></li>
+  <li><a href="#related-files" id="toc-related-files" class="nav-link" data-scroll-target="#related-files">Related files</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Interpolation Methods</h1>
+<p class="subtitle lead">How gridded dissolved oxygen fields are built from CTD observations</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This page describes how <a href="../scripts/interpolate_cruise.jl"><code>scripts/interpolate_cruise.jl</code></a> transforms cleaned CTD casts in <code>data/02_clean/</code> into gridded dissolved oxygen fields in <code>data/interpolated/{cruise_id}/oxygen_field.csv</code>. Those fields power the <a href="../cruise_oxygen/listing.html">oxygen field maps</a>, <a href="../cruise_hypoxic_depth/listing.html">hypoxic depth maps</a>, and <a href="../reports/hypoxic_extent.html">hypoxic extent summaries</a>.</p>
+<p>Run interpolation after processing:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> process</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> interpolate              <span class="co"># one cruise (default CRUISE=SV18067)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> interpolate CRUISE=WS0612</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> interpolate-all          <span class="co"># every cruise with cleaned data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>Interpolation is performed <strong>independently at each depth level</strong>. For a given depth slice, the method:</p>
+<ol type="1">
+<li>Selects CTD observations within a vertical tolerance of that depth.</li>
+<li>Builds a sea mask from <a href="https://www.ncei.noaa.gov/products/blue-topo-bathymetry">BlueTopo</a> bathymetry and a coastline land mask.</li>
+<li>Connects isolated observations across shallow water where needed.</li>
+<li>Runs <strong>multiscale DIVAnd</strong> (Data-Interpolating Variational Analysis) on each connected sea body.</li>
+<li>Fills remaining gaps, then masks unreliable extrapolation and disconnected water bodies.</li>
+</ol>
+<p>There is <strong>no separate 3-D variational solve</strong>. Vertical structure comes from stacking independent horizontal slices. Map displays then <strong>aggregate</strong> those slices into ecological depth bands (0–3 m, 3–10 m, etc.) in R.</p>
+<pre class="mermaid"><code>flowchart TD
+  A[data/02_clean/SFER_CTD_*.csv] --&gt; B[Load observations]
+  C[BlueTopo bathymetry + land mask] --&gt; D[Sea mask per depth slice]
+  B --&gt; E[interpolate_cruise.jl]
+  D --&gt; E
+  E --&gt; F[DIVAnd per depth slice]
+  F --&gt; G[Gap fill + quality masks]
+  G --&gt; H[data/interpolated/cruise/oxygen_field.csv]
+  H --&gt; I[R depth-layer aggregation]
+  I --&gt; J[Interactive maps and reports]</code></pre>
+</section>
+<section id="input-data" class="level2">
+<h2 class="anchored" data-anchor-id="input-data">Input data</h2>
+<p>Each cruise uses all cleaned cast files matching <code>SFER_CTD_{cruise_id}_*.csv</code>. For every row with valid <code>longitude</code>, <code>latitude</code>, <code>depth</code> (or <code>sea_water_pressure</code>), and <code>dissolved_oxygen</code>, one observation is passed to the interpolator.</p>
+<p>Casts are cleaned upstream by <a href="../scripts/clean_bin_ctd.R"><code>scripts/clean_bin_ctd.R</code></a>: IOOS QARTOD QC filtering, spike trimming with <code>oce::ctdTrim()</code>, and decimation to ~0.1 dbar with <code>oce::ctdDecimate()</code>. See the <a href="processing_summary.qmd">processing summary</a> for details.</p>
+</section>
+<section id="algorithm-divand" class="level2">
+<h2 class="anchored" data-anchor-id="algorithm-divand">Algorithm: DIVAnd</h2>
+<p>The core interpolator is <a href="https://github.com/gher-uliege/DIVAnd.jl">DIVAnd.jl</a> (<code>DIVAndrun</code> on a rectangular domain). DIVAnd finds a smooth field that fits observations while penalizing large spatial curvature. Two parameters control the trade-off:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 64%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>len_horiz</code></td>
+<td>Correlation length (°). Larger values produce smoother fields that influence points farther from observations.</td>
+</tr>
+<tr class="even">
+<td><code>epsilon2</code></td>
+<td>Signal-to-noise ratio. Higher values trust observations more relative to smoothness.</td>
+</tr>
+</tbody>
+</table>
+<p>This project uses a <strong>multiscale</strong> approach (<code>interpolate_surface_field_multiscale</code>):</p>
+<ol type="1">
+<li><strong>Background pass</strong> — long correlation length (<code>0.04°</code>), low smoothness penalty (<code>epsilon2 = 1.0</code>). Captures broad regional gradients.</li>
+<li><strong>Fine pass</strong> — short correlation length (<code>0.018°</code>), higher smoothness penalty (<code>epsilon2 = 0.01</code>). Fits local residuals on top of the background.</li>
+</ol>
+<p>The final field is <code>background + fine_residuals</code>. Observations are mean-centered before each pass to improve numerical stability.</p>
+<p>When only one observation falls in a sea component, that value is assigned uniformly. When none fall in a component, the slice is left empty (NaN) until gap filling.</p>
+</section>
+<section id="grid-construction" class="level2">
+<h2 class="anchored" data-anchor-id="grid-construction">Grid construction</h2>
+<p>The output grid spans the observation bounding box plus <code>0.02°</code> padding on each side.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 36%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Setting</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Horizontal target resolution</td>
+<td><code>0.005°</code> (~500 m)</td>
+<td>Used to size the lon/lat axes</td>
+</tr>
+<tr class="even">
+<td>Vertical target resolution</td>
+<td><code>2.0 m</code></td>
+<td>Used to size the depth axis</td>
+</tr>
+<tr class="odd">
+<td>Minimum axis length</td>
+<td>30 points</td>
+<td>Floor on grid extent</td>
+</tr>
+<tr class="even">
+<td>Maximum axis length</td>
+<td>250 points</td>
+<td>Ceiling per axis</td>
+</tr>
+<tr class="odd">
+<td>Maximum total grid points</td>
+<td>1 500 000</td>
+<td>If exceeded, all three axes are scaled down equally</td>
+</tr>
+</tbody>
+</table>
+<p>Correlation lengths are set to ~3–4 fine-grid cells (<code>0.018°</code> fine, <code>0.04°</code> background) so DIVAnd smoothing scales with the finer mesh.</p>
+<p>Depth levels are evenly spaced from the shallowest to deepest observed depth on the cruise. Actual grid spacing depends on cruise extent — large cruises may use coarser cells than the target resolution.</p>
+<p>Depth slice tolerance (observations assigned to a level) is <code>max(1 m, half the native depth spacing)</code>.</p>
+</section>
+<section id="bathymetry-and-sea-masking" class="level2">
+<h2 class="anchored" data-anchor-id="bathymetry-and-sea-masking">Bathymetry and sea masking</h2>
+<p>Bathymetry comes from <strong>BlueTopo</strong> at 8× the interpolation grid resolution (via <a href="../scripts/download_bluetopo.py"><code>scripts/download_bluetopo.py</code></a>). A separate <strong>coastline land mask</strong> is rasterized with <a href="../scripts/rasterize_land_mask.py"><code>scripts/rasterize_land_mask.py</code></a>.</p>
+<p>For each depth slice:</p>
+<ul>
+<li><strong>Land</strong> — cells with unknown elevation or elevation ≥ <code>−0.2 m</code> are excluded.</li>
+<li><strong>Too shallow</strong> — cells where bottom depth + tolerance &lt; slice depth are excluded (prevents interpolating below the seafloor).</li>
+<li><strong>Observation override</strong> — land-mask cells at cast locations are cleared so nearshore stations are retained.</li>
+</ul>
+<section id="connecting-observations-across-barriers" class="level3">
+<h3 class="anchored" data-anchor-id="connecting-observations-across-barriers">Connecting observations across barriers</h3>
+<p>Some casts fall in water bodies that are disconnected on the coarse grid (e.g.&nbsp;separated by land or missing bathymetry). Two mechanisms address this:</p>
+<ol type="1">
+<li><strong><code>extend_sea_mask_along_water!</code></strong> — walks up to 4 grid steps from each observation through cells with valid sub-tidal elevation.</li>
+<li><strong><code>bridge_unconnected_observations!</code></strong> — for observations not in the main sea component, finds a shortest path through high-resolution bathymetry (up to 40 steps) and marks those cells as sea. Paths that cross land are rejected. Observations more than 12 grid cells from the main field are skipped.</li>
+</ol>
+<p>After bridging, each depth slice is interpolated <strong>separately per connected sea component</strong> (<code>interpolate_by_sea_component</code>). Components with no nearby observations are masked out (<code>mask_disconnected_components!</code>).</p>
+</section>
+</section>
+<section id="post-processing-and-quality-control" class="level2">
+<h2 class="anchored" data-anchor-id="post-processing-and-quality-control">Post-processing and quality control</h2>
+<p>After DIVAnd runs for all depth levels:</p>
+<section id="depth-mean-gap-fill" class="level3">
+<h3 class="anchored" data-anchor-id="depth-mean-gap-fill">Depth-mean gap fill</h3>
+<p>Grid cells that are sea but still NaN (no observations contributed to that depth slice) are filled with the <strong>mean dissolved oxygen of all observations in that depth slice</strong>. If a slice has no observations at all, the cruise-wide mean for that slice index is used (or the global cruise mean as a last resort).</p>
+</section>
+<section id="local-observation-clamping" class="level3">
+<h3 class="anchored" data-anchor-id="local-observation-clamping">Local observation clamping</h3>
+<p>Multiscale DIVAnd can overshoot the observation range — for example, producing a 1.5 mg/L grid value next to a station measuring 3.4 mg/L when the fine residual pass adds an large negative correction. To prevent this, each grid cell is <strong>clamped</strong> after gap filling:</p>
+<pre><code>clamped_value = clamp(interpolated_value, local_min, local_max)</code></pre>
+<p>where <code>local_min</code> and <code>local_max</code> are the minimum and maximum dissolved oxygen among all observations <strong>in that depth slice</strong> within <strong><code>0.04°</code></strong> of the cell center (<code>CLAMP_RADIUS_DEG</code>, equal to the background correlation length). Cells with no observations within that radius are left unchanged.</p>
+<p>This keeps the field spanning the full grid extent while ensuring values near casts stay within the range of nearby measurements. It specifically targets ringing from the fine residual pass without flattening the entire slice to global min/max.</p>
+</section>
+<section id="observation-fit-reporting" class="level3">
+<h3 class="anchored" data-anchor-id="observation-fit-reporting">Observation fit reporting</h3>
+<p>For each depth slice with observations, the script logs mean absolute residual, max absolute residual, and RMSE at observation grid cells. These appear in the console when running <code>make interpolate</code>.</p>
+<p>The interpolated field spans the full sea mask within the cruise bounding box (including gap-filled cells). It is <strong>not</strong> clipped to a convex hull of observations, but values in data-sparse regions may be extrapolated beyond what casts directly support.</p>
+</section>
+</section>
+<section id="output-format" class="level2">
+<h2 class="anchored" data-anchor-id="output-format">Output format</h2>
+<p>Each cruise writes a long-format CSV:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>longitude</code></td>
+<td>Grid cell center (°)</td>
+</tr>
+<tr class="even">
+<td><code>latitude</code></td>
+<td>Grid cell center (°)</td>
+</tr>
+<tr class="odd">
+<td><code>depth_m</code></td>
+<td>Depth level (m)</td>
+</tr>
+<tr class="even">
+<td><code>dissolved_oxygen</code></td>
+<td>Interpolated O₂ (mg/L)</td>
+</tr>
+</tbody>
+</table>
+<p>Only sea cells with finite values are written. There is no pre-defined regular NetCDF grid; downstream R code treats the CSV as a scattered 3-D field.</p>
+<p>Output path: <code>data/interpolated/{cruise_id}/oxygen_field.csv</code></p>
+</section>
+<section id="how-maps-use-the-gridded-field" class="level2">
+<h2 class="anchored" data-anchor-id="how-maps-use-the-gridded-field">How maps use the gridded field</h2>
+<p>The interpolated CSV is <strong>not</strong> displayed directly at native depth levels. Report maps aggregate into ecological layers defined in <a href="../R/depth_layers.R"><code>R/depth_layers.R</code></a>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Depth range</th>
+<th>Map label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Neuston surface</td>
+<td>0–3 m</td>
+<td>0–3 m</td>
+</tr>
+<tr class="even">
+<td>Near-surface</td>
+<td>3–10 m</td>
+<td>3–10 m</td>
+</tr>
+<tr class="odd">
+<td>Mixed layer</td>
+<td>10–50 m</td>
+<td>10–50 m</td>
+</tr>
+<tr class="even">
+<td>Circalittoral</td>
+<td>50 m – max depth</td>
+<td>50 m+</td>
+</tr>
+</tbody>
+</table>
+<p>For each horizontal grid cell, all native depth levels falling in a layer are <strong>averaged</strong> (<code>aggregate_field_layer</code> in <a href="../cruise_oxygen/depth_layers.R"><code>cruise_oxygen/depth_layers.R</code></a>). CTD observations are averaged the same way for comparison on the map. Field cell popups include the nearest station and approximate distance.</p>
+</section>
+<section id="key-parameters-reference" class="level2">
+<h2 class="anchored" data-anchor-id="key-parameters-reference">Key parameters reference</h2>
+<p>All constants are defined at the top of <a href="../scripts/interpolate_cruise.jl"><code>scripts/interpolate_cruise.jl</code></a>:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 26%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constant</th>
+<th>Value</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>HORIZ_RES_DEG</code></td>
+<td>0.005°</td>
+<td>Target horizontal grid spacing</td>
+</tr>
+<tr class="even">
+<td><code>DEPTH_RES_M</code></td>
+<td>2.0 m</td>
+<td>Target vertical grid spacing</td>
+</tr>
+<tr class="odd">
+<td><code>LEN_HORIZ_DEG</code></td>
+<td>0.018°</td>
+<td>Fine DIVAnd correlation length (~3–4 cells)</td>
+</tr>
+<tr class="even">
+<td><code>EPSILON2</code></td>
+<td>0.01</td>
+<td>Fine smoothness penalty</td>
+</tr>
+<tr class="odd">
+<td><code>LEN_HORIZ_BG_DEG</code></td>
+<td>0.04°</td>
+<td>Background correlation length (~8 cells)</td>
+</tr>
+<tr class="even">
+<td><code>EPSILON2_BG</code></td>
+<td>1.0</td>
+<td>Background smoothness penalty</td>
+</tr>
+<tr class="odd">
+<td><code>CLAMP_RADIUS_DEG</code></td>
+<td>0.04°</td>
+<td>Local observation search radius for post-interpolation clamping</td>
+</tr>
+<tr class="even">
+<td><code>BBOX_PADDING_DEG</code></td>
+<td>0.02°</td>
+<td>Grid padding beyond observations</td>
+</tr>
+<tr class="odd">
+<td><code>LAND_ELEVATION_M</code></td>
+<td>−0.2 m</td>
+<td>Land/sea threshold</td>
+</tr>
+<tr class="even">
+<td><code>OBS_SEA_MAX_STEPS</code></td>
+<td>8</td>
+<td>Sea-mask extension from casts (~2× for finer grid)</td>
+</tr>
+<tr class="odd">
+<td><code>OBS_BRIDGE_MAX_STEPS</code></td>
+<td>40</td>
+<td>Max path length for observation bridging</td>
+</tr>
+<tr class="even">
+<td><code>OBS_BRIDGE_MAX_GRID_DIST</code></td>
+<td>24</td>
+<td>Max grid cells for bridging to main field (~2× for finer grid)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="limitations-and-interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-and-interpretation">Limitations and interpretation</h2>
+<ul>
+<li><strong>Sparse cruises</strong> — With widely spaced stations, DIVAnd can produce smooth gradients and overshoot between casts. Local clamping keeps values near casts within the nearby observation range.</li>
+<li><strong>No cross-shelf dynamics</strong> — Independent depth slices do not enforce physical vertical coherence (e.g.&nbsp;a subsurface minimum cannot inform the surface slice).</li>
+<li><strong>Single cruise per field</strong> — Each interpolation uses one cruise’s observations only. Multi-cruise summaries (e.g.&nbsp;hypoxia frequency) combine fields in R after interpolation.</li>
+<li><strong>Nearshore casts</strong> — Land-mask overrides and bridging allow nearshore stations to contribute, but coastal geometry on a coarse grid can still affect which cells receive values.</li>
+<li><strong>Gap-filled cells</strong> — Cells filled with the depth-slice mean carry no horizontal information; they appear as uniform patches across regions with no observations at that depth.</li>
+</ul>
+<p>When investigating suspicious map features, compare the field cell to nearby CTD markers and read the nearest-station distance in the popup.</p>
+</section>
+<section id="related-files" class="level2">
+<h2 class="anchored" data-anchor-id="related-files">Related files</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../scripts/interpolate_cruise.jl"><code>scripts/interpolate_cruise.jl</code></a></td>
+<td>Main interpolation script</td>
+</tr>
+<tr class="even">
+<td><a href="../julia/Project.toml"><code>julia/Project.toml</code></a></td>
+<td>Julia dependencies (DIVAnd, ArchGDAL, …)</td>
+</tr>
+<tr class="odd">
+<td><a href="../scripts/download_bluetopo.py"><code>scripts/download_bluetopo.py</code></a></td>
+<td>Fetch BlueTopo for cruise extent</td>
+</tr>
+<tr class="even">
+<td><a href="../scripts/rasterize_land_mask.py"><code>scripts/rasterize_land_mask.py</code></a></td>
+<td>Build coastline land mask</td>
+</tr>
+<tr class="odd">
+<td><a href="../R/depth_layers.R"><code>R/depth_layers.R</code></a></td>
+<td>Ecological depth layer definitions</td>
+</tr>
+<tr class="even">
+<td><a href="../cruise_oxygen/depth_layers.R"><code>cruise_oxygen/depth_layers.R</code></a></td>
+<td>Map payload aggregation</td>
+</tr>
+<tr class="odd">
+<td><a href="../cruise_oxygen/plot_oxygen_map.R"><code>cruise_oxygen/plot_oxygen_map.R</code></a></td>
+<td>Interactive field map</td>
+</tr>
+<tr class="even">
+<td><a href="../cruise_hypoxic_depth/hypoxic_depth.R"><code>cruise_hypoxic_depth/hypoxic_depth.R</code></a></td>
+<td>Shallowest hypoxic depth from field</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/marinebon\.github\.io\/sfer-mbon-oxygen\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
