@@ -15,24 +15,28 @@ const CLEAN_ROOT = joinpath(@__DIR__, "..", "data", "02_clean")
 const INTERP_ROOT = joinpath(@__DIR__, "..", "data", "interpolated")
 const BATH_ROOT = joinpath(@__DIR__, "..", "data", "bathymetry")
 const REPO_ROOT = joinpath(@__DIR__, "..")
-const HORIZ_RES_DEG = 0.01
-const DEPTH_RES_M = 4.0
+const HORIZ_RES_DEG = 0.005
+const DEPTH_RES_M = 2.0
 const MIN_GRID_POINTS = 30
-const MAX_GRID_POINTS = 150
-const MAX_GRID_POINTS_TOTAL = 120_000
+const MAX_GRID_POINTS = 250
+const MAX_GRID_POINTS_TOTAL = 1_500_000
 const MIN_BATHY_COVERAGE = 0.35
 const BATHY_GRID_SCALE = 8
 const MAX_BATHY_LON = 400
 const MAX_BATHY_LAT = 400
 const LAND_ELEVATION_M = -0.2
 const BBOX_PADDING_DEG = 0.02
-const OBS_SEA_MAX_STEPS = 4
+const OBS_SEA_MAX_STEPS = 8
 const OBS_BRIDGE_MAX_STEPS = 40
-const OBS_BRIDGE_MAX_GRID_DIST = 12
-const LEN_HORIZ_DEG = 0.035
-const EPSILON2 = 0.01
-const LEN_HORIZ_BG_DEG = 0.08
-const EPSILON2_BG = 1.0
+const OBS_BRIDGE_MAX_GRID_DIST = 24
+const OBS_COMPONENT_SEARCH_DEG = 0.05
+# Correlation lengths (degrees). Background must span several station spacings
+# (~0.05–0.08° on shelf transects) so the large-scale field follows data rather
+# than reverting to the slice mean between casts. Fine length ~half background.
+const LEN_HORIZ_DEG = 0.045
+const EPSILON2 = 0.5
+const LEN_HORIZ_BG_DEG = 0.10
+const EPSILON2_BG = 3.0
 # Clamp interpolated values to [min, max] of observations within this radius
 # (matches background correlation length so nearby casts define plausible bounds).
 const CLAMP_RADIUS_DEG = LEN_HORIZ_BG_DEG
@@ -837,7 +841,7 @@ function mask_disconnected_components!(
         y,
         lon_range,
         lat_range,
-        0.05,
+        OBS_COMPONENT_SEARCH_DEG,
     )
 
     if isempty(observed_labels)
@@ -1040,7 +1044,7 @@ function interpolate_by_sea_component(
         y,
         lon_range,
         lat_range,
-        0.05,
+        OBS_COMPONENT_SEARCH_DEG,
     )
     fi = fill(NaN, size(sea_mask))
 

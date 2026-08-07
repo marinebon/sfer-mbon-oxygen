@@ -62,10 +62,25 @@ The core interpolator is [DIVAnd.jl](https://github.com/gher-uliege/DIVAnd.jl) (
 
 This project uses a **multiscale** approach (`interpolate_surface_field_multiscale`):
 
-1. **Background pass** — long correlation length (`0.08°`), low smoothness penalty (`epsilon2 = 1.0`). Captures broad regional gradients.
-2. **Fine pass** — short correlation length (`0.035°`), higher smoothness penalty (`epsilon2 = 0.01`). Fits local residuals on top of the background.
+1. **Background pass** — long correlation length (`0.10°`), moderate data fidelity (`epsilon2 = 3.0`). Captures broad regional gradients between widely spaced casts.
+2. **Fine pass** — shorter correlation length (`0.045°`), moderate data fidelity (`epsilon2 = 0.5`). Adds local corrections on top of the background.
 
 The final field is `background + fine_residuals`. Observations are mean-centered before each pass to improve numerical stability.
+
+### Parameter tuning (large-scale variability)
+
+Short correlation lengths and a very low fine `epsilon2` produce **localized “bubbles”** around each cast: the field matches observations within ~0.02° (~2 km), then relaxes toward the depth-slice mean by ~0.08°. On WS0612’s surface slice this reduced field variance to ~26% of cast-to-cast variance.
+
+Parameters were tuned so the **background field spans several station spacings** (~0.05–0.08° on shelf transects) and both passes trust observations more:
+
+| Parameter | Previous | Current | Why |
+|-----------|----------|---------|-----|
+| `LEN_HORIZ_BG_DEG` | 0.04° | **0.10°** | Background must connect casts on transects, not flatten toward the slice mean between them |
+| `EPSILON2_BG` | 1.0 | **3.0** | Stronger fit to observations on the large-scale pass |
+| `LEN_HORIZ_DEG` | 0.018° | **0.045°** | Fine residuals extend ~1 cast spacing instead of ~0.5 grid cells |
+| `EPSILON2` | 0.01 | **0.5** | Fine pass was over-smoothing (50× weaker data weight than background) |
+
+After tuning on WS0612, field standard deviation increased from 0.067 to 0.084 mg/L (cast SD 0.255), and mean deviation from the slice mean at 0.08–0.10° from the nearest cast rose from 0.027 to 0.078 mg/L — the shelf-scale gradient persists farther from stations.
 
 When only one observation falls in a sea component, that value is assigned uniformly. When none fall in a component, the slice is left empty (NaN) until gap filling.
 
@@ -75,15 +90,17 @@ The output grid spans the observation bounding box plus `0.02°` padding on each
 
 | Setting | Default | Notes |
 |---------|---------|-------|
-| Horizontal target resolution | `0.01°` (~1 km) | Used to size the lon/lat axes |
-| Vertical target resolution | `4.0 m` | Used to size the depth axis |
+| Horizontal target resolution | `0.005°` (~500 m) | Used to size the lon/lat axes |
+| Vertical target resolution | `2.0 m` | Used to size the depth axis |
 | Minimum axis length | 30 points | Floor on grid extent |
-| Maximum axis length | 150 points | Ceiling per axis |
-| Maximum total grid points | 120 000 | If exceeded, all three axes are scaled down equally |
+| Maximum axis length | 250 points | Ceiling per axis |
+| Maximum total grid points | 1 500 000 | If exceeded, all three axes are scaled down equally |
+
+Correlation lengths are expressed in **degrees** and set to span real station spacing, not just grid cell width (large cruises may use ~0.035° cells even when the target is 0.005°).
 
 Depth levels are evenly spaced from the shallowest to deepest observed depth on the cruise. Actual grid spacing depends on cruise extent — large cruises may use coarser cells than the target resolution.
 
-Depth slice tolerance (observations assigned to a level) is `max(2 m, half the native depth spacing)`.
+Depth slice tolerance (observations assigned to a level) is `max(1 m, half the native depth spacing)`.
 
 ## Bathymetry and sea masking
 
@@ -99,8 +116,8 @@ For each depth slice:
 
 Some casts fall in water bodies that are disconnected on the coarse grid (e.g. separated by land or missing bathymetry). Two mechanisms address this:
 
-1. **`extend_sea_mask_along_water!`** — walks up to 4 grid steps from each observation through cells with valid sub-tidal elevation.
-2. **`bridge_unconnected_observations!`** — for observations not in the main sea component, finds a shortest path through high-resolution bathymetry (up to 40 steps) and marks those cells as sea. Paths that cross land are rejected. Observations more than 12 grid cells from the main field are skipped.
+1. **`extend_sea_mask_along_water!`** — walks up to 8 grid steps from each observation through cells with valid sub-tidal elevation.
+2. **`bridge_unconnected_observations!`** — for observations not in the main sea component, finds a shortest path through high-resolution bathymetry (up to 40 steps) and marks those cells as sea. Paths that cross land are rejected. Observations more than 24 grid cells from the main field are skipped.
 
 After bridging, each depth slice is interpolated **separately per connected sea component** (`interpolate_by_sea_component`). Components with no nearby observations are masked out (`mask_disconnected_components!`).
 
@@ -120,7 +137,7 @@ Multiscale DIVAnd can overshoot the observation range — for example, producing
 clamped_value = clamp(interpolated_value, local_min, local_max)
 ```
 
-where `local_min` and `local_max` are the minimum and maximum dissolved oxygen among all observations **in that depth slice** within **`0.08°`** of the cell center (`CLAMP_RADIUS_DEG`, equal to the background correlation length). Cells with no observations within that radius are left unchanged.
+where `local_min` and `local_max` are the minimum and maximum dissolved oxygen among all observations **in that depth slice** within **`0.10°`** of the cell center (`CLAMP_RADIUS_DEG`, equal to the background correlation length). Cells with no observations within that radius are left unchanged.
 
 This keeps the field spanning the full grid extent while ensuring values near casts stay within the range of nearby measurements. It specifically targets ringing from the fine residual pass without flattening the entire slice to global min/max.
 
@@ -164,18 +181,18 @@ All constants are defined at the top of [`scripts/interpolate_cruise.jl`](../scr
 
 | Constant | Value | Purpose |
 |----------|-------|---------|
-| `HORIZ_RES_DEG` | 0.01° | Target horizontal grid spacing |
-| `DEPTH_RES_M` | 4.0 m | Target vertical grid spacing |
-| `LEN_HORIZ_DEG` | 0.035° | Fine DIVAnd correlation length |
-| `EPSILON2` | 0.01 | Fine smoothness penalty |
-| `LEN_HORIZ_BG_DEG` | 0.08° | Background correlation length |
-| `EPSILON2_BG` | 1.0 | Background smoothness penalty |
-| `CLAMP_RADIUS_DEG` | 0.08° | Local observation search radius for post-interpolation clamping |
+| `HORIZ_RES_DEG` | 0.005° | Target horizontal grid spacing |
+| `DEPTH_RES_M` | 2.0 m | Target vertical grid spacing |
+| `LEN_HORIZ_DEG` | 0.045° | Fine DIVAnd correlation length (~1 cast spacing) |
+| `EPSILON2` | 0.5 | Fine data fidelity (signal-to-noise) |
+| `LEN_HORIZ_BG_DEG` | 0.10° | Background correlation length (~several cast spacings) |
+| `EPSILON2_BG` | 3.0 | Background data fidelity |
+| `CLAMP_RADIUS_DEG` | 0.10° | Local observation search radius for post-interpolation clamping |
 | `BBOX_PADDING_DEG` | 0.02° | Grid padding beyond observations |
 | `LAND_ELEVATION_M` | −0.2 m | Land/sea threshold |
-| `OBS_SEA_MAX_STEPS` | 4 | Sea-mask extension from casts |
+| `OBS_SEA_MAX_STEPS` | 8 | Sea-mask extension from casts (~2× for finer grid) |
 | `OBS_BRIDGE_MAX_STEPS` | 40 | Max path length for observation bridging |
-| `OBS_BRIDGE_MAX_GRID_DIST` | 12 | Max grid cells for bridging to main field |
+| `OBS_BRIDGE_MAX_GRID_DIST` | 24 | Max grid cells for bridging to main field (~2× for finer grid) |
 
 ## Limitations and interpretation
 
