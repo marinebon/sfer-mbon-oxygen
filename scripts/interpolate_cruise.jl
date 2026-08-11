@@ -30,11 +30,13 @@ const OBS_SEA_MAX_STEPS = 8
 const OBS_BRIDGE_MAX_STEPS = 40
 const OBS_BRIDGE_MAX_GRID_DIST = 24
 const OBS_COMPONENT_SEARCH_DEG = 0.05
-# Fine correlation length ~3–4 grid cells at HORIZ_RES_DEG; background ~2× fine.
-const LEN_HORIZ_DEG = 0.018
-const EPSILON2 = 0.01
-const LEN_HORIZ_BG_DEG = 0.04
-const EPSILON2_BG = 1.0
+# Correlation lengths (degrees). Background must span several station spacings
+# (~0.05–0.08° on shelf transects) so the large-scale field follows data rather
+# than reverting to the slice mean between casts. Fine length ~half background.
+const LEN_HORIZ_DEG = 0.045
+const EPSILON2 = 0.5
+const LEN_HORIZ_BG_DEG = 0.10
+const EPSILON2_BG = 3.0
 # Clamp interpolated values to [min, max] of observations within this radius
 # (matches background correlation length so nearby casts define plausible bounds).
 const CLAMP_RADIUS_DEG = LEN_HORIZ_BG_DEG
