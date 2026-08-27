@@ -265,10 +265,10 @@ function(el, x) {
         var activeMax = Math.max.apply(null, depths);
         if (activeMin === activeMax) {
           legendEl.textContent =
-            'All displayed cells: ' + activeMin.toFixed(1) + ' m (shallowest grid depth)';
+            'Depth range shown: ' + activeMin.toFixed(1) + ' m (all cells equal)';
         } else {
           legendEl.textContent =
-            'Displayed depths: ' + activeMin.toFixed(1) + '\u2013' + activeMax.toFixed(1) + ' m';
+            'Depth range shown: ' + activeMin.toFixed(1) + '\u2013' + activeMax.toFixed(1) + ' m';
         }
       }
     }
