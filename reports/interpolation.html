@@ -273,14 +273,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>This project uses a <strong>multiscale</strong> approach (<code>interpolate_surface_field_multiscale</code>):</p>
 <ol type="1">
-<li><strong>Background pass</strong> — long correlation length (<code>0.10°</code>), moderate data fidelity (<code>epsilon2 = 3.0</code>). Captures broad regional gradients between widely spaced casts.</li>
-<li><strong>Fine pass</strong> — shorter correlation length (<code>0.045°</code>), moderate data fidelity (<code>epsilon2 = 0.5</code>). Adds local corrections on top of the background.</li>
+<li><strong>Background pass</strong> — regional correlation length (<code>0.30°</code>), moderate data fidelity (<code>epsilon2 = 1.5</code>). Carries the broad gradient across the gaps between transect lines.</li>
+<li><strong>Fine pass</strong> — short correlation length (<code>0.07°</code>), moderate data fidelity (<code>epsilon2 = 1.0</code>). Adds a gentle local residual correction on top of the background.</li>
 </ol>
 <p>The final field is <code>background + fine_residuals</code>. Observations are mean-centered before each pass to improve numerical stability.</p>
 <section id="parameter-tuning-large-scale-variability" class="level3">
 <h3 class="anchored" data-anchor-id="parameter-tuning-large-scale-variability">Parameter tuning (large-scale variability)</h3>
-<p>Short correlation lengths and a very low fine <code>epsilon2</code> produce <strong>localized “bubbles”</strong> around each cast: the field matches observations within ~0.02° (~2 km), then relaxes toward the depth-slice mean by ~0.08°. On WS0612’s surface slice this reduced field variance to ~26% of cast-to-cast variance.</p>
-<p>Parameters were tuned so the <strong>background field spans several station spacings</strong> (~0.05–0.08° on shelf transects) and both passes trust observations more:</p>
+<p>Correlation lengths near a single station spacing produce <strong>localized discs</strong> around each cast: the field matches observations out to roughly the background length, then drops sharply back toward the depth-slice mean. Measured nearest-neighbour station spacing is ~0.06–0.09° (median) across cruises, with 0.16–0.39° gaps on transect ends, so a background length of <code>0.10°</code> — about one spacing — cannot bridge adjacent casts: each one sits in its own ~10 km bubble. The finer output grid (<code>0.005°</code>) sharpened the disc edges rather than causing them.</p>
+<p>Parameters were retuned so the <strong>background pass is genuinely regional</strong> — several station spacings — and the fine pass is a small correction rather than a hard high-fidelity stamp:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 31%">
@@ -299,31 +299,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td><code>LEN_HORIZ_BG_DEG</code></td>
-<td>0.04°</td>
-<td><strong>0.10°</strong></td>
-<td>Background must connect casts on transects, not flatten toward the slice mean between them</td>
+<td>0.10°</td>
+<td><strong>0.30°</strong></td>
+<td>~3–5 median station spacings; background carries a real trend across inter-transect gaps instead of decaying to the slice mean</td>
 </tr>
 <tr class="even">
 <td><code>EPSILON2_BG</code></td>
-<td>1.0</td>
-<td><strong>3.0</strong></td>
-<td>Stronger fit to observations on the large-scale pass</td>
+<td>3.0</td>
+<td><strong>1.5</strong></td>
+<td>With a long length, keep enough data fidelity that the regional trend still tracks the casts</td>
 </tr>
 <tr class="odd">
 <td><code>LEN_HORIZ_DEG</code></td>
-<td>0.018°</td>
-<td><strong>0.045°</strong></td>
-<td>Fine residuals extend ~1 cast spacing instead of ~0.5 grid cells</td>
+<td>0.045°</td>
+<td><strong>0.07°</strong></td>
+<td>Fine residual bridges to neighbouring casts (~one station spacing) instead of dying between them</td>
 </tr>
 <tr class="even">
 <td><code>EPSILON2</code></td>
-<td>0.01</td>
-<td><strong>0.5</strong></td>
-<td>Fine pass was over-smoothing (50× weaker data weight than background)</td>
+<td>0.5</td>
+<td><strong>1.0</strong></td>
+<td>Softer local pull; reduces the abrupt disc edge from the fine pass</td>
+</tr>
+<tr class="odd">
+<td><code>CLAMP_RADIUS_DEG</code></td>
+<td>0.10° (<code>= LEN_HORIZ_BG_DEG</code>)</td>
+<td><strong>0.10°</strong> (fixed)</td>
+<td>Decoupled from the background length so a regional-scale background does not drag the clamp radius across a third of a degree</td>
 </tr>
 </tbody>
 </table>
-<p>After tuning on WS0612, field standard deviation increased from 0.067 to 0.084 mg/L (cast SD 0.255), and mean deviation from the slice mean at 0.08–0.10° from the nearest cast rose from 0.027 to 0.078 mg/L — the shelf-scale gradient persists farther from stations.</p>
+<p>The earlier tuning was validated on WS0612, which has the tightest station spacing (median 0.056°) of the batch; <code>0.10°</code> looked like ~2 spacings there but is ~1 spacing or less on sparser cruises such as WS16207.</p>
 <p>When only one observation falls in a sea component, that value is assigned uniformly. When none fall in a component, the slice is left empty (NaN) until gap filling.</p>
 </section>
 </section>
@@ -405,7 +411,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="local-observation-clamping">Local observation clamping</h3>
 <p>Multiscale DIVAnd can overshoot the observation range — for example, producing a 1.5 mg/L grid value next to a station measuring 3.4 mg/L when the fine residual pass adds an large negative correction. To prevent this, each grid cell is <strong>clamped</strong> after gap filling:</p>
 <pre><code>clamped_value = clamp(interpolated_value, local_min, local_max)</code></pre>
-<p>where <code>local_min</code> and <code>local_max</code> are the minimum and maximum dissolved oxygen among all observations <strong>in that depth slice</strong> within <strong><code>0.10°</code></strong> of the cell center (<code>CLAMP_RADIUS_DEG</code>, equal to the background correlation length). Cells with no observations within that radius are left unchanged.</p>
+<p>where <code>local_min</code> and <code>local_max</code> are the minimum and maximum dissolved oxygen among all observations <strong>in that depth slice</strong> within <strong><code>0.10°</code></strong> of the cell center (<code>CLAMP_RADIUS_DEG</code>, roughly one station spacing). Cells with no observations within that radius are left unchanged.</p>
 <p>This keeps the field spanning the full grid extent while ensuring values near casts stay within the range of nearby measurements. It specifically targets ringing from the fine residual pass without flattening the entire slice to global min/max.</p>
 </section>
 <section id="observation-fit-reporting" class="level3">
@@ -511,28 +517,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td><code>LEN_HORIZ_DEG</code></td>
-<td>0.045°</td>
-<td>Fine DIVAnd correlation length (~1 cast spacing)</td>
+<td>0.07°</td>
+<td>Fine DIVAnd correlation length (~1 station spacing)</td>
 </tr>
 <tr class="even">
 <td><code>EPSILON2</code></td>
-<td>0.5</td>
+<td>1.0</td>
 <td>Fine data fidelity (signal-to-noise)</td>
 </tr>
 <tr class="odd">
 <td><code>LEN_HORIZ_BG_DEG</code></td>
-<td>0.10°</td>
-<td>Background correlation length (~several cast spacings)</td>
+<td>0.30°</td>
+<td>Background correlation length (~several station spacings)</td>
 </tr>
 <tr class="even">
 <td><code>EPSILON2_BG</code></td>
-<td>3.0</td>
+<td>1.5</td>
 <td>Background data fidelity</td>
 </tr>
 <tr class="odd">
 <td><code>CLAMP_RADIUS_DEG</code></td>
 <td>0.10°</td>
-<td>Local observation search radius for post-interpolation clamping</td>
+<td>Local observation search radius for post-interpolation clamping (fixed, ~1 station spacing)</td>
 </tr>
 <tr class="even">
 <td><code>BBOX_PADDING_DEG</code></td>

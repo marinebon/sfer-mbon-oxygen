@@ -30,16 +30,23 @@ const OBS_SEA_MAX_STEPS = 8
 const OBS_BRIDGE_MAX_STEPS = 40
 const OBS_BRIDGE_MAX_GRID_DIST = 24
 const OBS_COMPONENT_SEARCH_DEG = 0.05
-# Correlation lengths (degrees). Background must span several station spacings
-# (~0.05–0.08° on shelf transects) so the large-scale field follows data rather
-# than reverting to the slice mean between casts. Fine length ~half background.
-const LEN_HORIZ_DEG = 0.045
-const EPSILON2 = 0.5
-const LEN_HORIZ_BG_DEG = 0.10
-const EPSILON2_BG = 3.0
-# Clamp interpolated values to [min, max] of observations within this radius
-# (matches background correlation length so nearby casts define plausible bounds).
-const CLAMP_RADIUS_DEG = LEN_HORIZ_BG_DEG
+# Correlation lengths (degrees). Measured nearest-neighbour station spacing is
+# ~0.06–0.09° (median) across cruises, with 0.16–0.39° gaps on transect ends.
+# The background pass must span *several* of those spacings so the large-scale
+# field carries a real regional trend across the gaps instead of decaying to the
+# slice mean between casts; a background length near one station spacing (the old
+# 0.10°) produced ~10 km discs at each cast with a sharp drop-off. The fine pass
+# is a gentle local residual correction (~one station spacing), not a hard disc.
+const LEN_HORIZ_DEG = 0.07
+const EPSILON2 = 1.0
+const LEN_HORIZ_BG_DEG = 0.30
+const EPSILON2_BG = 1.5
+# Clamp interpolated values to [min, max] of observations within this radius.
+# Decoupled from the background length: with a regional-scale background (0.30°)
+# a matching clamp radius would bound cells to the obs range across a third of a
+# degree and flatten real gradients. Keep it near one station spacing so it only
+# reins in fine-pass ringing close to casts.
+const CLAMP_RADIUS_DEG = 0.10
 
 function grid_size(span, resolution, min_points, max_points)
     n = max(min_points, round(Int, span / resolution) + 1)
