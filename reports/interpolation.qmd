@@ -62,25 +62,26 @@ The core interpolator is [DIVAnd.jl](https://github.com/gher-uliege/DIVAnd.jl) (
 
 This project uses a **multiscale** approach (`interpolate_surface_field_multiscale`):
 
-1. **Background pass** — long correlation length (`0.10°`), moderate data fidelity (`epsilon2 = 3.0`). Captures broad regional gradients between widely spaced casts.
-2. **Fine pass** — shorter correlation length (`0.045°`), moderate data fidelity (`epsilon2 = 0.5`). Adds local corrections on top of the background.
+1. **Background pass** — regional correlation length (`0.30°`), moderate data fidelity (`epsilon2 = 1.5`). Carries the broad gradient across the gaps between transect lines.
+2. **Fine pass** — short correlation length (`0.07°`), moderate data fidelity (`epsilon2 = 1.0`). Adds a gentle local residual correction on top of the background.
 
 The final field is `background + fine_residuals`. Observations are mean-centered before each pass to improve numerical stability.
 
 ### Parameter tuning (large-scale variability)
 
-Short correlation lengths and a very low fine `epsilon2` produce **localized “bubbles”** around each cast: the field matches observations within ~0.02° (~2 km), then relaxes toward the depth-slice mean by ~0.08°. On WS0612’s surface slice this reduced field variance to ~26% of cast-to-cast variance.
+Correlation lengths near a single station spacing produce **localized discs** around each cast: the field matches observations out to roughly the background length, then drops sharply back toward the depth-slice mean. Measured nearest-neighbour station spacing is ~0.06–0.09° (median) across cruises, with 0.16–0.39° gaps on transect ends, so a background length of `0.10°` — about one spacing — cannot bridge adjacent casts: each one sits in its own ~10 km bubble. The finer output grid (`0.005°`) sharpened the disc edges rather than causing them.
 
-Parameters were tuned so the **background field spans several station spacings** (~0.05–0.08° on shelf transects) and both passes trust observations more:
+Parameters were retuned so the **background pass is genuinely regional** — several station spacings — and the fine pass is a small correction rather than a hard high-fidelity stamp:
 
 | Parameter | Previous | Current | Why |
 |-----------|----------|---------|-----|
-| `LEN_HORIZ_BG_DEG` | 0.04° | **0.10°** | Background must connect casts on transects, not flatten toward the slice mean between them |
-| `EPSILON2_BG` | 1.0 | **3.0** | Stronger fit to observations on the large-scale pass |
-| `LEN_HORIZ_DEG` | 0.018° | **0.045°** | Fine residuals extend ~1 cast spacing instead of ~0.5 grid cells |
-| `EPSILON2` | 0.01 | **0.5** | Fine pass was over-smoothing (50× weaker data weight than background) |
+| `LEN_HORIZ_BG_DEG` | 0.10° | **0.30°** | ~3–5 median station spacings; background carries a real trend across inter-transect gaps instead of decaying to the slice mean |
+| `EPSILON2_BG` | 3.0 | **1.5** | With a long length, keep enough data fidelity that the regional trend still tracks the casts |
+| `LEN_HORIZ_DEG` | 0.045° | **0.07°** | Fine residual bridges to neighbouring casts (~one station spacing) instead of dying between them |
+| `EPSILON2` | 0.5 | **1.0** | Softer local pull; reduces the abrupt disc edge from the fine pass |
+| `CLAMP_RADIUS_DEG` | 0.10° (`= LEN_HORIZ_BG_DEG`) | **0.10°** (fixed) | Decoupled from the background length so a regional-scale background does not drag the clamp radius across a third of a degree |
 
-After tuning on WS0612, field standard deviation increased from 0.067 to 0.084 mg/L (cast SD 0.255), and mean deviation from the slice mean at 0.08–0.10° from the nearest cast rose from 0.027 to 0.078 mg/L — the shelf-scale gradient persists farther from stations.
+The earlier tuning was validated on WS0612, which has the tightest station spacing (median 0.056°) of the batch; `0.10°` looked like ~2 spacings there but is ~1 spacing or less on sparser cruises such as WS16207.
 
 When only one observation falls in a sea component, that value is assigned uniformly. When none fall in a component, the slice is left empty (NaN) until gap filling.
 
@@ -137,7 +138,7 @@ Multiscale DIVAnd can overshoot the observation range — for example, producing
 clamped_value = clamp(interpolated_value, local_min, local_max)
 ```
 
-where `local_min` and `local_max` are the minimum and maximum dissolved oxygen among all observations **in that depth slice** within **`0.10°`** of the cell center (`CLAMP_RADIUS_DEG`, equal to the background correlation length). Cells with no observations within that radius are left unchanged.
+where `local_min` and `local_max` are the minimum and maximum dissolved oxygen among all observations **in that depth slice** within **`0.10°`** of the cell center (`CLAMP_RADIUS_DEG`, roughly one station spacing). Cells with no observations within that radius are left unchanged.
 
 This keeps the field spanning the full grid extent while ensuring values near casts stay within the range of nearby measurements. It specifically targets ringing from the fine residual pass without flattening the entire slice to global min/max.
 
@@ -183,11 +184,11 @@ All constants are defined at the top of [`scripts/interpolate_cruise.jl`](../scr
 |----------|-------|---------|
 | `HORIZ_RES_DEG` | 0.005° | Target horizontal grid spacing |
 | `DEPTH_RES_M` | 2.0 m | Target vertical grid spacing |
-| `LEN_HORIZ_DEG` | 0.045° | Fine DIVAnd correlation length (~1 cast spacing) |
-| `EPSILON2` | 0.5 | Fine data fidelity (signal-to-noise) |
-| `LEN_HORIZ_BG_DEG` | 0.10° | Background correlation length (~several cast spacings) |
-| `EPSILON2_BG` | 3.0 | Background data fidelity |
-| `CLAMP_RADIUS_DEG` | 0.10° | Local observation search radius for post-interpolation clamping |
+| `LEN_HORIZ_DEG` | 0.07° | Fine DIVAnd correlation length (~1 station spacing) |
+| `EPSILON2` | 1.0 | Fine data fidelity (signal-to-noise) |
+| `LEN_HORIZ_BG_DEG` | 0.30° | Background correlation length (~several station spacings) |
+| `EPSILON2_BG` | 1.5 | Background data fidelity |
+| `CLAMP_RADIUS_DEG` | 0.10° | Local observation search radius for post-interpolation clamping (fixed, ~1 station spacing) |
 | `BBOX_PADDING_DEG` | 0.02° | Grid padding beyond observations |
 | `LAND_ELEVATION_M` | −0.2 m | Land/sea threshold |
 | `OBS_SEA_MAX_STEPS` | 8 | Sea-mask extension from casts (~2× for finer grid) |
