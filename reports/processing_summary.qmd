@@ -1,0 +1,182 @@
+---
+title: "CTD Processing Summary"
+subtitle: "Changes applied during `make process`"
+format:
+  html:
+    toc: true
+    code-fold: true
+    theme: cosmo
+    css: ../styles.css
+execute:
+  echo: false
+  message: false
+  warning: false
+---
+
+This report summarizes how CTD cast data changed when raw ERDDAP downloads in `data/01_raw/` were cleaned into `data/02_clean/`.
+
+Run after processing:
+
+```bash
+make process
+make report-process
+```
+
+## Processing steps
+
+Each cast file is processed with the [`oce`](https://dankelley.github.io/oce/) package using the same workflow as [`ctd_reports_template.qmd`](../ctd_reports_template.qmd):
+
+1. **Load** — build an `oce` CTD object from the raw CSV (`R/ctd_load_from_csv.R`)
+2. **Trim** — `oce::ctdTrim()` removes pre-deployment and post-recovery scans
+3. **Decimate** — `oce::ctdDecimate(p = 0.1)` reduces vertical resolution to 0.1 dbar bins
+4. **Export** — keep the original CSV columns for scans retained after cleaning; add `station` and `cruise_id`
+
+Rows without `sea_water_pressure` are excluded before scan matching.
+
+```{r setup}
+ensure_packages <- function(pkgs) {
+  for (pkg in pkgs) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      install.packages(pkg, repos = "https://cloud.r-project.org")
+    }
+  }
+}
+
+ensure_packages(c("here", "readr", "dplyr", "knitr", "ggplot2"))
+
+library(here)
+library(readr)
+library(dplyr)
+library(knitr)
+library(ggplot2)
+
+source(here("R/summarize_processing.R"))
+
+cast_summary <- summarize_all_processing()
+cruise_summary <- summarize_processing_by_cruise(cast_summary)
+
+total_raw <- sum(cast_summary$raw_rows, na.rm = TRUE)
+total_clean <- sum(cast_summary$clean_rows, na.rm = TRUE)
+total_removed <- total_raw - total_clean
+overall_pct_kept <- if (total_raw > 0) round(100 * total_clean / total_raw, 1) else NA_real_
+
+status_counts <- cast_summary %>%
+  count(status, name = "casts")
+```
+
+## Overall summary
+
+| Metric | Value |
+|--------|------:|
+| Casts processed | `r nrow(cast_summary)` |
+| Cruises | `r nrow(cruise_summary)` |
+| Raw rows (with pressure) | `r format(total_raw, big.mark = ",")` |
+| Clean rows | `r format(total_clean, big.mark = ",")` |
+| Rows removed | `r format(total_removed, big.mark = ",")` |
+| Overall percent kept | `r overall_pct_kept`% |
+
+### Status by cast
+
+```{r status-table}
+kable(status_counts, col.names = c("Status", "Casts"))
+```
+
+## Changes by cruise
+
+```{r cruise-table}
+cruise_summary %>%
+  arrange(desc(pct_kept)) %>%
+  kable(digits = 1, col.names = c(
+    "Cruise", "Casts", "Cleaned", "Skipped", "Empty", "Failed",
+    "Raw rows", "Clean rows", "% kept"
+  ))
+```
+
+```{r cruise-plot}
+#| fig-cap: "Percent of raw rows retained after cleaning, by cruise."
+ggplot(cruise_summary, aes(x = reorder(cruise_id, pct_kept), y = pct_kept)) +
+  geom_col(fill = "#2C7FB8") +
+  coord_flip() +
+  labs(x = NULL, y = "Percent of raw rows kept") +
+  theme_minimal(base_size = 12)
+```
+
+## Cast-level detail
+
+Casts with the largest row reduction (potential outliers to review):
+
+```{r cast-detail}
+cast_summary %>%
+  filter(status %in% c("cleaned", "skipped")) %>%
+  arrange(desc(pct_removed)) %>%
+  select(cruise_id, cast_id, station, status, raw_rows, clean_rows, rows_removed, pct_removed) %>%
+  head(25) %>%
+  kable(digits = 1)
+```
+
+Casts that failed or produced no output:
+
+```{r cast-problems}
+problems <- cast_summary %>%
+  filter(status %in% c("failed", "empty", "missing_output"))
+
+if (nrow(problems) == 0) {
+  cat("No failed or empty casts.")
+} else {
+  problems %>%
+    select(cruise_id, cast_id, status, raw_rows, clean_rows) %>%
+    kable()
+}
+```
+
+## Example profile comparison
+
+The cast with the largest row reduction among successfully cleaned casts:
+
+```{r example-profile}
+#| fig-cap: "Example raw vs cleaned temperature profile for the cast with the largest row reduction."
+
+example <- cast_summary %>%
+  filter(status %in% c("cleaned", "skipped"), raw_rows > 0) %>%
+  slice_max(pct_removed, n = 1, with_ties = FALSE)
+
+if (nrow(example) == 1) {
+  raw_file <- here("data", "01_raw", example$cruise_id, paste0(example$cast_id, ".csv"))
+  clean_file <- here("data", "02_clean", paste0(example$cast_id, ".csv"))
+
+  raw_df <- read_csv(raw_file, show_col_types = FALSE) %>%
+    filter(!is.na(sea_water_pressure))
+  clean_df <- read_csv(clean_file, show_col_types = FALSE)
+
+  raw_plot <- raw_df %>%
+    mutate(stage = "Raw") %>%
+    select(stage, sea_water_pressure, sea_water_temperature)
+  clean_plot <- clean_df %>%
+    mutate(stage = "Clean") %>%
+    select(stage, sea_water_pressure, sea_water_temperature)
+
+  bind_rows(raw_plot, clean_plot) %>%
+    ggplot(aes(sea_water_temperature, sea_water_pressure, color = stage)) +
+    geom_path(linewidth = 0.6) +
+    scale_y_reverse() +
+    labs(
+      title = paste0(example$cast_id, " (", example$pct_removed, "% rows removed)"),
+      x = "Temperature (°C)",
+      y = "Pressure (dbar)",
+      color = NULL
+    ) +
+    theme_minimal(base_size = 12)
+} else {
+  cat("No cleaned casts available for profile comparison.")
+}
+```
+
+## Data locations
+
+| Stage | Path |
+|-------|------|
+| Raw downloads | `data/01_raw/{cruise_id}/{erddap_dataset_id}.csv` |
+| Cleaned casts | `data/02_clean/{erddap_dataset_id}.csv` |
+| Processing log | `data/02_clean/processing_log.csv` |
+
+Generated on `r format(Sys.time(), "%Y-%m-%d %H:%M %Z")`.

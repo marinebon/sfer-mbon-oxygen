@@ -1,0 +1,87 @@
+#' Shallowest depth where dissolved oxygen falls below a threshold.
+#'
+#' For each horizontal grid cell, scans the interpolated profile from the
+#' surface downward and returns the minimum depth at which O₂ < threshold.
+hypoxic_depth_grid <- function(field, threshold) {
+  if (is.null(field) || nrow(field) == 0) {
+    return(NULL)
+  }
+
+  depth_col <- field$depth_m
+  o2_col <- field$dissolved_oxygen
+
+  cells <- unique(field[, c("longitude", "latitude")])
+  rows <- lapply(seq_len(nrow(cells)), function(i) {
+    lon <- cells$longitude[i]
+    lat <- cells$latitude[i]
+    mask <- field$longitude == lon & field$latitude == lat
+    profile <- field[mask, c("depth_m", "dissolved_oxygen"), drop = FALSE]
+    profile <- profile[order(profile$depth_m), , drop = FALSE]
+
+    below <- profile$dissolved_oxygen < threshold & !is.na(profile$dissolved_oxygen)
+    depth <- if (!any(below)) {
+      NA_real_
+    } else {
+      raw_depth <- min(profile$depth_m[below])
+      surface_depth <- min(profile$depth_m, na.rm = TRUE)
+      if (raw_depth <= surface_depth + 1e-6) {
+        0
+      } else {
+        max(0, raw_depth)
+      }
+    }
+
+    data.frame(
+      longitude = lon,
+      latitude = lat,
+      hypoxic_depth_m = depth,
+      stringsAsFactors = FALSE
+    )
+  })
+
+  do.call(rbind, rows)
+}
+
+build_profile_payload <- function(field) {
+  if (is.null(field) || nrow(field) == 0) {
+    return(list(cells = list()))
+  }
+
+  split_keys <- interaction(field$longitude, field$latitude, drop = TRUE)
+  groups <- split(field, split_keys)
+
+  cells <- unname(lapply(groups, function(profile) {
+    profile <- profile[order(profile$depth_m), , drop = FALSE]
+    list(
+      lon = jsonlite::unbox(as.numeric(profile$longitude[1])),
+      lat = jsonlite::unbox(as.numeric(profile$latitude[1])),
+      depths = as.numeric(profile$depth_m),
+      oxygens = as.numeric(profile$dissolved_oxygen)
+    )
+  }))
+
+  list(cells = cells)
+}
+
+hypoxic_depth_grid_rectangles <- function(grid) {
+  if (is.null(grid) || nrow(grid) == 0) {
+    return(NULL)
+  }
+
+  lons <- sort(unique(grid$longitude))
+  lats <- sort(unique(grid$latitude))
+  dx <- if (length(lons) > 1) diff(lons)[1] / 2 else 0.01
+  dy <- if (length(lats) > 1) diff(lats)[1] / 2 else 0.01
+
+  grid$lon1 <- grid$longitude - dx
+  grid$lon2 <- grid$longitude + dx
+  grid$lat1 <- grid$latitude - dy
+  grid$lat2 <- grid$latitude + dy
+  grid
+}
+
+DEFAULT_HYPOXIC_DEPTH_O2_THRESHOLD <- 3.8
+
+default_hypoxic_threshold <- function(field, observations) {
+  DEFAULT_HYPOXIC_DEPTH_O2_THRESHOLD
+}
