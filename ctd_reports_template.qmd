@@ -20,10 +20,10 @@ if (!nzchar(system.file(package = "librarian"))) {
 
 librarian::shelf(
   quiet = TRUE,
-  readr, here, fs, ggplot2, glue, "jiho/castr", dplyr, oce, patchwork, purrr, tidyr
+  readr, here, fs, ggplot2, glue, "jiho/castr", dplyr, oce, patchwork, purrr, tidyr,
+  "USF-IMARS/ctd-qc"
 )
 
-source(here("R/get_metadata_from_cast_id.R"))
 metadata <- get_metadata_from_cast_id(params$cast_id)
 station_id <- metadata$station_id
 cruise_id <- metadata$cruise_id
@@ -34,7 +34,6 @@ dataFile <- here::here(glue::glue(
 
 ```{R}
 #| code-summary: create an oce CTD object
-source(here::here("R/ctd_load_from_csv.R"))
 cast <- ctd_load_from_csv(dataFile)
 
 # TODO: Include param here that specifies to handle QC flags. This should be done before converting to a OCE object. QC flag columns are listed in [this spreadsheet](https://docs.google.com/spreadsheets/d/1uCxEmJRqErU-HCQiRQ1FpyiIqtNaGgMSBI0WvrtwBRU/edit?gid=137286311#gid=137286311) and are not supposed to be included in the oce object. QC param values are : 

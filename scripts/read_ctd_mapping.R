@@ -31,12 +31,8 @@ list_cruise_ids_from_clean <- function(clean_root = here::here("data", "02_clean
     return(character())
   }
 
-  parsed <- lapply(sub("\\.csv$", "", files), function(cast_id) {
-    if (!exists("parse_sfer_ctd_id", mode = "function")) {
-      source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
-    }
-    parse_sfer_ctd_id(cast_id)
-  })
+  # Requires library(ctdqc) to already be loaded by the caller.
+  parsed <- lapply(sub("\\.csv$", "", files), parse_sfer_ctd_id)
   parsed <- Filter(Negate(is.null), parsed)
   if (length(parsed) == 0) {
     return(character())
@@ -61,9 +57,7 @@ list_cruise_ids <- function() {
     return(sort(unique(mapping$cruise_id)))
   }
 
-  if (!exists("discover_sfer_cruise_ids", mode = "function")) {
-    source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
-  }
+  # Requires library(ctdqc) to already be loaded by the caller.
   discover_sfer_cruise_ids()
 }
 

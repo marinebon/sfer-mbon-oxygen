@@ -8,17 +8,18 @@ ensure_packages <- function(pkgs) {
   }
 }
 
-ensure_packages(c("here", "readr", "dplyr", "oce"))
+ensure_packages(c("here", "readr", "dplyr", "oce", "remotes"))
 
 library(here)
 library(readr)
 library(dplyr)
 library(oce)
 
-source(here("R/get_metadata_from_cast_id.R"))
-source(here("R/ctd_load_from_csv.R"))
-source(here("R/qc_filter.R"))
-source(here("R/clean_ctd_cast.R"))
+if (!requireNamespace("ctdqc", quietly = TRUE)) {
+  remotes::install_github("USF-IMARS/ctd-qc")
+}
+library(ctdqc)
+
 source(here("R/summarize_processing.R"))
 source(here("scripts/read_ctd_mapping.R"))
 

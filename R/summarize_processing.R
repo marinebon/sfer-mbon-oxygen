@@ -1,7 +1,6 @@
+# Requires library(ctdqc) to already be loaded by the caller (provides
+# read_erddap_tabledap_csv()).
 count_pressure_rows <- function(csv_file) {
-  if (!exists("read_erddap_tabledap_csv", mode = "function")) {
-    source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
-  }
   df <- read_erddap_tabledap_csv(csv_file)
   sum(!is.na(df$sea_water_pressure))
 }
@@ -12,9 +11,6 @@ summarize_cast_processing <- function(raw_file, clean_root) {
   clean_file <- file.path(clean_root, paste0(cast_id, ".csv"))
 
   raw_rows <- count_pressure_rows(raw_file)
-  if (!exists("read_erddap_tabledap_csv", mode = "function")) {
-    source(here::here("R/erddap_ctd_resolve.R"), local = TRUE)
-  }
   raw_df <- read_erddap_tabledap_csv(raw_file)
   depth_col <- if ("depth" %in% names(raw_df)) "depth" else "sea_water_pressure"
 

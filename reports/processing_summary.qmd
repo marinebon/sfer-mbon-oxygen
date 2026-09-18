@@ -26,7 +26,7 @@ make report-process
 
 Each cast file is processed with the [`oce`](https://dankelley.github.io/oce/) package using the same workflow as [`ctd_reports_template.qmd`](../ctd_reports_template.qmd):
 
-1. **Load** — build an `oce` CTD object from the raw CSV (`R/ctd_load_from_csv.R`)
+1. **Load** — build an `oce` CTD object from the raw CSV (`ctdqc::ctd_load_from_csv()`)
 2. **Trim** — `oce::ctdTrim()` removes pre-deployment and post-recovery scans
 3. **Decimate** — `oce::ctdDecimate(p = 0.1)` reduces vertical resolution to 0.1 dbar bins
 4. **Export** — keep the original CSV columns for scans retained after cleaning; add `station` and `cruise_id`
@@ -42,13 +42,18 @@ ensure_packages <- function(pkgs) {
   }
 }
 
-ensure_packages(c("here", "readr", "dplyr", "knitr", "ggplot2"))
+ensure_packages(c("here", "readr", "dplyr", "knitr", "ggplot2", "remotes"))
 
 library(here)
 library(readr)
 library(dplyr)
 library(knitr)
 library(ggplot2)
+
+if (!requireNamespace("ctdqc", quietly = TRUE)) {
+  remotes::install_github("USF-IMARS/ctd-qc")
+}
+library(ctdqc)
 
 source(here("R/summarize_processing.R"))
 

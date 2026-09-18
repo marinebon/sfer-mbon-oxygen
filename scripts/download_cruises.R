@@ -8,11 +8,15 @@ ensure_packages <- function(pkgs) {
   }
 }
 
-ensure_packages(c("here"))
+ensure_packages(c("here", "remotes"))
 
 library(here)
 
-source(here("R/erddap_ctd_resolve.R"))
+if (!requireNamespace("ctdqc", quietly = TRUE)) {
+  remotes::install_github("USF-IMARS/ctd-qc")
+}
+library(ctdqc)
+
 source(here("scripts/read_ctd_mapping.R"))
 
 loc <- here("data", "01_raw")

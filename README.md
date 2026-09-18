@@ -67,7 +67,7 @@ reports/
 
 ### Cruise inventory
 
-Cruises are listed by querying ERDDAP for datasets matching `SFER_CTD_*` (see [`R/erddap_ctd_resolve.R`](R/erddap_ctd_resolve.R)). Each dataset id follows `SFER_CTD_{cruise_id}_{station_id}`; underscores in the station segment represent decimal points (e.g. `9_5` → station 9.5), and suffixes like `_2` or `-2` mark repeat casts at the same station.
+Cruises are listed by querying ERDDAP for datasets matching `SFER_CTD_*` (see [`ctdqc::parse_sfer_ctd_id()`](https://github.com/USF-IMARS/ctd-qc), a shared package this repo depends on for CTD QC/cleaning/ERDDAP ingestion). Each dataset id follows `SFER_CTD_{cruise_id}_{station_id}`; underscores in the station segment represent decimal points (e.g. `9_5` → station 9.5), and suffixes like `_2` or `-2` mark repeat casts at the same station.
 
 [`scripts/read_ctd_mapping.R`](scripts/read_ctd_mapping.R) prefers cruise ids from cleaned or raw data on disk, then falls back to ERDDAP discovery. [`example_batch/getListOfValues.R`](example_batch/getListOfValues.R) uses the same listing for report batching.
 
