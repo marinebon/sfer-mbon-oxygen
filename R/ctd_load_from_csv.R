@@ -39,13 +39,13 @@ ctd_load_from_csv <- function(file = NULL, cast_id = NULL, cruise_id = NULL, ctd
       cruise = cruise_id,
       longitude = lon,
       latitude = lat,
-      time = time_elapsed
+      time = as.POSIXct(time, format = "%Y-%m-%dT%H:%M:%OSZ", tz = "UTC")
     )
   )
 
   core_columns <- c(
     "sea_water_salinity", "sea_water_temperature", "sea_water_pressure",
-    "latitude", "longitude", "time_elapsed"
+    "latitude", "longitude", "time"
   )
   additional_columns <- setdiff(names(ctd_raw), core_columns)
 
