@@ -47,16 +47,16 @@ build_oxygen_map_payload <- function(field, observations, layers) {
       next
     }
 
+    obs_slice <- slice_observations_layer(
+      observations,
+      layer$depth_min,
+      layer$depth_max
+    )
+
     grid_slice <- field_slice_grid(field_slice)
     field_cells <- lapply(seq_len(nrow(grid_slice)), function(i) {
       row <- grid_slice[i, ]
-      nearest <- nearest_layer_obs(
-        row$longitude,
-        row$latitude,
-        observations,
-        layer$depth_min,
-        layer$depth_max
-      )
+      nearest <- nearest_layer_obs(row$longitude, row$latitude, obs_slice)
       list(
         lon1 = row$lon1,
         lat1 = row$lat1,
@@ -75,11 +75,6 @@ build_oxygen_map_payload <- function(field, observations, layers) {
       )
     })
 
-    obs_slice <- slice_observations_layer(
-      observations,
-      layer$depth_min,
-      layer$depth_max
-    )
     obs_cells <- list()
     if (nrow(obs_slice) > 0) {
       obs_slice$depth_label <- mapply(

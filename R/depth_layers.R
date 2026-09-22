@@ -139,9 +139,11 @@ snap_to_field_grid <- function(longitude, latitude, lon_step, lat_step) {
 }
 
 #' Nearest observation cast in a depth layer (unique station locations).
-nearest_layer_obs <- function(longitude, latitude, observations, depth_min, depth_max) {
-  obs_slice <- slice_observations_layer(observations, depth_min, depth_max)
-  if (nrow(obs_slice) == 0) {
+#' `obs_slice` must be precomputed once per layer via `slice_observations_layer()` -
+#' recomputing it per grid cell is O(n_cells) slower and was the dominant cost
+#' of building the oxygen map payload on larger cruises.
+nearest_layer_obs <- function(longitude, latitude, obs_slice) {
+  if (is.null(obs_slice) || nrow(obs_slice) == 0) {
     return(NULL)
   }
 
