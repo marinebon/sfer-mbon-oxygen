@@ -1402,6 +1402,7 @@ function main()
         error("No cruises found in cleaned CTD data under $CLEAN_ROOT")
     end
 
+    failed_cruises = String[]
     for cruise_id in cruise_ids
         try
             interpolate_cruise(cruise_id, CLEAN_ROOT, INTERP_ROOT)
@@ -1409,9 +1410,17 @@ function main()
             if err isa Exception && occursin("No cleaned CTD files", sprint(showerror, err))
                 println("Skipping $cruise_id (no cleaned CTD data).")
             else
-                rethrow()
+                println("ERROR interpolating $cruise_id: $(sprint(showerror, err))")
+                push!(failed_cruises, cruise_id)
             end
         end
+    end
+
+    if !isempty(failed_cruises)
+        println(
+            "Finished with $(length(failed_cruises)) cruise(s) failed: ",
+            join(failed_cruises, ", "),
+        )
     end
 end
 
