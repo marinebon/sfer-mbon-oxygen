@@ -1,0 +1,188 @@
+---
+title: "Stations Across Cruises"
+subtitle: "How the CTD station network has grown, shifted, and turned over"
+execute:
+  echo: false
+  message: false
+  warning: false
+---
+
+This vignette explores the **sampling design** itself, independent of any oxygen values: which stations were occupied on which cruises.
+
+```{r setup}
+ensure_packages <- function(pkgs) {
+  for (pkg in pkgs) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      install.packages(pkg, repos = "https://cloud.r-project.org")
+    }
+  }
+}
+
+ensure_packages(c(
+  "here", "dplyr", "ggplot2", "knitr", "scales", "viridisLite",
+  "leaflet", "plotly", "htmlwidgets"
+))
+
+library(here)
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(scales)
+library(viridisLite)
+library(leaflet)
+library(plotly)
+
+source(here("R/station_cruise_summary.R"))
+
+mapping <- load_station_cruise_mapping()
+stations <- station_summary(mapping)
+cruise_counts <- cruise_station_counts(mapping)
+growth <- cumulative_station_growth(mapping)
+presence <- station_presence_long(mapping)
+
+n_cruises <- dplyr::n_distinct(mapping$cruise_id)
+n_stations <- dplyr::n_distinct(mapping$station)
+date_range <- range(mapping$cruise_date, na.rm = TRUE)
+```
+
+## Overview
+
+| Metric | Value |
+|--------|------:|
+| Cruises | `r n_cruises` |
+| Distinct stations ever occupied | `r n_stations` |
+| Date range | `r format(date_range[1], "%Y-%m-%d")` to `r format(date_range[2], "%Y-%m-%d")` |
+| Station-cruise occupations | `r nrow(mapping)` |
+| Median stations per cruise | `r round(median(cruise_counts$n_stations))` |
+| Stations occupied on ≥ 90% of cruises | `r sum(stations$n_cruises >= 0.9 * n_cruises)` |
+| Stations occupied on only one cruise | `r sum(stations$n_cruises == 1)` |
+
+## Where are the frequently- and rarely-visited stations?
+
+Each marker is a station, colored and sized by how many cruises occupied it. 
+
+```{r frequency-map}
+#| fig-cap: "Station occupation frequency across all cruises."
+
+freq_pal <- colorNumeric(palette = viridisLite::viridis(256), domain = stations$n_cruises)
+
+leaflet(stations, width = "100%", height = 560) |>
+  addProviderTiles(providers$Esri.OceanBasemap) |>
+  addCircleMarkers(
+    lng = ~longitude,
+    lat = ~latitude,
+    radius = ~rescale(n_cruises, to = c(3, 12), from = range(stations$n_cruises)),
+    color = ~freq_pal(n_cruises),
+    stroke = FALSE,
+    fillOpacity = 0.85,
+    popup = ~paste0(
+      "<b>Station ", station, "</b><br>",
+      "Cruises: ", n_cruises, "<br>",
+      "First: ", first_cruise_date, "<br>",
+      "Last: ", last_cruise_date
+    )
+  ) |>
+  addLegend(
+    position = "bottomright",
+    pal = freq_pal,
+    values = ~n_cruises,
+    title = "Cruises"
+  )
+```
+
+## How often is each station visited?
+
+The table below highlights the most commonly sampled stations and the stations that were sampled only once.
+
+::: {.panel-tabset}
+
+## Core stations (≥ 90% of cruises)
+
+```{r core-stations}
+stations |>
+  filter(n_cruises >= 0.9 * .env$n_cruises) |>
+  select(station, n_cruises, first_cruise_date, last_cruise_date) |>
+  kable(
+    col.names = c("Station", "Cruises", "First cruise", "Last cruise"),
+    caption = "Stations occupied on at least 90% of all cruises."
+  )
+```
+
+## One-off stations
+
+```{r oneoff-stations}
+stations |>
+  filter(n_cruises == 1) |>
+  select(station, first_cruise_date, longitude, latitude) |>
+  arrange(first_cruise_date) |>
+  kable(
+    col.names = c("Station", "Cruise date", "Longitude", "Latitude"),
+    digits = 3,
+    caption = "Stations occupied on exactly one cruise."
+  )
+```
+
+:::
+
+## Presence table: which stations, which cruises
+
+Every cell is one station-cruise pair: filled if that station was occupied on that cruise. Stations (rows) are ordered by the cruise on which they **first** appear, so new stations entering the program show up as a new row starting partway across the plot — a staircase pattern reveals when the network expanded. Cruises (columns) run left to right in chronological order. Zoom and hover to identify a cell.
+
+```{r presence-heatmap}
+#| fig-cap: "Station occupation by cruise (chronological)."
+#| fig-height: 16
+
+presence_plot <- presence |>
+  mutate(z = as.integer(present))
+
+fig <- plot_ly(
+  data = presence_plot,
+  x = ~cruise_id,
+  y = ~station,
+  z = ~z,
+  type = "heatmap",
+  colorscale = list(c(0, "#f4f4f4"), c(1, "#21918c")),
+  showscale = FALSE,
+  hovertemplate = paste0(
+    "Station: %{y}<br>Cruise: %{x}<br>Date: %{customdata}<extra></extra>"
+  ),
+  customdata = ~format(cruise_date, "%Y-%m-%d")
+) |>
+  layout(
+    xaxis = list(title = "Cruise", tickangle = -90, tickfont = list(size = 8)),
+    yaxis = list(title = "Station", tickfont = list(size = 7)),
+    margin = list(b = 120)
+  )
+
+fig
+```
+
+## Stations sampled per cruise
+
+The number of distinct stations occupied fluctuates with survey design and vessel time.
+
+```{r stations-per-cruise}
+#| fig-cap: "Distinct stations occupied, by cruise date."
+
+ggplot(cruise_counts, aes(x = cruise_date, y = n_stations)) +
+  geom_line(color = "#21918c", linewidth = 0.85) +
+  geom_point(color = "#21918c", size = 1.8) +
+  scale_y_continuous(name = "Stations occupied", limits = c(0, NA)) +
+  labs(x = "Cruise date") +
+  theme_minimal(base_size = 12)
+```
+
+## Growth of the station network
+
+Cumulative count of distinct stations ever visited, through each cruise. Plateaus mean a cruise visited only stations that had already been sampled before; steps up mean new stations entered the program.
+
+```{r cumulative-growth}
+#| fig-cap: "Cumulative distinct stations occupied, over time."
+
+ggplot(growth, aes(x = cruise_date, y = cumulative_stations)) +
+  geom_step(color = "#3b528b", linewidth = 0.9) +
+  geom_point(color = "#3b528b", size = 1.4) +
+  scale_y_continuous(name = "Cumulative distinct stations") +
+  labs(x = "Cruise date") +
+  theme_minimal(base_size = 12)
+```

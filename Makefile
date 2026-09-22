@@ -14,7 +14,7 @@ INTERP_DIR := data/interpolated
 JULIA_PROJECT := julia
 CRUISE ?= SV18067
 
-.PHONY: help download download-cruise process process-cruise report-process report-hypoxic interpolate interpolate-cruise interpolate-all render render-cruise example-cruise publish clean
+.PHONY: help download download-cruise process process-cruise report-process report-hypoxic report-stations interpolate interpolate-cruise interpolate-all render render-cruise example-cruise publish clean
 
 help:
 	@echo "SFER MBON Oxygen pipeline"
@@ -24,6 +24,7 @@ help:
 	@echo "  make process         Clean raw CTD casts with oce into data/02_clean/ (skips up-to-date outputs)"
 	@echo "  make report-process  Render reports/processing_summary.qmd (run after make process)"
 	@echo "  make report-hypoxic   Render reports/hypoxic_extent.qmd (run after make process and make interpolate-all)"
+	@echo "  make report-stations  Render reports/stations_across_cruises.qmd (no processing required)"
 	@echo "  make interpolate     Build DIVAnd oxygen fields for one cruise (CRUISE=$(CRUISE))"
 	@echo "  make interpolate-all Build DIVAnd oxygen fields for every cruise with cleaned CTD data"
 	@echo "  make render          Render the Quarto website locally"
@@ -50,6 +51,9 @@ report-process:
 
 report-hypoxic:
 	quarto render reports/hypoxic_extent.qmd
+
+report-stations:
+	quarto render reports/stations_across_cruises.qmd
 
 interpolate: process
 	julia --project=$(JULIA_PROJECT) scripts/interpolate_cruise.jl $(CRUISE)
