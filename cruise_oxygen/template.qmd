@@ -39,10 +39,15 @@ source(here(glue("{params$batch_name}/getData.R")))
 source(here("R/color_scales.R"))
 source(here(glue("{params$batch_name}/depth_layers.R")))
 source(here(glue("{params$batch_name}/plot_oxygen_map.R")))
+source(here("R/hypoxic_summary.R"))
 
 data <- getData(params$batch_value)
 obs <- data$observations
 field <- data$oxygen_field
+
+cruise_dates <- cruise_dates_from_mapping()
+cruise_date <- cruise_dates$cruise_date[cruise_dates$cruise_id == params$batch_value]
+cruise_date <- if (length(cruise_date) == 1 && !is.na(cruise_date)) cruise_date else NA
 ```
 
 ```{r thumbnail}
@@ -57,7 +62,7 @@ if (!is.null(field)) {
 }
 ```
 
-## Cruise `r params$batch_value`
+## Cruise `r params$batch_value` (`r if (!is.na(cruise_date)) format(cruise_date, "%Y-%m-%d") else "date unknown"`)
 
 This report compares the DIVAnd-interpolated dissolved oxygen field with cleaned CTD observations from `data/02_clean/`.
 
