@@ -20,7 +20,7 @@ from rasterio.warp import Resampling, reproject
 from shapely.geometry import box
 
 BUCKET = "noaa-ocs-nationalbathymetry-pds"
-TILE_SCHEME_KEY = "BlueTopo/_BlueTopo_Tile_Scheme/BlueTopo_Tile_Scheme_20260626_132625.gpkg"
+TILE_SCHEME_PREFIX = "BlueTopo/_BlueTopo_Tile_Scheme/"
 ELEVATION_BAND = 1
 LAND_GEOJSON_URL = (
     "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/"
@@ -60,12 +60,26 @@ def tile_scheme_path(cache_dir: Path) -> Path:
     return cache_dir / "BlueTopo_Tile_Scheme.gpkg"
 
 
+def latest_tile_scheme_key(client) -> str:
+    resp = client.list_objects_v2(Bucket=BUCKET, Prefix=TILE_SCHEME_PREFIX)
+    candidates = [
+        obj for obj in resp.get("Contents", []) if obj["Key"].endswith(".gpkg")
+    ]
+    if not candidates:
+        raise RuntimeError(
+            f"No BlueTopo tile scheme .gpkg found under s3://{BUCKET}/{TILE_SCHEME_PREFIX}"
+        )
+    return max(candidates, key=lambda obj: obj["LastModified"])["Key"]
+
+
 def load_tile_scheme(cache_dir: Path) -> gpd.GeoDataFrame:
     scheme_path = tile_scheme_path(cache_dir)
     scheme_path.parent.mkdir(parents=True, exist_ok=True)
     if not scheme_path.exists():
-        print(f"Downloading tile scheme from s3://{BUCKET}/{TILE_SCHEME_KEY}")
-        s3_client().download_file(BUCKET, TILE_SCHEME_KEY, str(scheme_path))
+        client = s3_client()
+        tile_scheme_key = latest_tile_scheme_key(client)
+        print(f"Downloading tile scheme from s3://{BUCKET}/{tile_scheme_key}")
+        client.download_file(BUCKET, tile_scheme_key, str(scheme_path))
     gdf = gpd.read_file(scheme_path)
     if gdf.crs is None:
         gdf = gdf.set_crs("EPSG:4326")
@@ -124,18 +138,22 @@ def mosaic_bluetopo(
     for url in tile_urls:
         vsicurl = f"/vsicurl/{url}"
         temp = np.full(dst_shape, np.nan, dtype="float32")
-        with rasterio.open(vsicurl) as src:
-            reproject(
-                source=rasterio.band(src, ELEVATION_BAND),
-                destination=temp,
-                src_transform=src.transform,
-                src_crs=src.crs,
-                dst_transform=dst_transform,
-                dst_crs=dst_crs,
-                resampling=resampling,
-                src_nodata=np.nan,
-                dst_nodata=np.nan,
-            )
+        try:
+            with rasterio.open(vsicurl) as src:
+                reproject(
+                    source=rasterio.band(src, ELEVATION_BAND),
+                    destination=temp,
+                    src_transform=src.transform,
+                    src_crs=src.crs,
+                    dst_transform=dst_transform,
+                    dst_crs=dst_crs,
+                    resampling=resampling,
+                    src_nodata=np.nan,
+                    dst_nodata=np.nan,
+                )
+        except rasterio.errors.RasterioIOError as e:
+            print(f"Warning: skipping unreachable BlueTopo tile {url}: {e}", file=sys.stderr)
+            continue
         fill = np.isnan(dst) & ~np.isnan(temp)
         dst[fill] = temp[fill]
         overlap = ~np.isnan(dst) & ~np.isnan(temp)
@@ -162,18 +180,22 @@ def fill_missing_elevation(
     for url in fill_urls:
         vsicurl = f"/vsicurl/{url}"
         temp = np.full(dst_shape, np.nan, dtype="float32")
-        with rasterio.open(vsicurl) as src:
-            reproject(
-                source=rasterio.band(src, ELEVATION_BAND),
-                destination=temp,
-                src_transform=src.transform,
-                src_crs=src.crs,
-                dst_transform=dst_transform,
-                dst_crs=dst_crs,
-                resampling=resampling,
-                src_nodata=np.nan,
-                dst_nodata=np.nan,
-            )
+        try:
+            with rasterio.open(vsicurl) as src:
+                reproject(
+                    source=rasterio.band(src, ELEVATION_BAND),
+                    destination=temp,
+                    src_transform=src.transform,
+                    src_crs=src.crs,
+                    dst_transform=dst_transform,
+                    dst_crs=dst_crs,
+                    resampling=resampling,
+                    src_nodata=np.nan,
+                    dst_nodata=np.nan,
+                )
+        except rasterio.errors.RasterioIOError as e:
+            print(f"Warning: skipping unreachable BlueTopo fill tile {url}: {e}", file=sys.stderr)
+            continue
         fill = missing & ~np.isnan(temp)
         if not fill.any():
             continue
