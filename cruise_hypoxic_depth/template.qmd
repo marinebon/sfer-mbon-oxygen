@@ -39,6 +39,7 @@ source(here("R/color_scales.R"))
 source(here(glue("{params$batch_name}/hypoxic_depth.R")))
 source(here(glue("{params$batch_name}/plot_hypoxic_depth_map.R")))
 source(here("R/hypoxic_summary.R"))
+source(here("R/erddap_ctd_resolve.R"))
 
 data <- getData(params$batch_value)
 obs <- data$observations
@@ -47,6 +48,12 @@ field <- data$oxygen_field
 cruise_dates <- cruise_dates_from_mapping()
 cruise_date <- cruise_dates$cruise_date[cruise_dates$cruise_id == params$batch_value]
 cruise_date <- if (length(cruise_date) == 1 && !is.na(cruise_date)) cruise_date else NA
+
+erddap_search_url <- paste0(
+  ERDDAP_BASE,
+  "search/index.html?searchFor=",
+  utils::URLencode(paste0(SFER_CTD_PREFIX, params$batch_value), reserved = TRUE)
+)
 ```
 
 ```{r thumbnail}
@@ -62,7 +69,11 @@ if (!is.null(field)) {
 }
 ```
 
-## Cruise `r params$batch_value` (`r if (!is.na(cruise_date)) format(cruise_date, "%Y-%m-%d") else "date unknown"`)
+## Cruise `r params$batch_value`
+
+**Cruise date:** `r if (!is.na(cruise_date)) format(cruise_date, "%Y-%m-%d") else "date unknown"`
+
+**Upstream data:** [ERDDAP catalog search for `r params$batch_value`](`r erddap_search_url`)
 
 This report maps the **shallowest depth** at which the interpolated dissolved oxygen field falls below a chosen threshold (hypoxic boundary). Use the slider on the map to change the O₂ threshold; grid cells are colored by **depth in meters**.
 
